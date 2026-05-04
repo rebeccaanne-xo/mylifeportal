@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Portal — Rebecca Holka</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1B2A4A;--peony:#C2738A;--sage:#4A7C6F;--amber:#C4895A;
+  --plum:#7A5C7A;--teal:#2D6B6B;--cream:#F7EEF1;--faith:#6B8CB8;
+  --sidebar-w:220px;
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);color:#fff;line-height:1.6;overflow:hidden}
+
+/* ══ LAYOUT ══ */
+#app{display:flex;height:100vh}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:rgba(0,0,0,.35);
+  border-right:1px solid rgba(255,255,255,.07);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+}
+.sidebar-brand{padding:1.25rem 1rem .875rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.sidebar-greeting{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(255,255,255,.4)}
+.sidebar-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;font-weight:500;line-height:1.1}
+.sidebar-date{font-size:10px;color:rgba(255,255,255,.25);margin-top:.3rem}
+
+.nav-group{padding:.6rem .75rem .15rem}
+.nav-group-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:0 .3rem;margin-bottom:.3rem}
+.nav-btn{
+  display:flex;align-items:center;gap:8px;width:100%;
+  padding:.48rem .6rem;border-radius:7px;
+  font-size:13px;font-weight:500;color:rgba(255,255,255,.55);
+  cursor:pointer;transition:all .15s;margin-bottom:1px;
+  background:none;border:none;font-family:'DM Sans',sans-serif;text-align:left;
+}
+.nav-btn:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
+.nav-btn.active{color:#fff;font-weight:600}
+.nav-btn.active.tab-home{background:rgba(196,137,90,.18)}
+.nav-btn.active.tab-homelife{background:rgba(168,152,128,.18)}
+.nav-btn.active.tab-people{background:rgba(45,107,107,.18)}
+.nav-btn.active.tab-faith{background:rgba(107,140,184,.18)}
+.nav-btn.active.tab-mission{background:rgba(74,124,111,.18)}
+.nav-btn.active.tab-brain{background:rgba(122,92,122,.18)}
+.nav-btn.active.tab-habits{background:rgba(74,124,111,.18)}
+.nav-btn.active.tab-shopping{background:rgba(196,137,90,.18)}
+.nav-btn.active.tab-business{background:rgba(194,115,138,.18)}
+.nav-emoji{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.nav-external{font-size:9px;opacity:.4;margin-left:auto}
+
+.sidebar-footer{
+  margin-top:auto;padding:.875rem 1rem;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.user-row{display:flex;align-items:center;gap:8px}
+.user-av{width:26px;height:26px;border-radius:50%;background:var(--peony);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.user-name{font-size:11px;font-weight:600;color:#fff}
+.user-email{font-size:9px;color:rgba(255,255,255,.3)}
+.pts-display{font-size:10px;color:var(--sage);margin-top:.35rem;font-weight:600}
+
+/* ══ CONTENT AREA ══ */
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* TOP TABS */
+.top-tabs{
+  display:flex;gap:2px;
+  padding:.6rem 1rem;
+  background:rgba(0,0,0,.2);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  overflow-x:auto;flex-shrink:0;
+}
+.top-tabs::-webkit-scrollbar{height:2px}
+.top-tabs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1)}
+.top-tab{
+  font-size:12px;font-weight:500;padding:.35rem .85rem;
+  border-radius:6px;cursor:pointer;
+  color:rgba(255,255,255,.45);
+  transition:all .15s;white-space:nowrap;
+  background:none;border:none;font-family:'DM Sans',sans-serif;
+  flex-shrink:0;
+}
+.top-tab:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.05)}
+.top-tab.active{background:rgba(255,255,255,.1);color:#fff;font-weight:600}
+
+/* PAGE CONTENT */
+.pages{flex:1;overflow-y:auto;background:var(--navy)}
+.page{display:none;padding:1.5rem 1.75rem;min-height:100%}
+.page.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ COMMON COMPONENTS ══ */
+.page-header{margin-bottom:1.25rem}
+.page-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.25rem}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;color:#fff}
+.page-title em{font-style:italic}
+
+.s-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:.5rem;margin-top:1.1rem;display:flex;align-items:center;justify-content:space-between}
+.s-action{font-size:10px;color:var(--peony);cursor:pointer;letter-spacing:0;text-transform:none;font-weight:600;background:none;border:none;font-family:'DM Sans',sans-serif}
+
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.card-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.32)}
+.card-link{font-size:11px;color:var(--peony);text-decoration:none;font-weight:600;cursor:pointer}
+.card-link:hover{opacity:.75}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:.75rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:.75rem}
+.grid4{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:.75rem}
+
+.dump-box{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.09);border-radius:12px;padding:.875rem 1rem;margin-bottom:.75rem}
+.dump-box:focus-within{border-color:var(--peony)}
+.dump-textarea{width:100%;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;resize:none;min-height:70px;line-height:1.6}
+.dump-textarea::placeholder{color:rgba(255,255,255,.22)}
+
+.add-row{display:flex;gap:7px;margin-bottom:.6rem}
+.add-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:7px;padding:.55rem .8rem;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
+.add-input:focus{border-color:var(--peony)}
+.add-input::placeholder{color:rgba(255,255,255,.22)}
+.add-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.65);border-radius:7px;padding:.55rem .9rem;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.add-btn:hover{background:var(--peony);border-color:var(--peony);color:#fff}
+.add-select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:7px;padding:.55rem .7rem;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none}
+
+.items{display:flex;flex-direction:column;gap:5px;margin-bottom:.6rem}
+.item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:.65rem .875rem;display:flex;align-items:flex-start;gap:9px;transition:background .15s}
+.item:hover{background:rgba(255,255,255,.07)}
+.item-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.item-text{flex:1;font-size:13px;color:rgba(255,255,255,.82);line-height:1.45;word-break:break-word}
+.item-text[contenteditable=true]{outline:none;border-bottom:1px dashed rgba(255,255,255,.12)}
+.item-meta{font-size:10px;color:rgba(255,255,255,.28);margin-top:2px}
+.item-actions{display:flex;gap:3px;opacity:0;transition:opacity .15s;flex-shrink:0}
+.item:hover .item-actions{opacity:1}
+.item-btn{background:none;border:none;color:rgba(255,255,255,.28);cursor:pointer;font-size:11px;padding:1px 5px;border-radius:3px;transition:all .15s;font-family:'DM Sans',sans-serif}
+.item-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.item-btn.del:hover{background:rgba(192,57,43,.18);color:#F1948A}
+
+.check-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:.62rem .875rem;display:flex;align-items:flex-start;gap:9px;transition:background .15s}
+.check-item:hover{background:rgba(255,255,255,.07)}
+.check-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--peony);flex-shrink:0;margin-top:2px;cursor:pointer}
+.check-item label{font-size:13px;color:rgba(255,255,255,.82);flex:1;cursor:pointer;line-height:1.4}
+.check-item.done label{text-decoration:line-through;color:rgba(255,255,255,.3)}
+.check-actions{display:flex;gap:3px;opacity:0;transition:opacity .15s}
+.check-item:hover .check-actions{opacity:1}
+
+.badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:999px}
+.badge-active{background:rgba(46,125,82,.18);color:#82C4B5}
+.badge-pending{background:rgba(196,137,90,.18);color:var(--amber)}
+.badge-building{background:rgba(194,115,138,.18);color:var(--peony)}
+.badge-paused{background:rgba(122,92,122,.18);color:#C4A8C4}
+
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px;margin-bottom:.75rem}
+.stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:.875rem}
+.stat-val{font-size:22px;font-weight:700;color:#fff;line-height:1;margin-bottom:.2rem}
+.stat-val[contenteditable=true]{outline:none;border-bottom:1px dashed rgba(255,255,255,.18)}
+.stat-label{font-size:9px;color:rgba(255,255,255,.32);letter-spacing:.05em;text-transform:uppercase}
+
+.tabs-inner{display:flex;gap:3px;margin-bottom:.875rem;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:.6rem;flex-wrap:wrap}
+.tab-inner{font-size:11px;font-weight:500;padding:.3rem .75rem;border-radius:5px;cursor:pointer;color:rgba(255,255,255,.4);transition:all .15s;background:none;border:none;font-family:'DM Sans',sans-serif}
+.tab-inner:hover{color:rgba(255,255,255,.75)}
+.tab-inner.active{background:rgba(255,255,255,.08);color:#fff}
+.tab-content-inner{display:none}
+.tab-content-inner.active{display:block}
+
+.link-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;margin-bottom:.75rem}
+.qlink{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:.65rem .8rem;font-size:12px;font-weight:500;color:rgba(255,255,255,.58);text-decoration:none;cursor:pointer;transition:all .15s}
+.qlink:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.12)}
+.qlink-emoji{font-size:14px;flex-shrink:0}
+
+.milestone{background:linear-gradient(135deg,rgba(74,124,111,.2),rgba(74,124,111,.1));border:1px solid rgba(74,124,111,.25);border-radius:10px;padding:.875rem 1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:10px}
+.milestone-icon{font-size:20px;flex-shrink:0}
+.milestone-text strong{display:block;color:#fff;font-size:13px;margin-bottom:.1rem}
+.milestone-text span{font-size:12px;color:rgba(255,255,255,.5)}
+
+
+/* FLIP CLOCK */
+.flip-display{display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-bottom:1rem;padding:1.25rem;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.07);border-radius:14px;flex-wrap:wrap}
+.flip-section{display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.flip-section-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.flip-group{display:flex;gap:.3rem;align-items:center}
+.flip-separator{font-size:28px;font-weight:700;color:rgba(255,255,255,.3);line-height:1;margin-bottom:.25rem}
+.flip-card{position:relative;width:44px;height:56px;perspective:400px}
+.flip-card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d}
+.flip-upper,.flip-lower{position:absolute;width:100%;height:50%;left:0;overflow:hidden;background:#1a2d50;border-radius:4px 4px 0 0}
+.flip-lower{top:50%;border-radius:0 0 4px 4px;background:#152540}
+.flip-upper span,.flip-lower span{position:absolute;width:100%;height:200%;display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:36px;font-weight:600;color:#fff;line-height:1}
+.flip-lower span{bottom:0}
+.flip-line{position:absolute;top:50%;left:0;width:100%;height:1px;background:rgba(0,0,0,.4);z-index:10}
+.flip-shadow-top{position:absolute;bottom:0;left:0;width:100%;height:40%;background:linear-gradient(to bottom,transparent,rgba(0,0,0,.3));z-index:5}
+.flip-shadow-bot{position:absolute;top:0;left:0;width:100%;height:40%;background:linear-gradient(to top,transparent,rgba(0,0,0,.3));z-index:5}
+.flip-animating .flip-upper{animation:flipTop .25s ease-in forwards}
+.flip-animating .flip-lower{animation:flipBot .25s ease-out .25s forwards}
+ flipTop{0%{transform:rotateX(0)}100%{transform:rotateX(-90deg)}}
+ flipBot{0%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+.flip-cal-day{font-family:"Cormorant Garamond",serif;font-size:52px;font-weight:600;color:#fff;line-height:1;text-align:center;background:#1a2d50;border-radius:6px;padding:.1rem .5rem;min-width:64px}
+.flip-cal-month{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--peony);background:var(--peony);background:rgba(194,115,138,.15);border:1px solid rgba(194,115,138,.25);border-radius:999px;padding:.25rem .75rem;margin-top:.25rem}
+.flip-cal-dow{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem}
+.flip-divider{width:1px;height:60px;background:rgba(255,255,255,.08)}
+
+.scripture-block{background:linear-gradient(135deg,rgba(27,42,74,.9),rgba(45,65,112,.7));border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem 1.25rem;margin-bottom:.875rem}
+.scripture-verse{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:rgba(255,255,255,.82);line-height:1.65;margin-bottom:.35rem}
+.scripture-cite{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.05em}
+
+.finance-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:.75rem}
+.finance-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:1rem}
+.finance-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:.4rem}
+.finance-amount{font-size:24px;font-weight:700;color:#fff;font-family:'Cormorant Garamond',serif;outline:none}
+.finance-amount[contenteditable=true]{border-bottom:1px dashed rgba(255,255,255,.18)}
+
+.person-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px;margin-bottom:.75rem}
+.person-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.875rem;cursor:pointer;transition:all .2s;position:relative}
+.person-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.person-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-bottom:.6rem}
+.person-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:.15rem}
+.person-role{font-size:10px;color:rgba(255,255,255,.32)}
+.person-prayer{position:absolute;top:.6rem;right:.6rem;font-size:12px}
+
+.detail-panel{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem;display:none}
+.detail-panel.active{display:block}
+.detail-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.875rem}
+.detail-name{font-size:15px;font-weight:600;color:#fff}
+.close-btn{background:none;border:none;color:rgba(255,255,255,.28);cursor:pointer;font-size:15px;padding:2px 5px;transition:color .15s}
+.close-btn:hover{color:#fff}
+
+.habit-dot-grid{display:flex;gap:5px;flex-wrap:wrap;margin-top:.5rem}
+.h-dot{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:all .2s;title:attr(title)}
+.h-dot.done{background:var(--sage);border-color:var(--sage)}
+
+.glance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.glance-item{background:rgba(255,255,255,.04);border-radius:8px;padding:.65rem;text-align:center;cursor:pointer;transition:background .15s}
+.glance-item:hover{background:rgba(255,255,255,.08)}
+.glance-val{font-size:22px;font-weight:700;color:#fff;line-height:1;margin-bottom:.15rem}
+.glance-label{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+.glance-dot{width:5px;height:5px;border-radius:50%;margin:.3rem auto 0;background:rgba(255,255,255,.12)}
+.glance-dot.on{background:var(--peony);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.appt-item{display:flex;align-items:flex-start;gap:9px;padding:.55rem .7rem;background:rgba(255,255,255,.04);border-radius:7px;border-left:2px solid var(--peony);margin-bottom:5px}
+.appt-time{font-size:11px;font-weight:700;color:var(--peony);flex-shrink:0;min-width:40px;margin-top:1px}
+.appt-title{font-size:12px;color:#fff;flex:1}
+.appt-del{background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-size:11px;padding:1px 4px}
+.appt-del:hover{color:#F1948A}
+
+.priority-row{display:flex;align-items:flex-start;gap:9px;padding:.55rem .7rem;background:rgba(255,255,255,.04);border-radius:7px;margin-bottom:5px}
+.priority-num{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(255,255,255,.1);flex-shrink:0;width:16px;line-height:1}
+.priority-input{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(255,255,255,.8);resize:none;line-height:1.4;min-height:20px}
+.priority-input::placeholder{color:rgba(255,255,255,.2)}
+.priority-input:focus{color:#fff}
+
+/* GBB LINK CARD */
+.gbb-portal-card{background:linear-gradient(135deg,rgba(194,115,138,.15),rgba(194,115,138,.08));border:1px solid rgba(194,115,138,.25);border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.gbb-portal-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;margin-bottom:.2rem}
+.gbb-portal-sub{font-size:12px;color:rgba(255,255,255,.4)}
+.gbb-portal-btn{background:var(--peony);color:#fff;border:none;border-radius:999px;padding:.65rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;display:inline-block}
+.gbb-portal-btn:hover{opacity:.85}
+
+.tool-card{display:flex;flex-direction:column;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:.8rem .6rem;font-size:11px;font-weight:500;color:rgba(255,255,255,.58);text-decoration:none;cursor:pointer;transition:all .15s;text-align:center}
+.tool-card:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.12)}
+.tool-emoji{font-size:20px}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--sage);color:#fff;padding:.65rem 1.1rem;border-radius:9px;font-size:12px;font-weight:500;display:none;z-index:300;animation:slideUp .25s ease}
+.toast.show{display:block}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* MOBILE */
+.mob-toggle{display:none;position:fixed;top:.65rem;left:.65rem;z-index:200;background:var(--peony);border:none;border-radius:7px;padding:.4rem .55rem;cursor:pointer;color:#fff;font-size:15px}
+@media(max-width:768px){
+  .mob-toggle{display:block}
+  .sidebar{position:fixed;inset:0;z-index:100;transform:translateX(-100%);transition:transform .25s;width:75vw;max-width:260px}
+  .sidebar.open{transform:translateX(0)}
+  #app{display:block}
+  .content{height:100vh}
+  .page{padding:1rem .875rem}
+  .grid2,.finance-grid{grid-template-columns:1fr}
+  .grid3,.glance-grid{grid-template-columns:1fr 1fr 1fr}
+  .person-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<button class="mob-toggle" onclick="toggleSidebar()">☰</button>
+
+<div id="app">
+
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-greeting">Welcome back,</div>
+    <div class="sidebar-name">Rebecca.</div>
+    <div class="sidebar-date" id="sb-date"></div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Daily</div>
+    <button class="nav-btn tab-home active" onclick="goTab('home',this)"><span class="nav-emoji">🏠</span>Home</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Life</div>
+    <button class="nav-btn tab-homelife" onclick="goTab('homelife',this)"><span class="nav-emoji">🏡</span>Home Life</button>
+    <button class="nav-btn tab-shopping" onclick="goTab('shopping',this)"><span class="nav-emoji">🛒</span>Shopping</button>
+    <button class="nav-btn tab-habits" onclick="goTab('habits',this)"><span class="nav-emoji">💪</span>Health & Habits</button>
+    <button class="nav-btn tab-people" onclick="goTab('people',this)"><span class="nav-emoji">👥</span>People</button>
+    <button class="nav-btn tab-faith" onclick="goTab('faith',this)"><span class="nav-emoji">✝️</span>Faith</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Work</div>
+    <button class="nav-btn tab-business" onclick="goTab('business',this)"><span class="nav-emoji">💼</span>Get Booked & Branded<span class="nav-external">↗</span></button>
+    <button class="nav-btn tab-mission" onclick="goTab('mission',this)"><span class="nav-emoji">🌱</span>Mission</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Mind</div>
+    <button class="nav-btn tab-brain" onclick="goTab('brain',this)"><span class="nav-emoji">🧠</span>Brain Dump</button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="user-av">R</div>
+      <div>
+        <div class="user-name">Rebecca Holka</div>
+        <div class="user-email">rebeccaannexo@gmail.com</div>
+      </div>
+    </div>
+    <div style="font-size:9px;color:rgba(255,255,255,.25);margin-bottom:.2rem" id="db-status">connecting...</div><div class="pts-display" id="sb-points">⭐ 0 points · 🔥 0 streak</div>
+  </div>
+</div>
+
+<!-- ══ CONTENT ══ -->
+<div class="content">
+
+  <!-- TOP TABS -->
+  <div class="top-tabs" id="top-tabs">
+    <button class="top-tab active" data-tab="home" onclick="goTab('home',this)">🏠 Home</button>
+    <button class="top-tab" data-tab="homelife" onclick="goTab('homelife',this)">🏡 Home Life</button>
+    <button class="top-tab" data-tab="shopping" onclick="goTab('shopping',this)">🛒 Shopping</button>
+    <button class="top-tab" data-tab="habits" onclick="goTab('habits',this)">💪 Habits</button>
+    <button class="top-tab" data-tab="people" onclick="goTab('people',this)">👥 People</button>
+    <button class="top-tab" data-tab="faith" onclick="goTab('faith',this)">✝️ Faith</button>
+    <button class="top-tab" data-tab="business" onclick="goTab('business',this)">💼 GBB</button>
+    <button class="top-tab" data-tab="mission" onclick="goTab('mission',this)">🌱 Mission</button>
+    <button class="top-tab" data-tab="brain" onclick="goTab('brain',this)">🧠 Brain</button>
+  </div>
+
+  <!-- PAGES -->
+  <div class="pages">
+
+    <!-- ══════════ HOME ══════════ -->
+    <div class="page active" id="page-home">
+      <!-- FLIP CLOCK + CALENDAR -->
+      <div class="flip-display">
+        <!-- CALENDAR SIDE -->
+        <div class="flip-section">
+          <div class="flip-section-label">Today</div>
+          <div class="flip-cal-day" id="flip-day">01</div>
+          <div class="flip-cal-month" id="flip-month">January</div>
+          <div class="flip-cal-dow" id="flip-dow">Monday</div>
+        </div>
+        <div class="flip-divider"></div>
+        <!-- CLOCK SIDE -->
+        <div class="flip-section">
+          <div class="flip-section-label">Time</div>
+          <div class="flip-group">
+            <div class="flip-card" id="fc-h1"><div class="flip-upper"><span id="fcu-h1">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-h1">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-card" id="fc-h2"><div class="flip-upper"><span id="fcu-h2">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-h2">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-separator">:</div>
+            <div class="flip-card" id="fc-m1"><div class="flip-upper"><span id="fcu-m1">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-m1">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-card" id="fc-m2"><div class="flip-upper"><span id="fcu-m2">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-m2">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-separator">:</div>
+            <div class="flip-card" id="fc-s1"><div class="flip-upper"><span id="fcu-s1">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-s1">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-card" id="fc-s2"><div class="flip-upper"><span id="fcu-s2">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-s2">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+          </div>
+          <div id="flip-ampm" style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:.3rem">AM</div>
+        </div>
+      </div>
+
+      <div class="page-header">
+        <div class="page-eyebrow" id="home-greeting"></div>
+        <div class="page-title">Good to see you, <em>Rebecca.</em></div>
+      </div>
+
+      <div class="scripture-block">
+        <div class="scripture-verse" id="scripture-verse">Loading...</div>
+        <div class="scripture-cite" id="scripture-cite"></div>
+      </div>
+
+      <div class="grid2">
+        <!-- APPOINTMENTS -->
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-title">📅 Today</div>
+            <button class="s-action" onclick="toggleApptForm()">+ Add</button>
+          </div>
+          <div id="appt-form" style="display:none;margin-bottom:.6rem">
+            <div class="add-row">
+              <input class="add-input" id="appt-time" placeholder="Time" style="max-width:75px"/>
+              <input class="add-input" id="appt-title" placeholder="Appointment or event..." onkeydown="if(event.key==='Enter')addAppt()"/>
+              <button class="add-btn" onclick="addAppt()">Add</button>
+            </div>
+          </div>
+          <div id="appt-list"></div>
+          <div id="appt-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic">Nothing scheduled today</div>
+        </div>
+
+        <!-- PRIORITIES -->
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-title">🎯 Today's Focus</div>
+            <button class="s-action" onclick="clearPriorities()">Clear</button>
+          </div>
+          <div class="priority-row"><div class="priority-num">1</div><textarea class="priority-input" id="p1" rows="1" placeholder="Most important thing today..." onblur="savePriorities()" oninput="autoGrow(this)"></textarea></div>
+          <div class="priority-row"><div class="priority-num">2</div><textarea class="priority-input" id="p2" rows="1" placeholder="Second priority..." onblur="savePriorities()" oninput="autoGrow(this)"></textarea></div>
+          <div class="priority-row"><div class="priority-num">3</div><textarea class="priority-input" id="p3" rows="1" placeholder="Third priority..." onblur="savePriorities()" oninput="autoGrow(this)"></textarea></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <!-- HABIT SNAPSHOT -->
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-title">💪 Habits Today</div>
+            <span class="card-link" onclick="goTab('habits',document.querySelector('[data-tab=habits]'))">Open →</span>
+          </div>
+          <div class="stat-row" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:.5rem">
+            <div class="stat"><div class="stat-val" id="snap-done">0</div><div class="stat-label">Done</div></div>
+            <div class="stat"><div class="stat-val" id="snap-total">0</div><div class="stat-label">Total</div></div>
+            <div class="stat"><div class="stat-val" id="snap-pts" style="color:var(--sage)">0</div><div class="stat-label">Pts</div></div>
+          </div>
+          <div class="habit-dot-grid" id="habit-dots"></div>
+        </div>
+
+        <!-- AT A GLANCE -->
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">👁 At a Glance</div></div>
+          <div class="glance-grid">
+            <div class="glance-item" onclick="goTab('business',document.querySelector('[data-tab=business]'))"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
+            <div class="glance-item" onclick="goTab('people',document.querySelector('[data-tab=people]'))"><div class="glance-val" id="g-followup">—</div><div class="glance-label">Follow ups</div><div class="glance-dot" id="gd-followup"></div></div>
+            <div class="glance-item" onclick="goTab('faith',document.querySelector('[data-tab=faith]'))"><div class="glance-val" id="g-prayers">—</div><div class="glance-label">Prayers</div><div class="glance-dot" id="gd-prayers"></div></div>
+            <div class="glance-item" onclick="goTab('shopping',document.querySelector('[data-tab=shopping]'))"><div class="glance-val" id="g-shopping">—</div><div class="glance-label">Shopping</div><div class="glance-dot" id="gd-shopping"></div></div>
+            <div class="glance-item" onclick="goTab('mission',document.querySelector('[data-tab=mission]'))"><div class="glance-val" id="g-mission">—</div><div class="glance-label">Mission</div><div class="glance-dot" id="gd-mission"></div></div>
+            <div class="glance-item" onclick="goTab('brain',document.querySelector('[data-tab=brain]'))"><div class="glance-val" id="g-brain">—</div><div class="glance-label">Brain</div><div class="glance-dot" id="gd-brain"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACCESS -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">⚡ Quick Access</div></div>
+        <div class="grid4">
+          <div class="tool-card" onclick="goTab('brain',document.querySelector('[data-tab=brain]'))"><div class="tool-emoji">🧠</div>Brain Dump</div>
+          <div class="tool-card" onclick="goTab('habits',document.querySelector('[data-tab=habits]'))"><div class="tool-emoji">💪</div>Habits</div>
+          <div class="tool-card" onclick="goTab('shopping',document.querySelector('[data-tab=shopping]'))"><div class="tool-emoji">🛒</div>Shopping</div>
+          <div class="tool-card" onclick="goTab('people',document.querySelector('[data-tab=people]'))"><div class="tool-emoji">👥</div>People</div>
+          <div class="tool-card" onclick="goTab('faith',document.querySelector('[data-tab=faith]'))"><div class="tool-emoji">✝️</div>Faith</div>
+          <div class="tool-card" onclick="goTab('business',document.querySelector('[data-tab=business]'))"><div class="tool-emoji">💼</div>GBB</div>
+          <div class="tool-card" onclick="goTab('mission',document.querySelector('[data-tab=mission]'))"><div class="tool-emoji">🌱</div>Mission</div>
+          <div class="tool-card" onclick="goTab('homelife',document.querySelector('[data-tab=homelife]'))"><div class="tool-emoji">🏡</div>Home Life</div>
+          <a class="tool-card" href="https://getbookednbranded.pages.dev" target="_blank"><div class="tool-emoji">🌐</div>GBB Site</a>
+          <a class="tool-card" href="https://calendly.com/rebeccaannexo/meet" target="_blank"><div class="tool-emoji">📅</div>Calendly</a>
+          <a class="tool-card" href="https://drive.google.com" target="_blank"><div class="tool-emoji">📁</div>Drive</a>
+          <a class="tool-card" href="https://dash.cloudflare.com" target="_blank"><div class="tool-emoji">☁️</div>Cloudflare</a>
+          <a class="tool-card" href="https://github.com" target="_blank"><div class="tool-emoji">💻</div>GitHub</a>
+          <a class="tool-card" href="https://script.google.com" target="_blank"><div class="tool-emoji">⚙️</div>Apps Script</a>
+          <a class="tool-card" href="https://console.cloud.google.com" target="_blank"><div class="tool-emoji">🔑</div>Cloud Console</a>
+          <a class="tool-card" href="https://getbookednbranded.pages.dev/prospecting-audit-tool.html" target="_blank"><div class="tool-emoji">🔍</div>Prospect Audit</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ HOME LIFE ══════════ -->
+    <div class="page" id="page-homelife">
+      <div class="page-header">
+        <div class="page-eyebrow">Household · Seth · Bruno · Lavender · Shadow</div>
+        <div class="page-title">Home <em>Life</em></div>
+      </div>
+      <div class="tabs-inner">
+        <button class="tab-inner active" onclick="innerTab(this,'hl-tasks')">Tasks</button>
+        <button class="tab-inner" onclick="innerTab(this,'hl-seth')">Seth</button>
+        <button class="tab-inner" onclick="innerTab(this,'hl-dogs')">Dogs</button>
+        <button class="tab-inner" onclick="innerTab(this,'hl-errands')">Errands</button>
+        <button class="tab-inner" onclick="innerTab(this,'hl-finances')">Finances</button>
+        <button class="tab-inner" onclick="innerTab(this,'hl-goals')">Goals</button>
+        <button class="tab-inner" onclick="innerTab(this,'hl-notes')">Notes</button>
+      </div>
+      <div class="tab-content-inner active" id="hl-tasks">
+        <div class="add-row"><input class="add-input" id="hl-task-in" placeholder="Add household task..." onkeydown="if(event.key==='Enter')addCheck('hl-task-in','hl-task-list','hl_tasks')"/><button class="add-btn" onclick="addCheck('hl-task-in','hl-task-list','hl_tasks')">Add</button></div>
+        <div class="items" id="hl-task-list"></div>
+      </div>
+      <div class="tab-content-inner" id="hl-seth">
+        <div class="milestone"><div class="milestone-icon">🌿</div><div class="milestone-text"><strong>Seth — 9 months sober from kratom</strong><span>Real. Hard. Worth marking.</span></div></div>
+        <div class="tabs-inner">
+          <button class="tab-inner active" onclick="innerTab(this,'seth-discuss')">To Discuss</button>
+          <button class="tab-inner" onclick="innerTab(this,'seth-legal')">Legal / Fynnlea</button>
+          <button class="tab-inner" onclick="innerTab(this,'seth-work')">Work / Income</button>
+          <button class="tab-inner" onclick="innerTab(this,'seth-notes')">Notes</button>
+          <button class="tab-inner" onclick="innerTab(this,'seth-prayer')">Prayer</button>
+        </div>
+        <div class="tab-content-inner active" id="seth-discuss">
+          <div class="add-row"><input class="add-input" id="seth-dis-in" placeholder="Things to bring to Seth when timing is right..." onkeydown="if(event.key==='Enter')addCheck('seth-dis-in','seth-dis-list','seth_discuss')"/><button class="add-btn" onclick="addCheck('seth-dis-in','seth-dis-list','seth_discuss')">Add</button></div>
+          <div class="items" id="seth-dis-list"></div>
+        </div>
+        <div class="tab-content-inner" id="seth-legal">
+          <div class="add-row"><input class="add-input" id="seth-legal-in" placeholder="Legal update or action item..." onkeydown="if(event.key==='Enter')addItem('seth-legal-in','seth-legal-list','seth_legal','{amber}')"/><button class="add-btn" onclick="addItem('seth-legal-in','seth-legal-list','seth_legal','var(--amber)')">Add</button></div>
+          <div class="items" id="seth-legal-list"></div>
+          <div class="dump-box" style="margin-top:.5rem"><textarea class="dump-textarea" id="seth-legal-notes" placeholder="Legal notes, court dates, Fynnlea updates..." onblur="saveText('seth-legal-notes','seth_legal_notes')" style="min-height:60px"></textarea></div>
+        </div>
+        <div class="tab-content-inner" id="seth-work">
+          <div class="stat-row"><div class="stat"><div class="stat-val" id="seth-week" contenteditable="true" onblur="saveText('seth-week','seth_week')">$0</div><div class="stat-label">Uber this week</div></div><div class="stat"><div class="stat-val" id="seth-month" contenteditable="true" onblur="saveText('seth-month','seth_month')">$0</div><div class="stat-label">This month</div></div></div>
+          <div class="dump-box"><textarea class="dump-textarea" id="seth-work-notes" placeholder="Uber Black · fleet notes · income tracking..." onblur="saveText('seth-work-notes','seth_work_notes')" style="min-height:60px"></textarea></div>
+        </div>
+        <div class="tab-content-inner" id="seth-notes">
+          <div class="dump-box"><textarea class="dump-textarea" id="seth-notes-text" placeholder="Notes about Seth, your relationship, things you're working through together..." onblur="saveText('seth-notes-text','seth_notes')" style="min-height:120px"></textarea></div>
+        </div>
+        <div class="tab-content-inner" id="seth-prayer">
+          <div class="add-row"><input class="add-input" id="seth-pray-in" placeholder="Prayer for Seth..." onkeydown="if(event.key==='Enter')addPrayerFor('seth-pray-in','seth-pray-list','seth_prayers','Seth')"/><button class="add-btn" onclick="addPrayerFor('seth-pray-in','seth-pray-list','seth_prayers','Seth')">Add</button></div>
+          <div class="items" id="seth-pray-list"></div>
+        </div>
+      </div>
+      <div class="tab-content-inner" id="hl-dogs">
+        <div class="grid3">
+          <div class="card"><div style="font-size:24px;margin-bottom:.4rem">🐾</div><div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:.15rem">Bruno</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.6rem">13 years · Senior</div><div class="add-row"><input class="add-input" id="bruno-in" placeholder="Vet notes, reminders..." onkeydown="if(event.key==='Enter')addCheck('bruno-in','bruno-list','bruno_notes')" style="font-size:11px"/><button class="add-btn" onclick="addCheck('bruno-in','bruno-list','bruno_notes')" style="font-size:11px">Add</button></div><div class="items" id="bruno-list"></div></div>
+          <div class="card"><div style="font-size:24px;margin-bottom:.4rem">🐾</div><div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:.15rem">Lavender</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.6rem">9 years</div><div class="add-row"><input class="add-input" id="lav-in" placeholder="Vet notes, reminders..." onkeydown="if(event.key==='Enter')addCheck('lav-in','lav-list','lav_notes')" style="font-size:11px"/><button class="add-btn" onclick="addCheck('lav-in','lav-list','lav_notes')" style="font-size:11px">Add</button></div><div class="items" id="lav-list"></div></div>
+          <div class="card"><div style="font-size:24px;margin-bottom:.4rem">🐾</div><div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:.15rem">Shadow</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.6rem">2 years · Pup</div><div class="add-row"><input class="add-input" id="shadow-in" placeholder="Vet notes, reminders..." onkeydown="if(event.key==='Enter')addCheck('shadow-in','shadow-list','shadow_notes')" style="font-size:11px"/><button class="add-btn" onclick="addCheck('shadow-in','shadow-list','shadow_notes')" style="font-size:11px">Add</button></div><div class="items" id="shadow-list"></div></div>
+        </div>
+      </div>
+      <div class="tab-content-inner" id="hl-errands">
+        <div class="add-row"><input class="add-input" id="errand-in" placeholder="Add errand (note if needs a ride)..." onkeydown="if(event.key==='Enter')addCheck('errand-in','errand-list','hl_errands')"/><button class="add-btn" onclick="addCheck('errand-in','errand-list','hl_errands')">Add</button></div>
+        <div class="items" id="errand-list"></div>
+      </div>
+      <div class="tab-content-inner" id="hl-finances">
+        <div class="finance-grid"><div class="finance-card"><div class="finance-label">Monthly budget</div><div class="finance-amount" id="hl-budget" contenteditable="true" onblur="saveText('hl-budget','hl_budget')">$0</div></div><div class="finance-card"><div class="finance-label">Bills due</div><div class="finance-amount" id="hl-bills" contenteditable="true" onblur="saveText('hl-bills','hl_bills')">$0</div></div></div>
+        <div class="dump-box"><textarea class="dump-textarea" id="hl-fin-notes" placeholder="Budget notes, bills, household expenses..." onblur="saveText('hl-fin-notes','hl_fin_notes')" style="min-height:60px"></textarea></div>
+      </div>
+      <div class="tab-content-inner" id="hl-goals">
+        <div class="add-row"><input class="add-input" id="hl-goal-in" placeholder="Add a home or life goal..." onkeydown="if(event.key==='Enter')addItem('hl-goal-in','hl-goal-list','hl_goals','var(--col-homelife)')"/><button class="add-btn" onclick="addItem('hl-goal-in','hl-goal-list','hl_goals','var(--amber)')">Add</button></div>
+        <div class="items" id="hl-goal-list"></div>
+      </div>
+      <div class="tab-content-inner" id="hl-notes">
+        <div class="dump-box"><textarea class="dump-textarea" id="hl-notes-text" placeholder="Home life notes, family updates, anything about daily life..." onblur="saveText('hl-notes-text','hl_notes')" style="min-height:150px"></textarea></div>
+      </div>
+    </div>
+
+    <!-- ══════════ SHOPPING ══════════ -->
+    <div class="page" id="page-shopping">
+      <div class="page-header">
+        <div class="page-eyebrow">Grocery · Household · Dogs · Personal</div>
+        <div class="page-title">Shopping <em>& Inventory</em></div>
+      </div>
+      <div class="card" style="background:rgba(74,124,111,.08);border-color:rgba(74,124,111,.2)">
+        <div class="card-hdr"><div class="card-title" style="color:var(--sage)">📱 Share with Seth</div><button class="add-btn" onclick="copyShopLink()" style="font-size:11px">Copy link</button></div>
+        <div style="font-size:11px;color:rgba(255,255,255,.35)">Seth opens the link on his phone · taps items as he gets them</div>
+      </div>
+      <div class="tabs-inner">
+        <button class="tab-inner active" onclick="innerTab(this,'shop-list')">Shopping List</button>
+        <button class="tab-inner" onclick="innerTab(this,'shop-pantry')">Pantry</button>
+        <button class="tab-inner" onclick="innerTab(this,'shop-household')">Household</button>
+        <button class="tab-inner" onclick="innerTab(this,'shop-dogs')">Dogs</button>
+      </div>
+      <div class="tab-content-inner active" id="shop-list">
+        <div class="add-row">
+          <input class="add-input" id="shop-name-in" placeholder="Item..." onkeydown="if(event.key==='Enter')addShopItem()"/>
+          <input class="add-input" id="shop-qty-in" placeholder="Qty" style="max-width:65px"/>
+          <select class="add-select" id="shop-cat-in">
+            <option value="grocery">🥦 Grocery</option>
+            <option value="household">🏠 Household</option>
+            <option value="personal">✨ Personal</option>
+            <option value="dogs">🐾 Dogs</option>
+            <option value="other">📦 Other</option>
+          </select>
+          <button class="add-btn" onclick="addShopItem()">Add</button>
+        </div>
+        <div class="items" id="shop-items-list"></div>
+        <div id="shop-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;padding:.5rem 0">List is empty</div>
+        <button class="s-action" onclick="clearGotShop()" style="margin-top:.5rem">Clear gotten items</button>
+      </div>
+      <div class="tab-content-inner" id="shop-pantry">
+        <div class="add-row"><input class="add-input" id="pantry-name-in" placeholder="Pantry item..."/><select class="add-select" id="pantry-status-in"><option value="good">✓ Good</option><option value="low">⚠ Low</option><option value="out">✕ Out</option></select><button class="add-btn" onclick="addInvItem('pantry')">Add</button></div>
+        <div class="items" id="pantry-list"></div>
+      </div>
+      <div class="tab-content-inner" id="shop-household">
+        <div class="add-row"><input class="add-input" id="hhold-name-in" placeholder="Household item..."/><select class="add-select" id="hhold-status-in"><option value="good">✓ Good</option><option value="low">⚠ Low</option><option value="out">✕ Out</option></select><button class="add-btn" onclick="addInvItem('household')">Add</button></div>
+        <div class="items" id="household-list"></div>
+      </div>
+      <div class="tab-content-inner" id="shop-dogs">
+        <div class="add-row"><input class="add-input" id="dogs-inv-in" placeholder="Dog supply (e.g. Bruno — senior food)..."/><select class="add-select" id="dogs-status-in"><option value="good">✓ Good</option><option value="low">⚠ Low</option><option value="out">✕ Out</option></select><button class="add-btn" onclick="addInvItem('dogs')">Add</button></div>
+        <div class="items" id="dogs-inv-list"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ HABITS ══════════ -->
+    <div class="page" id="page-habits">
+      <div class="page-header">
+        <div class="page-eyebrow">Move · Strengthen · Show up · Earn rewards</div>
+        <div class="page-title">Health <em>& Habits</em></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="stat-val" id="h-streak" style="color:var(--amber)">0🔥</div><div class="stat-label">Day Streak</div></div>
+        <div class="stat"><div class="stat-val" id="h-total-pts" style="color:var(--sage)">0</div><div class="stat-label">Total Points</div></div>
+        <div class="stat"><div class="stat-val" id="h-today-pts" style="color:var(--peony)">0</div><div class="stat-label">Today's Pts</div></div>
+        <div class="stat"><div class="stat-val" id="h-done-count">0/0</div><div class="stat-label">Habits Done</div></div>
+      </div>
+      <div class="tabs-inner">
+        <button class="tab-inner active" onclick="innerTab(this,'h-today')">Today</button>
+        <button class="tab-inner" onclick="innerTab(this,'h-exercise')">Exercise</button>
+        <button class="tab-inner" onclick="innerTab(this,'h-goals')">Goals</button>
+        <button class="tab-inner" onclick="innerTab(this,'h-rewards')">Rewards</button>
+        <button class="tab-inner" onclick="innerTab(this,'h-all')">All Habits</button>
+      </div>
+      <div class="tab-content-inner active" id="h-today">
+        <div class="s-label">Today's habits <button class="s-action" onclick="resetHabits()">Reset day</button></div>
+        <div class="items" id="h-today-list"></div>
+        <div id="h-today-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic">No habits set up yet · go to All Habits tab</div>
+      </div>
+      <div class="tab-content-inner" id="h-exercise">
+        <div class="s-label">Log exercise</div>
+        <div class="grid2">
+          <div class="card"><div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:.2rem">🚶 Walking</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.6rem">Your favorite · low impact · builds everything</div><div class="add-row"><input class="add-input" id="walk-in" placeholder="e.g. 30 min, 1.5 miles" style="font-size:11px"/><button class="add-btn" onclick="logEx('walking','walk-in','walk-log',5)" style="font-size:11px">+5pts</button></div><div id="walk-log"></div></div>
+          <div class="card"><div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:.2rem">🥾 Hiking</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.6rem">Weekly goal · full body · mental reset</div><div class="add-row"><input class="add-input" id="hike-in" placeholder="e.g. 2 miles, Arbor Hills" style="font-size:11px"/><button class="add-btn" onclick="logEx('hiking','hike-in','hike-log',15)" style="font-size:11px">+15pts</button></div><div id="hike-log"></div></div>
+          <div class="card"><div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:.2rem">💪 Pelvic Floor</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.6rem">Kegels · bridges · stop-start · 10 min daily</div><div class="add-row"><input class="add-input" id="pelvic-in" placeholder="e.g. 3 sets Kegels, 10 bridges" style="font-size:11px"/><button class="add-btn" onclick="logEx('pelvic','pelvic-in','pelvic-log',10)" style="font-size:11px">+10pts</button></div><div id="pelvic-log"></div></div>
+          <div class="card"><div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:.2rem">🧘 Core & Mobility</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.6rem">Low impact · stretching · hip mobility</div><div class="add-row"><input class="add-input" id="core-in" placeholder="e.g. 10 min stretch, dead bug x10" style="font-size:11px"/><button class="add-btn" onclick="logEx('core','core-in','core-log',8)" style="font-size:11px">+8pts</button></div><div id="core-log"></div></div>
+        </div>
+      </div>
+      <div class="tab-content-inner" id="h-goals">
+        <div class="s-label">Daily goals</div>
+        <div class="add-row"><input class="add-input" id="goal-daily-in" placeholder="Daily goal..." onkeydown="if(event.key==='Enter')addGoal('daily')"/><button class="add-btn" onclick="addGoal('daily')">Add</button></div>
+        <div class="items" id="goals-daily-list"></div>
+        <div class="s-label">Weekly goals</div>
+        <div class="add-row"><input class="add-input" id="goal-weekly-in" placeholder="Weekly goal..." onkeydown="if(event.key==='Enter')addGoal('weekly')"/><button class="add-btn" onclick="addGoal('weekly')">Add</button></div>
+        <div class="items" id="goals-weekly-list"></div>
+        <div class="s-label">Monthly goals</div>
+        <div class="add-row"><input class="add-input" id="goal-monthly-in" placeholder="Monthly goal..." onkeydown="if(event.key==='Enter')addGoal('monthly')"/><button class="add-btn" onclick="addGoal('monthly')">Add</button></div>
+        <div class="items" id="goals-monthly-list"></div>
+      </div>
+      <div class="tab-content-inner" id="h-rewards">
+        <div class="card" style="background:rgba(74,124,111,.08);border-color:rgba(74,124,111,.2)">
+          <div class="card-hdr"><div class="card-title" style="color:var(--sage)">🎯 Current reward goal</div><button class="s-action" onclick="setRewardGoal()">Edit</button></div>
+          <div style="font-size:15px;color:var(--amber);font-weight:500;margin-bottom:.4rem" id="reward-name-display">Set a reward goal →</div>
+          <div style="height:6px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;margin-bottom:.3rem"><div id="reward-bar" style="height:100%;background:linear-gradient(90deg,var(--sage),var(--amber));border-radius:999px;width:0%;transition:width .5s"></div></div>
+          <div style="font-size:11px;color:rgba(255,255,255,.3)" id="reward-progress-text">Add a reward to start</div>
+        </div>
+        <div class="add-row">
+          <input class="add-input" id="reward-name-in" placeholder="Reward (e.g. Steam mop)..."/>
+          <input class="add-input" id="reward-pts-in" placeholder="Points needed" type="number" style="max-width:130px"/>
+          <button class="add-btn" onclick="addReward()">Add</button>
+        </div>
+        <div class="items" id="rewards-list"></div>
+      </div>
+      <div class="tab-content-inner" id="h-all">
+        <div class="s-label">All habits <button class="s-action" onclick="toggleHabitForm()">+ Add habit</button></div>
+        <div id="add-habit-form" style="display:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.875rem;margin-bottom:.6rem">
+          <div class="add-row"><input class="add-input" id="habit-name-in" placeholder="Habit name..."/><input class="add-input" id="habit-emoji-in" placeholder="Emoji" style="max-width:70px"/></div>
+          <div class="add-row">
+            <select class="add-select" id="habit-freq-in"><option value="daily">Daily</option><option value="weekly">Weekly</option></select>
+            <select class="add-select" id="habit-pts-in"><option value="5">5 pts — standard</option><option value="10">10 pts — income task ⚡</option><option value="3">3 pts — light</option><option value="15">15 pts — big win</option></select>
+            <button class="add-btn" onclick="saveNewHabit()">Save</button>
+          </div>
+        </div>
+        <div class="items" id="h-all-list"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ PEOPLE ══════════ -->
+    <div class="page" id="page-people">
+      <div class="page-header">
+        <div class="page-eyebrow">Relationships · Community · Follow up · Prayer</div>
+        <div class="page-title">The <em>People</em></div>
+      </div>
+      <div class="tabs-inner">
+        <button class="tab-inner active" onclick="innerTab(this,'ppl-cards')">My People</button>
+        <button class="tab-inner" onclick="innerTab(this,'ppl-followup')">Follow Up</button>
+        <button class="tab-inner" onclick="innerTab(this,'ppl-praying')">Praying For</button>
+        <button class="tab-inner" onclick="innerTab(this,'ppl-notes')">Notes</button>
+      </div>
+      <div class="tab-content-inner active" id="ppl-cards">
+        <div class="person-grid" id="people-grid"></div>
+        <div id="person-detail-wrap"></div>
+        <div class="add-row">
+          <input class="add-input" id="ppl-name-in" placeholder="Name..." style="max-width:150px"/>
+          <input class="add-input" id="ppl-role-in" placeholder="Role / relationship..."/>
+          <button class="add-btn" onclick="addPerson()">Add</button>
+        </div>
+      </div>
+      <div class="tab-content-inner" id="ppl-followup">
+        <div class="add-row"><input class="add-input" id="fu-in" placeholder="Who needs follow up and why..." onkeydown="if(event.key==='Enter')addCheck('fu-in','fu-list','followup_list')"/><button class="add-btn" onclick="addCheck('fu-in','fu-list','followup_list')">Add</button></div>
+        <div class="items" id="fu-list"></div>
+      </div>
+      <div class="tab-content-inner" id="ppl-praying">
+        <div class="s-label">Praying for others</div>
+        <div class="items" id="praying-for-list"></div>
+        <div class="add-row"><input class="add-input" id="praying-in" placeholder="Add someone you're praying for..." onkeydown="if(event.key==='Enter')addPrayingFor()"/><button class="add-btn" onclick="addPrayingFor()">Add</button></div>
+      </div>
+      <div class="tab-content-inner" id="ppl-notes">
+        <div class="dump-box"><textarea class="dump-textarea" id="ppl-notes-text" placeholder="Relationship notes, community thoughts, who's on your heart..." onblur="saveText('ppl-notes-text','ppl_notes')" style="min-height:150px"></textarea></div>
+      </div>
+    </div>
+
+    <!-- ══════════ FAITH ══════════ -->
+    <div class="page" id="page-faith">
+      <div class="page-header">
+        <div class="page-eyebrow">Prayer · Scripture · Journal · Gratitude</div>
+        <div class="page-title">Faith <em>& Spirit</em></div>
+      </div>
+      <div class="tabs-inner">
+        <button class="tab-inner active" onclick="innerTab(this,'f-praying')">Praying For</button>
+        <button class="tab-inner" onclick="innerTab(this,'f-myself')">For Myself</button>
+        <button class="tab-inner" onclick="innerTab(this,'f-general')">General</button>
+        <button class="tab-inner" onclick="innerTab(this,'f-answered')">Answered</button>
+        <button class="tab-inner" onclick="innerTab(this,'f-scripture')">Scripture</button>
+        <button class="tab-inner" onclick="innerTab(this,'f-journal')">Journal</button>
+        <button class="tab-inner" onclick="innerTab(this,'f-gratitude')">Gratitude</button>
+      </div>
+      <div class="tab-content-inner active" id="f-praying">
+        <div class="items" id="f-praying-list"></div>
+        <div class="add-row"><input class="add-input" id="f-pray-in" placeholder="Person or thing you're praying for..." onkeydown="if(event.key==='Enter')addFaithPrayer()"/><button class="add-btn" onclick="addFaithPrayer()">Add</button></div>
+      </div>
+      <div class="tab-content-inner" id="f-myself">
+        <div class="add-row"><input class="add-input" id="f-self-in" placeholder="A prayer for yourself..." onkeydown="if(event.key==='Enter')addItem('f-self-in','f-self-list','self_prayers','var(--faith)')"/><button class="add-btn" onclick="addItem('f-self-in','f-self-list','self_prayers','var(--faith)')">Add</button></div>
+        <div class="items" id="f-self-list"></div>
+      </div>
+      <div class="tab-content-inner" id="f-general">
+        <div class="add-row"><input class="add-input" id="f-gen-in" placeholder="Add a prayer..." onkeydown="if(event.key==='Enter')addItem('f-gen-in','f-gen-list','general_prayers','var(--faith)')"/><button class="add-btn" onclick="addItem('f-gen-in','f-gen-list','general_prayers','var(--faith)')">Add</button></div>
+        <div class="items" id="f-gen-list"></div>
+      </div>
+      <div class="tab-content-inner" id="f-answered">
+        <div class="add-row"><input class="add-input" id="f-ans-in" placeholder="Record an answered prayer..." onkeydown="if(event.key==='Enter')addItem('f-ans-in','f-ans-list','answered_prayers','var(--sage)')"/><button class="add-btn" onclick="addItem('f-ans-in','f-ans-list','answered_prayers','var(--sage)')">Add</button></div>
+        <div class="items" id="f-ans-list"></div>
+      </div>
+      <div class="tab-content-inner" id="f-scripture">
+        <div class="add-row"><input class="add-input" id="f-scr-in" placeholder="e.g. Jeremiah 29:11 NIV..." onkeydown="if(event.key==='Enter')addItem('f-scr-in','f-scr-list','scripture_list','var(--faith)')"/><button class="add-btn" onclick="addItem('f-scr-in','f-scr-list','scripture_list','var(--faith)')">Add</button></div>
+        <div class="items" id="f-scr-list"></div>
+      </div>
+      <div class="tab-content-inner" id="f-journal">
+        <div class="dump-box"><textarea class="dump-textarea" id="f-journal-text" placeholder="What is God saying to you today? What are you working through in your faith..." onblur="saveText('f-journal-text','faith_journal')" style="min-height:200px"></textarea></div>
+      </div>
+      <div class="tab-content-inner" id="f-gratitude">
+        <div class="add-row"><input class="add-input" id="f-grat-in" placeholder="What are you grateful for..." onkeydown="if(event.key==='Enter')addItem('f-grat-in','f-grat-list','gratitude_list','var(--amber)')"/><button class="add-btn" onclick="addItem('f-grat-in','f-grat-list','gratitude_list','var(--amber)')">Add</button></div>
+        <div class="items" id="f-grat-list"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ BUSINESS ══════════ -->
+    <div class="page" id="page-business">
+      <div class="page-header">
+        <div class="page-eyebrow">Get Booked & Branded</div>
+        <div class="page-title">Business <em>Command Center</em></div>
+      </div>
+      <div class="gbb-portal-card">
+        <div>
+          <div class="gbb-portal-title">Get Booked & Branded Admin</div>
+          <div class="gbb-portal-sub">Full management · clients · tools · finances · team · all live there</div>
+        </div>
+        <a class="gbb-portal-btn" href="https://getbookednbranded.pages.dev" target="_blank">Open GBB →</a>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">Active clients</div></div>
+          <div class="items" id="biz-clients-list">
+            <div class="item"><div class="item-dot" style="background:var(--peony)"></div><div class="item-content"><div class="item-text">Kelly — Graphic Arts Print Shop · Missouri</div><div class="item-meta">Facebook only · In progress</div></div></div>
+          </div>
+          <div class="add-row" style="margin-top:.4rem"><input class="add-input" id="biz-client-in" placeholder="Add client..." onkeydown="if(event.key==='Enter')addItem('biz-client-in','biz-clients-list','biz_clients','var(--peony)')"/><button class="add-btn" onclick="addItem('biz-client-in','biz-clients-list','biz_clients','var(--peony)')">Add</button></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">Revenue snapshot</div></div>
+          <div class="finance-grid" style="margin-bottom:0">
+            <div class="finance-card"><div class="finance-label">This month</div><div class="finance-amount" id="biz-rev" contenteditable="true" onblur="saveText('biz-rev','biz_rev')">$0</div></div>
+            <div class="finance-card"><div class="finance-label">Outstanding</div><div class="finance-amount" id="biz-out" contenteditable="true" onblur="saveText('biz-out','biz_out')">$0</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="s-label">GBB build queue</div>
+      <div class="items" id="biz-tasks-list">
+        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Complete Kelly's welcome landing page</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Formalize offer structure</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Build public GBB website</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Register getbookednbranded.com domain</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Connect Google Places API key to prospecting tool</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Set up Cloudflare Zero Trust for myportal.pages.dev</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+      </div>
+      <div class="add-row"><input class="add-input" id="biz-task-in" placeholder="Add to build queue..." onkeydown="if(event.key==='Enter')addCheck('biz-task-in','biz-tasks-list','biz_tasks')"/><button class="add-btn" onclick="addCheck('biz-task-in','biz-tasks-list','biz_tasks')">Add</button></div>
+      <div class="s-label">Quick links</div>
+      <div class="link-grid">
+        <a class="qlink" href="https://getbookednbranded.pages.dev" target="_blank"><span class="qlink-emoji">🌐</span>GBB Live Site</a>
+        <a class="qlink" href="https://getbookednbranded.pages.dev/prospecting-audit-tool.html" target="_blank"><span class="qlink-emoji">🔍</span>Prospect Audit</a>
+        <a class="qlink" href="https://calendly.com/rebeccaannexo/meet" target="_blank"><span class="qlink-emoji">📅</span>Calendly</a>
+        <a class="qlink" href="https://script.google.com" target="_blank"><span class="qlink-emoji">⚙️</span>Apps Script</a>
+      </div>
+      <div class="s-label">Notes</div>
+      <div class="dump-box"><textarea class="dump-textarea" id="biz-notes-text" placeholder="Business notes, strategy, ideas..." onblur="saveText('biz-notes-text','biz_notes')" style="min-height:100px"></textarea></div>
+    </div>
+
+    <!-- ══════════ MISSION ══════════ -->
+    <div class="page" id="page-mission">
+      <div class="page-header">
+        <div class="page-eyebrow">Aligned Life · We The Church · Mustard Seed</div>
+        <div class="page-title">The <em>Mission</em></div>
+      </div>
+      <div class="tabs-inner">
+        <button class="tab-inner active" onclick="innerTab(this,'m-aligned')">Aligned Life</button>
+        <button class="tab-inner" onclick="innerTab(this,'m-wtc')">We The Church</button>
+        <button class="tab-inner" onclick="innerTab(this,'m-mustard')">Mustard Seed</button>
+      </div>
+      <div class="tab-content-inner active" id="m-aligned">
+        <div class="s-label">Build queue</div>
+        <div class="items" id="al-list">
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>"What God Says About You" section → Workbook</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Values / True Aim / Anti-Vision → Life Plan (Aligned_Life.odt)</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Vol2 intro letter → Life Plan</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Rebuild Life Wheel in correct pillar colors</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Brand refresh → extras · dividers · Part B · Prayer+Spirit pages</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Merge Q2 files → master PDF + separate daily pages PDF</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>GoHighLevel setup + 3 business emails</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+        </div>
+        <div class="add-row"><input class="add-input" id="al-task-in" placeholder="Add to build queue..." onkeydown="if(event.key==='Enter')addCheck('al-task-in','al-list','al_tasks')"/><button class="add-btn" onclick="addCheck('al-task-in','al-list','al_tasks')">Add</button></div>
+        <div class="dump-box" style="margin-top:.4rem"><textarea class="dump-textarea" id="al-notes" placeholder="Aligned Life notes..." onblur="saveText('al-notes','al_notes')" style="min-height:80px"></textarea></div>
+      </div>
+      <div class="tab-content-inner" id="m-wtc">
+        <div class="s-label">Build queue</div>
+        <div class="items" id="wtc-list">
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Complete Galatians HTML + study notes + discussion questions</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Finalize welcome email + newsletter first issue</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Lock reusable HTML template for future series</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Decide hosting — Netlify / GitHub Pages / own domain</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Build email list + distribution</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+        </div>
+        <div class="add-row"><input class="add-input" id="wtc-task-in" placeholder="Add task..." onkeydown="if(event.key==='Enter')addCheck('wtc-task-in','wtc-list','wtc_tasks')"/><button class="add-btn" onclick="addCheck('wtc-task-in','wtc-list','wtc_tasks')">Add</button></div>
+        <div class="dump-box" style="margin-top:.4rem"><textarea class="dump-textarea" id="wtc-notes" placeholder="We The Church notes..." onblur="saveText('wtc-notes','wtc_notes')" style="min-height:80px"></textarea></div>
+      </div>
+      <div class="tab-content-inner" id="m-mustard">
+        <div class="s-label">Status</div>
+        <div class="items" id="ms-list">
+          <div class="check-item done"><input type="checkbox" checked onchange="toggleCheck(this)"/><label>Articles of Incorporation filed — Washington SOS ✓</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>501c3 filing</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Donation acceptance setup</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Mission statement + founding documents</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+        </div>
+        <div class="add-row"><input class="add-input" id="ms-task-in" placeholder="Add task..." onkeydown="if(event.key==='Enter')addCheck('ms-task-in','ms-list','ms_tasks')"/><button class="add-btn" onclick="addCheck('ms-task-in','ms-list','ms_tasks')">Add</button></div>
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.875rem;margin-top:.4rem;font-size:12px;color:rgba(255,255,255,.4);font-style:italic">Supporting Olivia alongside Cindy · handle with care · her ministry · her vision · her anchor</div>
+        <div class="dump-box" style="margin-top:.5rem"><textarea class="dump-textarea" id="ms-notes" placeholder="Mustard Seed notes..." onblur="saveText('ms-notes','ms_notes')" style="min-height:80px"></textarea></div>
+      </div>
+    </div>
+
+    <!-- ══════════ BRAIN ══════════ -->
+    <div class="page" id="page-brain">
+      <div class="page-header">
+        <div class="page-eyebrow">Voice transcript → Claude organizes → You approve</div>
+        <div class="page-title">Brain <em>Dump</em></div>
+      </div>
+      <div class="card" style="background:rgba(196,137,90,.06);border-color:rgba(196,137,90,.18)">
+        <div class="card-hdr"><div class="card-title" style="color:var(--amber)">⚡ Anthropic API Key</div><button class="s-action" onclick="toggleApiSetup()">Setup</button></div>
+        <div id="api-setup-area" style="display:none">
+          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:.5rem">Get your key from console.anthropic.com → API Keys. Stored locally on your device only.</div>
+          <div class="add-row"><input type="password" class="add-input" id="api-key-in" placeholder="sk-ant-..."/><button class="add-btn" onclick="saveApiKey()">Save</button></div>
+        </div>
+        <div style="font-size:11px" id="api-key-status">Not set — add key above to activate Claude processing</div>
+      </div>
+      <div class="s-label">How it works</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:.875rem;font-size:11px;color:rgba(255,255,255,.4)">
+        <span>1. Record voice memo on iPhone</span>
+        <span>→</span><span>2. Tap Transcribe in Voice Memos</span>
+        <span>→</span><span>3. Copy transcript · paste below</span>
+        <span>→</span><span>4. Claude organizes everything</span>
+        <span>→</span><span>5. Review · approve · done</span>
+      </div>
+      <div class="dump-box">
+        <textarea class="dump-textarea" id="brain-transcript" placeholder="Paste your voice memo transcript here, or just type whatever is on your mind. Stream of consciousness is fine — Claude will sort it out..." style="min-height:150px" oninput="updateBrainCount()"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.6rem;padding-top:.6rem;border-top:1px solid rgba(255,255,255,.06)">
+          <span style="font-size:10px;color:rgba(255,255,255,.22)" id="brain-char-count">0 characters</span>
+          <div style="display:flex;gap:7px">
+            <button class="add-btn" onclick="document.getElementById('brain-transcript').value='';updateBrainCount()">Clear</button>
+            <button class="add-btn" id="brain-process-btn" onclick="processBrainDump()" style="background:var(--plum);border-color:var(--plum);color:#fff">✦ Process with Claude</button>
+          </div>
+        </div>
+      </div>
+      <div id="brain-loading" style="display:none;text-align:center;padding:2rem">
+        <div style="width:32px;height:32px;border:2px solid rgba(122,92,122,.2);border-top-color:var(--plum);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto .75rem"></div>
+        <div style="font-size:12px;color:rgba(255,255,255,.35);font-style:italic">Claude is reading your thoughts...</div>
+      </div>
+      <div id="brain-results" style="display:none"></div>
+      <div class="s-label" style="margin-top:1rem">Recent captures</div>
+      <div class="items" id="brain-recent-list"></div>
+    </div>
+
+  </div><!-- end pages -->
+</div><!-- end content -->
+</div><!-- end app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ STORAGE ══
+
+// DATABASE CONNECTION — Google Sheets
+var DB_URL="https://script.google.com/macros/s/AKfycbwACwmDOB3utDpsgmgAvJz4TnDTDyWkbG6tpwqmq4rocpL51vz5eNlKm8QwgdOowGis/exec";
+var DB_ONLINE=false;
+var DB_QUEUE=[];
+
+async function checkDbConnection(){
+  try{
+    var resp=await fetch(DB_URL+"?sheet=Config&t="+Date.now());
+    var data=await resp.json();
+    if(data.status==="success"){DB_ONLINE=true;updateDbStatus(true);flushQueue();}
+  }catch(e){DB_ONLINE=false;updateDbStatus(false);}
+}
+
+function updateDbStatus(online){
+  var el=document.getElementById("db-status");
+  if(el){el.textContent=online?"db connected":"local only";el.style.color=online?"#82C4B5":"rgba(255,255,255,.3)";}
+}
+
+async function dbWrite(action,payload){
+  var data=Object.assign({action:action},payload);
+  if(DB_ONLINE){try{await fetch(DB_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});}catch(e){DB_QUEUE.push(data);}}
+  else{DB_QUEUE.push(data);}
+}
+
+async function dbRead(sheet){
+  if(!DB_ONLINE)return null;
+  try{var resp=await fetch(DB_URL+"?sheet="+encodeURIComponent(sheet)+"&t="+Date.now());var data=await resp.json();return data.status==="success"?data.data:null;}catch(e){return null;}
+}
+
+async function flushQueue(){
+  var queue=DB_QUEUE.splice(0);
+  for(var p of queue){try{await fetch(DB_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});}catch(e){DB_QUEUE.push(p);}}
+  if(queue.length>0)showToast("Synced "+queue.length+" items to database");
+}
+
+function sv(k,v){try{localStorage.setItem('p_'+k,JSON.stringify(v))}catch(e){}}
+function ld(k,d){try{var x=localStorage.getItem('p_'+k);return x?JSON.parse(x):d}catch(e){return d}}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+var TODAY=new Date().toDateString();
+
+// ══ NAVIGATION ══
+function goTab(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.top-tab').forEach(t=>t.classList.remove('active'));
+  var page=document.getElementById('page-'+id);
+  if(page)page.classList.add('active');
+  if(el){
+    el.classList.add('active');
+    // sync sidebar and top tabs
+    document.querySelectorAll('.nav-btn.tab-'+id).forEach(b=>b.classList.add('active'));
+    document.querySelectorAll('.top-tab[data-tab='+id+']').forEach(t=>t.classList.add('active'));
+  }
+  if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');
+  document.querySelector('.pages').scrollTo(0,0);
+  if(id==='home')loadGlance();
+  if(id==='habits')renderHabitsPage();
+}
+
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+
+// ══ INNER TABS ══
+function innerTab(el,contentId){
+  var page=el.closest('.page');
+  var group=el.parentElement;
+  group.querySelectorAll('.tab-inner').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  var target=document.getElementById(contentId);
+  if(target){
+    var container=target.parentElement;
+    container.querySelectorAll(':scope > .tab-content-inner').forEach(t=>t.classList.remove('active'));
+    target.classList.add('active');
+  }
+}
+
+// ══ SCRIPTURE ══
+var SCRIPTURES=[
+  {t:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.",r:"Jeremiah 29:11 NIV"},
+  {t:"She is clothed with strength and dignity; she can laugh at the days to come.",r:"Proverbs 31:25 NIV"},
+  {t:"Trust in the Lord with all your heart and lean not on your own understanding.",r:"Proverbs 3:5 NIV"},
+  {t:"I can do all this through him who gives me strength.",r:"Philippians 4:13 NIV"},
+  {t:"The Lord your God is with you, the Mighty Warrior who saves.",r:"Zephaniah 3:17 NIV"},
+  {t:"Commit to the Lord whatever you do, and he will establish your plans.",r:"Proverbs 16:3 NIV"},
+  {t:"Be still and know that I am God.",r:"Psalm 46:10 NIV"},
+  {t:"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.",r:"Philippians 4:6 NIV"},
+  {t:"For we are God's handiwork, created in Christ Jesus to do good works.",r:"Ephesians 2:10 NIV"},
+  {t:"The heart of man plans his way, but the Lord establishes his steps.",r:"Proverbs 16:9 ESV"},
+  {t:"But seek first his kingdom and his righteousness, and all these things will be given to you as well.",r:"Matthew 6:33 NIV"},
+  {t:"And we know that in all things God works for the good of those who love him.",r:"Romans 8:28 NIV"},
+  {t:"Cast all your anxiety on him because he cares for you.",r:"1 Peter 5:7 NIV"},
+  {t:"The Lord is my shepherd, I lack nothing.",r:"Psalm 23:1 NIV"},
+  {t:"Now faith is confidence in what we hope for and assurance about what we do not see.",r:"Hebrews 11:1 NIV"}
+];
+
+function loadScripture(){
+  var lastDate=ld('scr_date','');
+  var idx=ld('scr_idx',0);
+  if(lastDate!==TODAY){idx=(idx+1)%SCRIPTURES.length;sv('scr_idx',idx);sv('scr_date',TODAY);}
+  var s=SCRIPTURES[idx];
+  document.getElementById('scripture-verse').textContent='\u201c'+s.t+'\u201d';
+  document.getElementById('scripture-cite').textContent=s.r;
+}
+
+// ══ DATE ══
+function loadDate(){
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var d=new Date();
+  var h=d.getHours();
+  var greeting=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  document.getElementById('home-greeting').textContent=greeting+' \u00b7 '+days[d.getDay()];
+  var dateStr=days[d.getDay()]+' \u00b7 '+months[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+  document.getElementById('sb-date').textContent=dateStr;
+}
+
+// ══ APPOINTMENTS ══
+function toggleApptForm(){var f=document.getElementById('appt-form');f.style.display=f.style.display==='none'?'block':'none';}
+function addAppt(){
+  var time=document.getElementById('appt-time').value.trim();
+  var title=document.getElementById('appt-title').value.trim();
+  if(!title)return;
+  var appts=ld('appts',[]);
+  appts.push({id:Date.now(),time,title,date:TODAY});
+  sv('appts',appts);
+  document.getElementById('appt-time').value='';
+  document.getElementById('appt-title').value='';
+  document.getElementById('appt-form').style.display='none';
+  renderAppts();
+}
+function renderAppts(){
+  var appts=ld('appts',[]).filter(a=>a.date===TODAY);
+  var list=document.getElementById('appt-list');
+  var empty=document.getElementById('appt-empty');
+  list.innerHTML='';
+  if(!appts.length){empty.style.display='block';return;}
+  empty.style.display='none';
+  appts.sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+  appts.forEach(a=>{
+    var div=document.createElement('div');
+    div.className='appt-item';
+    div.innerHTML=`<div class="appt-time">${esc(a.time||'—')}</div><div class="appt-title">${esc(a.title)}</div><button class="appt-del" onclick="removeAppt(${a.id})">✕</button>`;
+    list.appendChild(div);
+  });
+}
+function removeAppt(id){sv('appts',ld('appts',[]).filter(a=>a.id!=id));renderAppts();}
+
+// ══ PRIORITIES ══
+function savePriorities(){sv('prio_'+TODAY,{p1:document.getElementById('p1').value,p2:document.getElementById('p2').value,p3:document.getElementById('p3').value});}
+function loadPriorities(){var p=ld('prio_'+TODAY,{});if(p.p1)document.getElementById('p1').value=p.p1;if(p.p2)document.getElementById('p2').value=p.p2;if(p.p3)document.getElementById('p3').value=p.p3;}
+function clearPriorities(){['p1','p2','p3'].forEach(id=>document.getElementById(id).value='');savePriorities();}
+function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
+
+// ══ ITEMS ══
+function makeItem(text,color,meta,id,key){
+  var div=document.createElement('div');
+  div.className='item';
+  div.dataset.id=id;
+  div.innerHTML=`<div class="item-dot" style="background:${color}"></div><div class="item-content" style="flex:1;min-width:0"><div class="item-text" contenteditable="true" onblur="editItem(this,'${key}',${id})">${esc(text)}</div>${meta?`<div class="item-meta">${esc(meta)}</div>`:''}</div><div class="item-actions"><button class="item-btn del" onclick="delItem(this,'${key}',${id})">✕</button></div>`;
+  return div;
+}
+function addItem(inputId,listId,key,color){
+  var input=document.getElementById(inputId);
+  var text=input.value.trim();if(!text)return;
+  var items=ld(key,[]);
+  var item={id:Date.now(),text,date:new Date().toLocaleDateString()};
+  items.push(item);sv(key,items);
+  var list=document.getElementById(listId);
+  if(list)list.appendChild(makeItem(text,color||'var(--peony)',item.date,item.id,key));
+  input.value='';
+}
+function editItem(el,key,id){var items=ld(key,[]);var item=items.find(i=>i.id==id);if(item){item.text=el.textContent;sv(key,items);}}
+function delItem(btn,key,id){sv(key,ld(key,[]).filter(i=>i.id!=id));btn.closest('.item').remove();}
+
+// ══ CHECK ITEMS ══
+function makeCheck(item,key){
+  var div=document.createElement('div');
+  div.className='check-item'+(item.done?' done':'');
+  div.dataset.id=item.id;
+  div.innerHTML=`<input type="checkbox" ${item.done?'checked':''} onchange="toggleCheck(this,'${key}',${item.id})"/><label>${esc(item.text)}</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this,'${key}',${item.id})">✕</button></div>`;
+  return div;
+}
+function addCheck(inputId,listId,key){
+  var input=document.getElementById(inputId);
+  var text=input.value.trim();if(!text)return;
+  var items=ld(key,[]);
+  var item={id:Date.now(),text,done:false};
+  items.push(item);sv(key,items);
+  var list=document.getElementById(listId);
+  if(list)list.appendChild(makeCheck(item,key));
+  input.value='';
+}
+function toggleCheck(cb,key,id){
+  var row=cb.closest('.check-item');
+  row.classList.toggle('done',cb.checked);
+  if(key&&id){var items=ld(key,[]);var item=items.find(i=>i.id==id);if(item){item.done=cb.checked;sv(key,items);}}
+}
+function removeCheck(btn,key,id){
+  if(key&&id)sv(key,ld(key,[]).filter(i=>i.id!=id));
+  btn.closest('.check-item').remove();
+}
+
+// ══ SAVE TEXT ══
+function saveText(elId,key){var el=document.getElementById(elId);if(el)sv(key,el.tagName==='TEXTAREA'?el.value:el.textContent);}
+
+// ══ HABITS ══
+var DEFAULT_HABITS=[
+  {id:1,name:'Morning walk',emoji:'🚶',freq:'daily',points:5,streak:0,lastDone:''},
+  {id:2,name:'Pelvic floor exercises',emoji:'💪',freq:'daily',points:10,streak:0,lastDone:''},
+  {id:3,name:'Stretching / mobility',emoji:'🧘',freq:'daily',points:5,streak:0,lastDone:''},
+  {id:4,name:'Bible reading',emoji:'📖',freq:'daily',points:5,streak:0,lastDone:''},
+  {id:5,name:'Prayer time',emoji:'🙏',freq:'daily',points:5,streak:0,lastDone:''},
+  {id:6,name:'Self-care routine',emoji:'✨',freq:'daily',points:5,streak:0,lastDone:''},
+  {id:7,name:'Income-generating task',emoji:'💼',freq:'daily',points:10,streak:0,lastDone:'',double:true},
+  {id:8,name:'Drink enough water',emoji:'💧',freq:'daily',points:3,streak:0,lastDone:''},
+  {id:9,name:'Hiking',emoji:'🥾',freq:'weekly',points:15,streak:0,lastDone:''},
+];
+function getHabits(){return ld('habits',DEFAULT_HABITS);}
+function saveHabits(h){sv('habits',h);}
+
+function renderHabitSnapshot(){
+  var habits=getHabits().filter(h=>!h.freq||h.freq==='daily');
+  var done=habits.filter(h=>h.lastDone===TODAY).length;
+  document.getElementById('snap-done').textContent=done;
+  document.getElementById('snap-total').textContent=habits.length;
+  var todayPts=ld('today_pts_'+TODAY,0);
+  document.getElementById('snap-pts').textContent='+'+todayPts;
+  var dots=document.getElementById('habit-dots');
+  if(!dots)return;
+  dots.innerHTML='';
+  habits.forEach(h=>{
+    var dot=document.createElement('div');
+    dot.className='h-dot'+(h.lastDone===TODAY?' done':'');
+    dot.title=h.name;
+    dot.textContent=h.emoji||'⭐';
+    dots.appendChild(dot);
+  });
+}
+
+function renderHabitsPage(){
+  var habits=getHabits();
+  var daily=habits.filter(h=>!h.freq||h.freq==='daily');
+  var done=daily.filter(h=>h.lastDone===TODAY).length;
+  var todayPts=ld('today_pts_'+TODAY,0);
+  var totalPts=ld('total_pts',0);
+  var streak=ld('streak',0);
+  document.getElementById('h-streak').textContent=streak+'🔥';
+  document.getElementById('h-total-pts').textContent=totalPts.toLocaleString();
+  document.getElementById('h-today-pts').textContent='+'+todayPts;
+  document.getElementById('h-done-count').textContent=done+'/'+daily.length;
+
+  var list=document.getElementById('h-today-list');
+  var empty=document.getElementById('h-today-empty');
+  list.innerHTML='';
+  if(!daily.length){empty.style.display='block';return;}
+  empty.style.display='none';
+  daily.forEach(h=>{
+    var isDone=h.lastDone===TODAY;
+    var div=document.createElement('div');
+    div.className='item'+(isDone?' done':'');
+    div.style.cursor='pointer';
+    div.style.borderLeft='3px solid '+(isDone?'var(--sage)':'rgba(255,255,255,.06)');
+    div.onclick=()=>toggleHabit(h.id);
+    div.innerHTML=`
+      <div style="width:20px;height:20px;border-radius:50%;border:1.5px solid ${isDone?'var(--sage)':'rgba(255,255,255,.18)'};background:${isDone?'var(--sage)':'none'};display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0">${isDone?'✓':''}</div>
+      <div style="font-size:16px;flex-shrink:0">${h.emoji||'⭐'}</div>
+      <div style="flex:1"><div class="item-text" style="${isDone?'text-decoration:line-through;color:rgba(255,255,255,.4)':''}">${esc(h.name)}</div><div class="item-meta"><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;background:${h.double?'rgba(196,137,90,.15)':'rgba(74,124,111,.15)'};color:${h.double?'var(--amber)':'var(--sage)'}">${h.double?'⚡ ':''}+${h.points} pts</span>${h.streak>0?' <span style="font-size:10px;color:var(--amber)">🔥 '+h.streak+' streak</span>':''}</div></div>
+    `;
+    list.appendChild(div);
+  });
+
+  var allList=document.getElementById('h-all-list');
+  allList.innerHTML='';
+  habits.forEach(h=>{
+    var isDone=h.lastDone===TODAY;
+    var div=document.createElement('div');
+    div.className='item'+(isDone?' done':'');
+    div.style.cursor='pointer';
+    div.onclick=()=>{toggleHabit(h.id);};
+    div.innerHTML=`<div style="font-size:14px">${h.emoji||'⭐'}</div><div style="flex:1"><div class="item-text">${esc(h.name)}</div><div class="item-meta">${h.freq} · +${h.points} pts${h.streak>0?' · 🔥'+h.streak:''}</div></div><div class="item-actions"><button class="item-btn del" onclick="deleteHabit(event,${h.id})">✕</button></div>`;
+    allList.appendChild(div);
+  });
+
+  updateRewardProgress();
+  renderGoalsPage();
+  renderRewardsPage();
+  updateSidebarPoints();
+}
+
+function toggleHabit(id){
+  var habits=getHabits();
+  var h=habits.find(x=>x.id==id);if(!h)return;
+  var todayPts=ld('today_pts_'+TODAY,0);
+  var totalPts=ld('total_pts',0);
+  if(h.lastDone===TODAY){
+    h.lastDone='';if(h.streak>0)h.streak--;
+    todayPts=Math.max(0,todayPts-h.points);
+    totalPts=Math.max(0,totalPts-h.points);
+  }else{
+    h.lastDone=TODAY;h.streak=(h.streak||0)+1;
+    todayPts+=h.points;totalPts+=h.points;
+    showToast('+'+h.points+' pts — '+h.name+' ✓');
+  }
+  sv('today_pts_'+TODAY,todayPts);sv('total_pts',totalPts);
+  saveHabits(habits);
+  renderHabitsPage();
+  renderHabitSnapshot();
+  updateSidebarPoints();
+}
+
+function deleteHabit(e,id){e.stopPropagation();saveHabits(getHabits().filter(h=>h.id!=id));renderHabitsPage();}
+function resetHabits(){if(!confirm('Reset all habits for today?'))return;var h=getHabits();h.forEach(x=>x.lastDone='');saveHabits(h);renderHabitsPage();renderHabitSnapshot();}
+function toggleHabitForm(){document.getElementById('add-habit-form').style.display=document.getElementById('add-habit-form').style.display==='none'?'block':'none';}
+function saveNewHabit(){
+  var name=document.getElementById('habit-name-in').value.trim();if(!name)return;
+  var habits=getHabits();
+  habits.push({id:Date.now(),name,emoji:document.getElementById('habit-emoji-in').value.trim()||'⭐',freq:document.getElementById('habit-freq-in').value,points:parseInt(document.getElementById('habit-pts-in').value),streak:0,lastDone:'',double:document.getElementById('habit-pts-in').value==='10'});
+  saveHabits(habits);
+  document.getElementById('habit-name-in').value='';document.getElementById('habit-emoji-in').value='';
+  document.getElementById('add-habit-form').style.display='none';
+  renderHabitsPage();renderHabitSnapshot();
+  showToast('Habit added ✓');
+}
+
+// ══ EXERCISE LOG ══
+function logEx(key,inputId,logId,pts){
+  var input=document.getElementById(inputId);
+  var text=input.value.trim();if(!text)return;
+  var logs=ld('ex_'+key,[]);
+  logs.unshift({id:Date.now(),text,date:new Date().toLocaleDateString()});
+  sv('ex_'+key,logs.slice(0,10));
+  renderExLog(key,logId);
+  var todayPts=ld('today_pts_'+TODAY,0)+pts;
+  var totalPts=ld('total_pts',0)+pts;
+  sv('today_pts_'+TODAY,todayPts);sv('total_pts',totalPts);
+  showToast('+'+pts+' pts — '+text+' logged ✓');
+  input.value='';
+  updateSidebarPoints();
+}
+function renderExLog(key,logId){
+  var logs=ld('ex_'+key,[]);
+  var el=document.getElementById(logId);if(!el)return;
+  el.innerHTML='';
+  logs.slice(0,3).forEach(l=>{
+    var div=document.createElement('div');
+    div.style.cssText='font-size:10px;color:rgba(255,255,255,.3);padding:2px 0;border-bottom:1px solid rgba(255,255,255,.04)';
+    div.textContent=l.date.split(',')[0]+' — '+l.text;
+    el.appendChild(div);
+  });
+}
+
+// ══ GOALS ══
+function addGoal(period){
+  var input=document.getElementById('goal-'+period+'-in');
+  var text=input.value.trim();if(!text)return;
+  var goals=ld('goals_'+period,[]);
+  var item={id:Date.now(),text,done:false};
+  goals.push(item);sv('goals_'+period,goals);
+  renderGoalList(period);input.value='';
+}
+function renderGoalList(period){
+  var goals=ld('goals_'+period,[]);
+  var list=document.getElementById('goals-'+period+'-list');if(!list)return;
+  list.innerHTML='';
+  goals.forEach(g=>{
+    var div=document.createElement('div');
+    div.className='check-item'+(g.done?' done':'');
+    div.innerHTML=`<input type="checkbox" ${g.done?'checked':''} onchange="toggleGoal('${period}',${g.id},this.checked)"/><label>${esc(g.text)}</label><div class="check-actions"><button class="item-btn del" onclick="removeGoalItem('${period}',${g.id},this)">✕</button></div>`;
+    list.appendChild(div);
+  });
+}
+function renderGoalsPage(){['daily','weekly','monthly'].forEach(p=>renderGoalList(p));}
+function toggleGoal(period,id,checked){
+  var goals=ld('goals_'+period,[]);var g=goals.find(x=>x.id==id);
+  if(g){g.done=checked;sv('goals_'+period,goals);}
+  if(checked){
+    var pts=ld('total_pts',0)+5;sv('total_pts',pts);
+    showToast('+5 pts — goal completed ✓');
+    updateSidebarPoints();
+  }
+  renderGoalList(period);
+}
+function removeGoalItem(period,id,btn){sv('goals_'+period,ld('goals_'+period,[]).filter(g=>g.id!=id));btn.closest('.check-item').remove();}
+
+// ══ REWARDS ══
+function addReward(){
+  var name=document.getElementById('reward-name-in').value.trim();
+  var pts=parseInt(document.getElementById('reward-pts-in').value);
+  if(!name||!pts)return;
+  var items=ld('reward_items',[]);
+  items.push({id:Date.now(),name,points:pts,done:false});
+  sv('reward_items',items);
+  document.getElementById('reward-name-in').value='';document.getElementById('reward-pts-in').value='';
+  renderRewardsPage();
+}
+function setRewardGoal(){
+  var name=prompt('Reward name:');var pts=parseInt(prompt('Points needed:'));
+  if(name&&pts){sv('current_reward',{name,points:pts});updateRewardProgress();}
+}
+function updateRewardProgress(){
+  var reward=ld('current_reward',null);
+  if(!reward)return;
+  var total=ld('total_pts',0);
+  var pct=Math.min(100,Math.round((total/reward.points)*100));
+  var nameEl=document.getElementById('reward-name-display');
+  var barEl=document.getElementById('reward-bar');
+  var textEl=document.getElementById('reward-progress-text');
+  if(nameEl)nameEl.textContent=reward.name;
+  if(barEl)barEl.style.width=pct+'%';
+  if(textEl)textEl.textContent=total.toLocaleString()+' / '+reward.points.toLocaleString()+' pts ('+pct+'%)';
+}
+function renderRewardsPage(){
+  var items=ld('reward_items',[]);
+  var total=ld('total_pts',0);
+  var list=document.getElementById('rewards-list');if(!list)return;
+  list.innerHTML='';
+  items.forEach(item=>{
+    var canRedeem=total>=item.points&&!item.done;
+    var div=document.createElement('div');
+    div.className='item'+(item.done?' done':'');
+    div.innerHTML=`<div class="item-dot" style="background:var(--amber)"></div><div style="flex:1"><div class="item-text">🎁 ${esc(item.name)}</div><div class="item-meta">${item.points.toLocaleString()} pts needed</div></div>${canRedeem?`<button class="add-btn" style="font-size:11px;padding:3px 10px" onclick="redeemReward(${item.id})">Redeem!</button>`:''}<div class="item-actions"><button class="item-btn del" onclick="removeRewardItem(${item.id},this)">✕</button></div>`;
+    list.appendChild(div);
+  });
+}
+function redeemReward(id){
+  var items=ld('reward_items',[]);var item=items.find(i=>i.id==id);if(!item)return;
+  var total=Math.max(0,ld('total_pts',0)-item.points);sv('total_pts',total);
+  item.done=true;sv('reward_items',items);
+  renderRewardsPage();updateRewardProgress();updateSidebarPoints();
+  showToast('🎉 Redeemed: '+item.name+'!');
+}
+function removeRewardItem(id,btn){sv('reward_items',ld('reward_items',[]).filter(i=>i.id!=id));btn.closest('.item').remove();}
+
+// ══ SIDEBAR POINTS ══
+function updateSidebarPoints(){
+  var pts=ld('total_pts',0);
+  var streak=ld('streak',0);
+  var sb=document.getElementById('sb-points');
+  if(sb)sb.textContent='⭐ '+pts.toLocaleString()+' pts · 🔥 '+streak+' streak';
+}
+
+// ══ AT A GLANCE ══
+function loadGlance(){
+  var bizTasks=ld('biz_tasks',[]);setGlance('tasks',bizTasks.filter(t=>!t.done).length,'gd-tasks');
+  var fu=ld('followup_list',[]);setGlance('followup',fu.filter(f=>!f.done).length,'gd-followup');
+  var prayers=ld('faith_praying',[]);setGlance('prayers',prayers.length,'gd-prayers');
+  var shop=ld('shop_items',[]);setGlance('shopping',shop.filter(i=>!i.got).length,'gd-shopping');
+  var al=ld('al_tasks',[]);var wtc=ld('wtc_tasks',[]);var ms=ld('ms_tasks',[]);
+  setGlance('mission',[...al,...wtc,...ms].filter(t=>!t.done).length,'gd-mission');
+  var brain=ld('brain_items',[]);setGlance('brain',brain.length,'gd-brain');
+}
+function setGlance(id,val,dotId){
+  var el=document.getElementById('g-'+id);if(el)el.textContent=val;
+  var dot=document.getElementById(dotId);if(dot&&val>0)dot.classList.add('on');
+}
+
+// ══ PEOPLE ══
+var DEFAULT_PEOPLE=[
+  {id:1,name:'Seth Peralta',role:'Husband · common-law · home + life',color:'#C2738A',praying:false},
+  {id:2,name:'Olivia',role:'Best friend · Mustard Seed founder · grieving',color:'#4A7C6F',praying:true},
+  {id:3,name:'Cindy',role:'Friend · co-supporting Olivia on Mustard Seed',color:'#4A7C6F',praying:false},
+  {id:4,name:'Kelly',role:'GBB client · Graphic Arts Print Shop · Missouri',color:'#2D6B6B',praying:false},
+];
+function getPeople(){return ld('people',null)||DEFAULT_PEOPLE;}
+function renderPeople(){
+  var people=getPeople();
+  var grid=document.getElementById('people-grid');if(!grid)return;
+  grid.innerHTML='';
+  people.forEach(p=>{
+    var initials=p.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+    var card=document.createElement('div');
+    card.className='person-card';
+    card.innerHTML=`<div class="person-av" style="background:${p.color}20;color:${p.color}">${initials}</div><div class="person-name">${esc(p.name)}</div><div class="person-role">${esc(p.role)}</div>${p.praying?'<div class="person-prayer">🙏</div>':''}`;
+    card.onclick=()=>showPersonDetail(p);
+    grid.appendChild(card);
+  });
+  renderPrayingFor();
+}
+function showPersonDetail(p){
+  var wrap=document.getElementById('person-detail-wrap');
+  var notes=ld('pnotes_'+p.id,'');
+  var contact=ld('pcontact_'+p.id,'');
+  var prayers=ld('pprayers_'+p.id,[]);
+  wrap.innerHTML=`
+    <div class="detail-panel active">
+      <div class="detail-hdr"><div class="detail-name">${esc(p.name)}</div><button class="close-btn" onclick="document.getElementById('person-detail-wrap').innerHTML=''">✕</button></div>
+      <div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.75rem">${esc(p.role)}</div>
+      <div class="tabs-inner">
+        <button class="tab-inner active" onclick="innerTab(this,'pd-notes')">Notes</button>
+        <button class="tab-inner" onclick="innerTab(this,'pd-prayer')">Prayer</button>
+        <button class="tab-inner" onclick="innerTab(this,'pd-contact')">Contact</button>
+      </div>
+      <div class="tab-content-inner active" id="pd-notes">
+        <div class="dump-box"><textarea class="dump-textarea" id="pd-notes-text" placeholder="Notes about ${esc(p.name)}..." onblur="sv('pnotes_${p.id}',this.value)" style="min-height:80px">${notes}</textarea></div>
+      </div>
+      <div class="tab-content-inner" id="pd-prayer">
+        <div class="add-row"><input class="add-input" id="pd-pray-in" placeholder="Prayer for ${esc(p.name)}..."/><button class="add-btn" onclick="addPersonPrayer(${p.id},'${esc(p.name)}')">Add</button></div>
+        <div class="items" id="pd-pray-list">
+          ${prayers.map(pr=>`<div class="item"><div class="item-dot" style="background:var(--faith)"></div><div class="item-text">${esc(pr.text)}</div></div>`).join('')}
+        </div>
+        <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;margin-top:.4rem">
+          <input type="checkbox" ${p.praying?'checked':''} onchange="togglePersonPraying(${p.id},this.checked)" style="accent-color:var(--faith)"/>
+          Actively praying for ${esc(p.name)}
+        </label>
+      </div>
+      <div class="tab-content-inner" id="pd-contact">
+        <div class="dump-box"><textarea class="dump-textarea" id="pd-contact-text" placeholder="Phone, email, social handles, best way to reach them..." onblur="sv('pcontact_${p.id}',this.value)" style="min-height:80px">${contact}</textarea></div>
+        <a class="qlink" href="mailto:?subject=Checking in" target="_blank" style="margin-top:.4rem"><span class="qlink-emoji">✉️</span>Send email</a>
+      </div>
+    </div>
+  `;
+}
+function addPersonPrayer(personId,personName){
+  var input=document.getElementById('pd-pray-in');
+  var text=input.value.trim();if(!text)return;
+  var prayers=ld('pprayers_'+personId,[]);
+  prayers.push({id:Date.now(),text,date:new Date().toLocaleDateString()});
+  sv('pprayers_'+personId,prayers);
+  var list=document.getElementById('pd-pray-list');
+  if(list){var div=document.createElement('div');div.className='item';div.innerHTML=`<div class="item-dot" style="background:var(--faith)"></div><div class="item-text">${esc(text)}</div>`;list.appendChild(div);}
+  var fp=ld('faith_praying',[]);fp.push({id:Date.now(),text,person:personName,date:new Date().toLocaleDateString()});sv('faith_praying',fp);
+  renderFaithPraying();input.value='';
+}
+function togglePersonPraying(id,checked){
+  var people=getPeople();var p=people.find(x=>x.id==id);if(p){p.praying=checked;sv('people',people);}
+  renderPeople();
+}
+function addPerson(){
+  var name=document.getElementById('ppl-name-in').value.trim();if(!name)return;
+  var role=document.getElementById('ppl-role-in').value.trim();
+  var people=getPeople();
+  var colors=['#C2738A','#4A7C6F','#2D6B6B','#7A5C7A','#C4895A','#6B8CB8'];
+  people.push({id:Date.now(),name,role,color:colors[people.length%colors.length],praying:false});
+  sv('people',people);renderPeople();
+  document.getElementById('ppl-name-in').value='';document.getElementById('ppl-role-in').value='';
+}
+function renderPrayingFor(){
+  var people=getPeople().filter(p=>p.praying);
+  var list=document.getElementById('praying-for-list');if(!list)return;
+  list.innerHTML='';
+  people.forEach(p=>{
+    var div=document.createElement('div');div.className='item';
+    div.innerHTML=`<div class="item-dot" style="background:var(--faith)"></div><div class="item-text">🙏 ${esc(p.name)}</div>`;
+    list.appendChild(div);
+  });
+  renderFaithPraying();
+}
+function addPrayingFor(){
+  var input=document.getElementById('praying-in');
+  var text=input.value.trim();if(!text)return;
+  var fp=ld('faith_praying',[]);
+  fp.push({id:Date.now(),text,person:text,date:new Date().toLocaleDateString()});
+  sv('faith_praying',fp);renderFaithPraying();input.value='';
+}
+function renderFaithPraying(){
+  var list=document.getElementById('f-praying-list');if(!list)return;
+  list.innerHTML='';
+  var items=ld('faith_praying',[]);
+  items.forEach(item=>{
+    var div=document.createElement('div');div.className='item';
+    div.innerHTML=`<div class="item-dot" style="background:var(--faith)"></div><div class="item-text">🙏 ${esc(item.person||item.text)}</div><div class="item-actions"><button class="item-btn del" onclick="removeFaithPraying(${item.id},this)">✕</button></div>`;
+    list.appendChild(div);
+  });
+}
+function addFaithPrayer(){
+  var input=document.getElementById('f-pray-in');
+  var text=input.value.trim();if(!text)return;
+  var fp=ld('faith_praying',[]);
+  fp.push({id:Date.now(),text,person:text,date:new Date().toLocaleDateString()});
+  sv('faith_praying',fp);renderFaithPraying();input.value='';
+}
+function removeFaithPraying(id,btn){sv('faith_praying',ld('faith_praying',[]).filter(i=>i.id!=id));btn.closest('.item').remove();}
+
+// ══ SHOPPING ══
+function addShopItem(){
+  var name=document.getElementById('shop-name-in').value.trim();if(!name)return;
+  var qty=document.getElementById('shop-qty-in').value.trim();
+  var cat=document.getElementById('shop-cat-in').value;
+  var items=ld('shop_items',[]);
+  items.push({id:Date.now(),name,qty,cat,got:false});
+  sv('shop_items',items);renderShopList();
+  document.getElementById('shop-name-in').value='';document.getElementById('shop-qty-in').value='';
+}
+function renderShopList(){
+  var items=ld('shop_items',[]);
+  var list=document.getElementById('shop-items-list');
+  var empty=document.getElementById('shop-empty');if(!list)return;
+  list.innerHTML='';
+  if(!items.length){empty.style.display='block';return;}
+  empty.style.display='none';
+  var catColors={grocery:'var(--sage)',household:'var(--amber)',personal:'var(--peony)',dogs:'var(--plum)',other:'rgba(255,255,255,.3)'};
+  [...items.filter(i=>!i.got),...items.filter(i=>i.got)].forEach(item=>{
+    var div=document.createElement('div');
+    div.className='check-item'+(item.got?' done':'');
+    div.innerHTML=`<input type="checkbox" ${item.got?'checked':''} onchange="toggleShop(${item.id})"/><label>${esc(item.name)}${item.qty?' ('+esc(item.qty)+')':''} <span style="font-size:9px;padding:1px 6px;border-radius:999px;background:${catColors[item.cat]}20;color:${catColors[item.cat]};font-weight:700">${item.cat}</span></label><div class="check-actions"><button class="item-btn del" onclick="removeShop(${item.id},this)">✕</button></div>`;
+    list.appendChild(div);
+  });
+}
+function toggleShop(id){var items=ld('shop_items',[]);var item=items.find(i=>i.id==id);if(item){item.got=!item.got;sv('shop_items',items);}renderShopList();}
+function removeShop(id,btn){sv('shop_items',ld('shop_items',[]).filter(i=>i.id!=id));btn.closest('.check-item').remove();}
+function clearGotShop(){sv('shop_items',ld('shop_items',[]).filter(i=>!i.got));renderShopList();}
+function addInvItem(type){
+  var nameEl=document.getElementById(type==='pantry'?'pantry-name-in':type==='household'?'hhold-name-in':'dogs-inv-in');
+  var statusEl=document.getElementById(type==='pantry'?'pantry-status-in':type==='household'?'hhold-status-in':'dogs-status-in');
+  var name=nameEl.value.trim();if(!name)return;
+  var items=ld('inv_'+type,[]);
+  items.push({id:Date.now(),name,status:statusEl.value});
+  sv('inv_'+type,items);renderInvList(type);nameEl.value='';
+}
+function renderInvList(type){
+  var listIds={pantry:'pantry-list',household:'household-list',dogs:'dogs-inv-list'};
+  var items=ld('inv_'+type,[]);
+  var list=document.getElementById(listIds[type]);if(!list)return;
+  list.innerHTML='';
+  var statusColors={good:'var(--sage)',low:'var(--amber)',out:'#F1948A'};
+  var statusLabels={good:'✓ Good',low:'⚠ Low',out:'✕ Out'};
+  items.forEach(item=>{
+    var div=document.createElement('div');div.className='item';
+    div.innerHTML=`<div class="item-dot" style="background:${statusColors[item.status]}"></div><div style="flex:1"><div class="item-text">${esc(item.name)}</div><div class="item-meta">${statusLabels[item.status]}</div></div>${item.status!=='good'?`<button class="add-btn" style="font-size:10px;padding:2px 8px" onclick="addShopFromInv('${esc(item.name)}')">+ List</button>`:''}<div class="item-actions"><button class="item-btn del" onclick="removeInv('${type}',${item.id},this)">✕</button></div>`;
+    list.appendChild(div);
+  });
+}
+function addShopFromInv(name){var items=ld('shop_items',[]);items.push({id:Date.now(),name,qty:'',cat:'household',got:false});sv('shop_items',items);showToast(name+' added to shopping list ✓');}
+function removeInv(type,id,btn){sv('inv_'+type,ld('inv_'+type,[]).filter(i=>i.id!=id));btn.closest('.item').remove();}
+function copyShopLink(){navigator.clipboard.writeText(window.location.href+'?shopping=1').then(()=>showToast('Link copied — send to Seth ✓'));}
+
+// ══ BRAIN DUMP ══
+var BRAIN_API_KEY=ld('brain_api_key','');
+function toggleApiSetup(){var a=document.getElementById('api-setup-area');a.style.display=a.style.display==='none'?'block':'none';}
+function saveApiKey(){var k=document.getElementById('api-key-in').value.trim();if(!k)return;sv('brain_api_key',k);BRAIN_API_KEY=k;document.getElementById('api-key-status').textContent='✓ API key saved — Claude ready';document.getElementById('api-setup-area').style.display='none';showToast('API key saved ✓');}
+function updateBrainCount(){document.getElementById('brain-char-count').textContent=document.getElementById('brain-transcript').value.length.toLocaleString()+' characters';}
+
+async function processBrainDump(){
+  var transcript=document.getElementById('brain-transcript').value.trim();
+  if(!transcript){showToast('Paste a transcript first');return;}
+  if(!BRAIN_API_KEY||!BRAIN_API_KEY.startsWith('sk-ant')){showToast('Add your Anthropic API key first');document.getElementById('api-setup-area').style.display='block';return;}
+  document.getElementById('brain-loading').style.display='block';
+  document.getElementById('brain-results').style.display='none';
+  document.getElementById('brain-process-btn').disabled=true;
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':BRAIN_API_KEY,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({
+        model:'claude-opus-4-6',max_tokens:2000,
+        messages:[{role:'user',content:`You are Rebecca Holka's personal AI organizer. Extract and organize her brain dump into these categories. Respond ONLY with valid JSON:\n{"tasks":[{"text":"...","priority":"high|med|low"}],"ideas":[{"text":"..."}],"prayers":[{"text":"..."}],"reminders":[{"text":"...","priority":"high|med|low"}],"parking_lot":[{"text":"..."}],"notes":[{"text":"..."}]}\n\nBrain dump:\n${transcript}`}]
+      })
+    });
+    var data=await resp.json();
+    if(data.error)throw new Error(data.error.message);
+    var text=data.content[0].text;
+    var parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderBrainResults(parsed,transcript);
+  }catch(err){showToast('Error: '+(err.message||'Check your API key'));console.error(err);}
+  finally{document.getElementById('brain-loading').style.display='none';document.getElementById('brain-process-btn').disabled=false;}
+}
+
+var CAT_COLORS={tasks:'var(--peony)',ideas:'var(--amber)',prayers:'var(--faith)',reminders:'var(--sage)',parking_lot:'var(--plum)',notes:'var(--teal)'};
+var CAT_LABELS={tasks:'✓ Tasks',ideas:'💡 Ideas',prayers:'🙏 Prayers',reminders:'⏰ Reminders',parking_lot:'🅿️ Parking Lot',notes:'📝 Notes'};
+
+function renderBrainResults(data,transcript){
+  var results=document.getElementById('brain-results');
+  results.style.display='block';
+  var total=Object.values(data).reduce((s,v)=>s+(v||[]).length,0);
+  var html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.875rem"><div style="font-size:13px;font-weight:600;color:#fff">${total} items found</div><div style="display:flex;gap:7px"><button class="add-btn" onclick="approveAllBrain()" style="background:var(--sage);border-color:var(--sage);color:#fff">✓ Approve all</button><button class="add-btn" onclick="newBrainDump()">New dump</button></div></div>`;
+  Object.entries(data).forEach(([cat,items])=>{
+    if(!items||!items.length)return;
+    html+=`<div style="margin-bottom:.75rem"><div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${CAT_COLORS[cat]};margin-bottom:.4rem">${CAT_LABELS[cat]||cat} (${items.length})</div><div class="items" id="brain-cat-${cat}">`;
+    items.forEach((item,idx)=>{
+      html+=`<div class="item" data-cat="${cat}" data-idx="${idx}" data-text="${esc(item.text)}"><div class="item-dot" style="background:${CAT_COLORS[cat]}"></div><div class="item-text" contenteditable="true">${esc(item.text)}</div>${item.priority?`<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);flex-shrink:0">${item.priority}</span>`:''}<div class="item-actions"><button class="item-btn approve" onclick="approveBrainItem(this)" style="color:var(--sage)">✓</button><button class="item-btn del" onclick="this.closest('.item').style.opacity='.2'">✕</button></div></div>`;
+    });
+    html+='</div></div>';
+  });
+  results.innerHTML=html;
+}
+
+function approveBrainItem(btn){
+  var item=btn.closest('.item');
+  var text=item.querySelector('.item-text').textContent;
+  var cat=item.dataset.cat;
+  var items=ld('brain_items',[]);
+  items.unshift({id:Date.now(),text,cat,date:new Date().toLocaleDateString()});
+  sv('brain_items',items.slice(0,100));
+  item.style.background='rgba(46,125,82,.1)';item.style.borderColor='rgba(46,125,82,.2)';
+  showToast('Saved to '+cat.replace('_',' ')+' ✓');
+  renderBrainRecent();
+}
+
+function approveAllBrain(){
+  document.querySelectorAll('#brain-results .item').forEach(item=>{
+    if(item.style.opacity!=='0.2'){
+      var text=item.querySelector('.item-text').textContent;
+      var cat=item.dataset.cat;
+      var items=ld('brain_items',[]);
+      items.unshift({id:Date.now(),text,cat,date:new Date().toLocaleDateString()});
+      sv('brain_items',items.slice(0,100));
+      item.style.background='rgba(46,125,82,.1)';item.style.borderColor='rgba(46,125,82,.2)';
+    }
+  });
+  showToast('All items approved ✓');
+  renderBrainRecent();
+}
+
+function newBrainDump(){
+  document.getElementById('brain-results').style.display='none';
+  document.getElementById('brain-transcript').value='';
+  updateBrainCount();
+}
+
+function renderBrainRecent(){
+  var items=ld('brain_items',[]);
+  var list=document.getElementById('brain-recent-list');if(!list)return;
+  list.innerHTML='';
+  items.slice(0,8).forEach(item=>{
+    var div=document.createElement('div');div.className='item';
+    div.innerHTML=`<div class="item-dot" style="background:${CAT_COLORS[item.cat]||'var(--peony)'}"></div><div class="item-text">${esc(item.text)}</div><div class="item-meta">${item.cat||''} · ${item.date||''}</div>`;
+    list.appendChild(div);
+  });
+}
+
+// ══ TOAST ══
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ══ LOAD SAVED DATA ══
+function loadSaved(){
+  loadPriorities();
+  renderAppts();
+
+  var texts=[
+    ['seth-legal-notes','seth_legal_notes'],['seth-work-notes','seth_work_notes'],
+    ['seth-notes-text','seth_notes'],['hl-fin-notes','hl_fin_notes'],
+    ['hl-notes-text','hl_notes'],['al-notes','al_notes'],
+    ['wtc-notes','wtc_notes'],['ms-notes','ms_notes'],
+    ['ppl-notes-text','ppl_notes'],['f-journal-text','faith_journal'],
+    ['biz-notes-text','biz_notes'],
+  ];
+  texts.forEach(([elId,key])=>{var v=ld(key,'');if(v){var el=document.getElementById(elId);if(el&&el.tagName==='TEXTAREA')el.value=v;}});
+
+  var editables=[
+    ['hl-budget','hl_budget'],['hl-bills','hl_bills'],
+    ['biz-rev','biz_rev'],['biz-out','biz_out'],
+    ['seth-week','seth_week'],['seth-month','seth_month'],
+  ];
+  editables.forEach(([elId,key])=>{var v=ld(key,'');if(v){var el=document.getElementById(elId);if(el)el.textContent=v;}});
+
+  var entryLists=[
+    ['f-self-list','self_prayers','var(--faith)'],
+    ['f-gen-list','general_prayers','var(--faith)'],
+    ['f-ans-list','answered_prayers','var(--sage)'],
+    ['f-scr-list','scripture_list','var(--faith)'],
+    ['f-grat-list','gratitude_list','var(--amber)'],
+    ['hl-goal-list','hl_goals','var(--amber)'],
+    ['seth-legal-list','seth_legal','var(--amber)'],
+    ['biz-clients-list','biz_clients','var(--peony)'],
+  ];
+  entryLists.forEach(([listId,key,color])=>{
+    var items=ld(key,[]);var list=document.getElementById(listId);
+    if(list&&items.length>0)items.forEach(item=>{if(!document.querySelector(`#${listId} [data-id='${item.id}']`))list.appendChild(makeItem(item.text,color,item.date,item.id,key));});
+  });
+
+  var checkLists=[
+    ['hl-task-list','hl_tasks'],['errand-list','hl_errands'],
+    ['seth-dis-list','seth_discuss'],['bruno-list','bruno_notes'],
+    ['lav-list','lav_notes'],['shadow-list','shadow_notes'],
+    ['fu-list','followup_list'],['biz-tasks-list','biz_tasks'],
+    ['al-list','al_tasks'],['wtc-list','wtc_tasks'],['ms-list','ms_tasks'],
+  ];
+  checkLists.forEach(([listId,key])=>{
+    var items=ld(key,[]);var list=document.getElementById(listId);
+    if(list&&items.length>0)items.forEach(item=>{if(!document.querySelector(`#${listId} [data-id='${item.id}']`))list.appendChild(makeCheck(item,key));});
+  });
+
+  renderPeople();
+  renderFaithPraying();
+  renderShopList();
+  ['pantry','household','dogs'].forEach(t=>renderInvList(t));
+  renderHabitSnapshot();
+  renderBrainRecent();
+  updateSidebarPoints();
+  loadGlance();
+
+  if(BRAIN_API_KEY&&BRAIN_API_KEY.startsWith('sk-ant')){
+    document.getElementById('api-key-status').textContent='✓ Claude ready';
+  }
+}
+
+
+// FLIP CLOCK
+var flipPrev={h1:-1,h2:-1,m1:-1,m2:-1,s1:-1,s2:-1};
+function flipDigit(id,val){
+  var card=document.getElementById("fc-"+id);
+  var upper=document.getElementById("fcu-"+id);
+  var lower=document.getElementById("fcl-"+id);
+  if(!card||!upper||!lower)return;
+  if(String(val)===String(flipPrev[id]))return;
+  upper.textContent=val;lower.textContent=val;
+  card.classList.remove("flip-animating");void card.offsetWidth;card.classList.add("flip-animating");
+  setTimeout(function(){card.classList.remove("flip-animating");},600);
+  flipPrev[id]=String(val);
+}
+function updateFlipClock(){
+  var now=new Date();
+  var h=now.getHours();var m=now.getMinutes();var s=now.getSeconds();
+  var ampm=h>=12?"PM":"AM";var h12=h%12||12;
+  var hh=String(h12).padStart(2,"0");var mm=String(m).padStart(2,"0");var ss=String(s).padStart(2,"0");
+  flipDigit("h1",hh[0]);flipDigit("h2",hh[1]);flipDigit("m1",mm[0]);flipDigit("m2",mm[1]);flipDigit("s1",ss[0]);flipDigit("s2",ss[1]);
+  var el=document.getElementById("flip-ampm");if(el)el.textContent=ampm;
+}
+function updateFlipCalendar(){
+  var now=new Date();
+  var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var dayEl=document.getElementById("flip-day");var monthEl=document.getElementById("flip-month");var dowEl=document.getElementById("flip-dow");
+  if(dayEl)dayEl.textContent=String(now.getDate()).padStart(2,"0");
+  if(monthEl)monthEl.textContent=months[now.getMonth()]+" "+now.getFullYear();
+  if(dowEl)dowEl.textContent=days[now.getDay()];
+}
+updateFlipClock();updateFlipCalendar();
+setInterval(updateFlipClock,1000);setInterval(updateFlipCalendar,60000);
+
+// ══ INIT ══
+loadDate();
+loadScripture();
+loadSaved();
+checkDbConnection();
+
+// ══ EXERCISE LOG RESTORE ══
+[['walking','walk-log'],['hiking','hike-log'],['pelvic','pelvic-log'],['core','core-log']].forEach(([k,logId])=>renderExLog(k,logId));
+</script>
+</body>
+</html>
