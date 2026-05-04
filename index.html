@@ -460,6 +460,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
           <div class="tool-card" onclick="goTab('business',document.querySelector('[data-tab=business]'))"><div class="tool-emoji">💼</div>GBB</div>
           <div class="tool-card" onclick="goTab('mission',document.querySelector('[data-tab=mission]'))"><div class="tool-emoji">🌱</div>Mission</div>
           <div class="tool-card" onclick="goTab('homelife',document.querySelector('[data-tab=homelife]'))"><div class="tool-emoji">🏡</div>Home Life</div>
+          <a class="tool-card" href="daily.html"><div class="tool-emoji">📓</div>Daily Log</a>
           <a class="tool-card" href="https://getbookednbranded.pages.dev" target="_blank"><div class="tool-emoji">🌐</div>GBB Site</a>
           <a class="tool-card" href="https://calendly.com/rebeccaannexo/meet" target="_blank"><div class="tool-emoji">📅</div>Calendly</a>
           <a class="tool-card" href="https://drive.google.com" target="_blank"><div class="tool-emoji">📁</div>Drive</a>
@@ -486,6 +487,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
         <button class="tab-inner" onclick="innerTab(this,'hl-finances')">Finances</button>
         <button class="tab-inner" onclick="innerTab(this,'hl-goals')">Goals</button>
         <button class="tab-inner" onclick="innerTab(this,'hl-notes')">Notes</button>
+        <button class="tab-inner" onclick="innerTab(this,'hl-bills')">Bills</button>
       </div>
       <div class="tab-content-inner active" id="hl-tasks">
         <div class="add-row"><input class="add-input" id="hl-task-in" placeholder="Add household task..." onkeydown="if(event.key==='Enter')addCheck('hl-task-in','hl-task-list','hl_tasks')"/><button class="add-btn" onclick="addCheck('hl-task-in','hl-task-list','hl_tasks')">Add</button></div>
@@ -542,6 +544,17 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
       </div>
       <div class="tab-content-inner" id="hl-notes">
         <div class="dump-box"><textarea class="dump-textarea" id="hl-notes-text" placeholder="Home life notes, family updates, anything about daily life..." onblur="saveText('hl-notes-text','hl_notes')" style="min-height:150px"></textarea></div>
+      </div>
+      <div class="tab-content-inner" id="hl-bills">
+        <div class="s-label">Upcoming bills</div>
+        <div class="add-row">
+          <input class="add-input" id="bill-name-in" placeholder="Bill name..."/>
+          <input class="add-input" id="bill-amount-in" placeholder="Amount" style="max-width:90px"/>
+          <input class="add-input" id="bill-due-in" placeholder="Due date" type="date" style="max-width:140px"/>
+          <button class="add-btn" onclick="addBill()">Add</button>
+        </div>
+        <div class="items" id="bills-list"></div>
+        <div id="bills-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;padding:.5rem 0">No bills added yet</div>
       </div>
     </div>
 
@@ -1796,6 +1809,7 @@ function loadSaved(){
   ['pantry','household','dogs'].forEach(t=>renderInvList(t));
   renderHabitSnapshot();
   renderBrainRecent();
+  renderBills();
   updateSidebarPoints();
   loadGlance();
 
@@ -1804,6 +1818,65 @@ function loadSaved(){
   }
 }
 
+
+
+// BILLS TRACKER
+function addBill(){
+  var name=document.getElementById('bill-name-in').value.trim();
+  if(!name)return;
+  var amount=document.getElementById('bill-amount-in').value.trim();
+  var due=document.getElementById('bill-due-in').value;
+  var bills=ld('bills',[]);
+  var bill={id:Date.now(),name,amount,due,paid:false,dateAdded:new Date().toLocaleDateString()};
+  bills.push(bill);
+  sv('bills',bills);
+  renderBills();
+  dbWrite('saveBill',{id:bill.id,name,amount,dueDate:due,category:'home',recurring:false,frequency:'',paid:false,notes:''});
+  document.getElementById('bill-name-in').value='';
+  document.getElementById('bill-amount-in').value='';
+  document.getElementById('bill-due-in').value='';
+}
+
+function renderBills(){
+  var bills=ld('bills',[]);
+  var list=document.getElementById('bills-list');
+  var empty=document.getElementById('bills-empty');
+  if(!list)return;
+  list.innerHTML='';
+  if(!bills.length){if(empty)empty.style.display='block';return;}
+  if(empty)empty.style.display='none';
+  var today=new Date();
+  bills.sort(function(a,b){return new Date(a.due)-new Date(b.due);});
+  bills.forEach(function(bill){
+    var overdue=bill.due&&new Date(bill.due)<today&&!bill.paid;
+    var soon=bill.due&&!overdue&&!bill.paid&&(new Date(bill.due)-today)<7*24*60*60*1000;
+    var div=document.createElement('div');
+    div.className='item'+(bill.paid?' done':'');
+    div.style.borderLeft='3px solid '+(overdue?'#F1948A':soon?'var(--amber)':bill.paid?'var(--sage)':'rgba(255,255,255,.1)');
+    div.innerHTML=`
+      <input type="checkbox" ${bill.paid?'checked':''} onchange="toggleBill(${bill.id},this.checked)" style="width:15px;height:15px;accent-color:var(--sage);flex-shrink:0;margin-top:2px;cursor:pointer"/>
+      <div style="flex:1">
+        <div class="item-text" ${bill.paid?'style="text-decoration:line-through;opacity:.4"':''}>${esc(bill.name)} ${bill.amount?'<span style="color:var(--amber);font-size:11px;font-weight:600">'+bill.amount+'</span>':''}</div>
+        <div class="item-meta">${bill.due?'<span style="color:'+(overdue?'#F1948A':soon?'var(--amber)':'rgba(255,255,255,.3)')+';font-size:10px">'+(overdue?'OVERDUE — ':soon?'Due soon — ':'Due: ')+new Date(bill.due).toLocaleDateString()+'</span>':''}</div>
+      </div>
+      <div class="item-actions"><button class="item-btn del" onclick="removeBill(${bill.id},this)">✕</button></div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function toggleBill(id,paid){
+  var bills=ld('bills',[]);
+  var b=bills.find(x=>x.id==id);
+  if(b){b.paid=paid;sv('bills',bills);}
+  dbWrite('updateBill',{id,paid});
+  renderBills();
+}
+
+function removeBill(id,btn){
+  sv('bills',ld('bills',[]).filter(b=>b.id!=id));
+  btn.closest('.item').remove();
+}
 
 // FLIP CLOCK
 var flipPrev={h1:-1,h2:-1,m1:-1,m2:-1,s1:-1,s2:-1};

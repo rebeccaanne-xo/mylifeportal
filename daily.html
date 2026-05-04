@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Daily Log — Rebecca Holka</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1B2A4A;--peony:#C2738A;--sage:#4A7C6F;--amber:#C4895A;
+  --plum:#7A5C7A;--teal:#2D6B6B;--faith:#6B8CB8;
+}
+html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);color:#fff;line-height:1.6}
+.container{max-width:720px;margin:0 auto;padding:1.5rem}
+
+/* HEADER */
+.header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.07);flex-wrap:wrap;gap:.75rem}
+.back-link{font-size:12px;color:rgba(255,255,255,.3);text-decoration:none;display:flex;align-items:center;gap:6px;margin-bottom:.4rem;transition:color .15s}
+.back-link:hover{color:rgba(255,255,255,.7)}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500}
+.page-title em{font-style:italic;color:var(--peony)}
+.today-badge{background:rgba(194,115,138,.15);border:1px solid rgba(194,115,138,.25);border-radius:999px;padding:.3rem .875rem;font-size:11px;font-weight:600;color:var(--peony)}
+
+/* SYMBOL LEGEND */
+.legend{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem;padding:.75rem 1rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.45)}
+.legend-sym{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;width:18px;text-align:center}
+.sym-task{color:var(--peony)}
+.sym-event{color:var(--amber)}
+.sym-note{color:rgba(255,255,255,.6)}
+.sym-priority{color:#F1E56B}
+.sym-prayer{color:var(--faith)}
+.sym-idea{color:var(--sage)}
+.sym-migrated{color:rgba(255,255,255,.3)}
+
+/* QUICK ENTRY */
+.entry-box{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.09);border-radius:14px;padding:1rem 1.1rem;margin-bottom:1.25rem;transition:border-color .2s}
+.entry-box:focus-within{border-color:var(--peony)}
+.entry-top{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap}
+.entry-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+.sym-picker{display:flex;gap:.3rem;flex-wrap:wrap}
+.sym-btn{
+  width:30px;height:30px;border-radius:6px;border:1px solid rgba(255,255,255,.1);
+  background:none;cursor:pointer;font-family:'JetBrains Mono',monospace;
+  font-size:15px;font-weight:500;color:rgba(255,255,255,.45);
+  transition:all .15s;display:flex;align-items:center;justify-content:center;
+}
+.sym-btn:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)}
+.sym-btn.selected{background:rgba(194,115,138,.2);border-color:var(--peony);color:var(--peony)}
+.entry-input{
+  width:100%;background:none;border:none;outline:none;
+  font-family:'DM Sans',sans-serif;font-size:14px;color:#fff;
+  line-height:1.5;resize:none;min-height:40px;
+}
+.entry-input::placeholder{color:rgba(255,255,255,.22)}
+.entry-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.6rem;padding-top:.6rem;border-top:1px solid rgba(255,255,255,.05);flex-wrap:wrap;gap:.5rem}
+.entry-tags{display:flex;gap:.4rem;flex-wrap:wrap}
+.tag-btn{font-size:10px;font-weight:500;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.4);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.tag-btn:hover,.tag-btn.on{border-color:currentColor;font-weight:700}
+.tag-btn.on{opacity:1}
+.tag-home{color:var(--amber)}
+.tag-business{color:var(--peony)}
+.tag-faith{color:var(--faith)}
+.tag-people{color:var(--teal)}
+.tag-mission{color:var(--sage)}
+.tag-health{color:#82C4B5}
+.log-btn{background:var(--peony);color:#fff;border:none;border-radius:999px;padding:.5rem 1.25rem;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .2s}
+.log-btn:hover{opacity:.85}
+
+/* DATE DIVIDERS */
+.date-divider{display:flex;align-items:center;gap:.75rem;margin:1.25rem 0 .75rem}
+.date-label{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:rgba(255,255,255,.45);white-space:nowrap}
+.date-line{flex:1;height:1px;background:rgba(255,255,255,.07)}
+.date-count{font-size:10px;color:rgba(255,255,255,.25)}
+
+/* LOG ENTRIES */
+.log-entries{display:flex;flex-direction:column;gap:4px}
+.log-entry{
+  display:flex;align-items:flex-start;gap:.6rem;
+  padding:.55rem .75rem;border-radius:8px;
+  transition:background .15s;position:relative;
+  border-left:2px solid transparent;
+}
+.log-entry:hover{background:rgba(255,255,255,.04)}
+.log-entry.type-task{border-left-color:var(--peony)}
+.log-entry.type-event{border-left-color:var(--amber)}
+.log-entry.type-priority{border-left-color:#F1E56B}
+.log-entry.type-prayer{border-left-color:var(--faith)}
+.log-entry.type-idea{border-left-color:var(--sage)}
+.log-entry.type-note{border-left-color:rgba(255,255,255,.15)}
+.log-entry.type-migrated{border-left-color:rgba(255,255,255,.08);opacity:.5}
+.log-entry.done .entry-sym,.log-entry.done .entry-text{opacity:.35;text-decoration:line-through}
+
+.entry-sym{
+  font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;
+  flex-shrink:0;width:20px;text-align:center;margin-top:1px;line-height:1.3;
+}
+.entry-content{flex:1;min-width:0}
+.entry-text{font-size:13px;color:rgba(255,255,255,.85);line-height:1.5;word-break:break-word}
+.entry-text[contenteditable=true]{outline:none;border-bottom:1px dashed rgba(255,255,255,.15)}
+.entry-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:2px}
+.entry-time{font-size:10px;color:rgba(255,255,255,.25);font-family:'JetBrains Mono',monospace}
+.entry-tag{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:999px}
+.entry-actions{display:flex;gap:3px;opacity:0;transition:opacity .15s;flex-shrink:0;margin-top:1px}
+.log-entry:hover .entry-actions{opacity:1}
+.act-btn{background:none;border:none;color:rgba(255,255,255,.28);cursor:pointer;font-size:11px;padding:2px 5px;border-radius:3px;transition:all .15s;font-family:'DM Sans',sans-serif}
+.act-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.act-btn.done-btn:hover{background:rgba(74,124,111,.15);color:#82C4B5}
+.act-btn.del-btn:hover{background:rgba(192,57,43,.18);color:#F1948A}
+.act-btn.migrate-btn{font-size:10px}
+
+/* MIGRATE MENU */
+.migrate-menu{position:absolute;right:.5rem;top:2rem;background:#1e3055;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.5rem;z-index:50;display:none;flex-direction:column;gap:3px;min-width:140px}
+.migrate-menu.open{display:flex}
+.migrate-opt{font-size:12px;padding:.35rem .6rem;border-radius:6px;cursor:pointer;color:rgba(255,255,255,.65);transition:all .15s;border:none;background:none;font-family:'DM Sans',sans-serif;text-align:left}
+.migrate-opt:hover{background:rgba(255,255,255,.08);color:#fff}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap}
+.filter-btn{font-size:11px;font-weight:500;padding:.3rem .8rem;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.4);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.filter-btn:hover{border-color:rgba(255,255,255,.3);color:#fff}
+.filter-btn.active{background:rgba(255,255,255,.09);color:#fff;border-color:rgba(255,255,255,.25)}
+
+/* STATS */
+.log-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem}
+.log-stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:.65rem;text-align:center}
+.log-stat-val{font-size:20px;font-weight:700;color:#fff;line-height:1;margin-bottom:.15rem}
+.log-stat-label{font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+
+/* EMPTY */
+.log-empty{text-align:center;padding:3rem 0;color:rgba(255,255,255,.2);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:16px}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--sage);color:#fff;padding:.65rem 1.1rem;border-radius:9px;font-size:12px;font-weight:500;display:none;z-index:300}
+.toast.show{display:block}
+
+@media(max-width:600px){
+  .container{padding:1rem .875rem}
+  .log-stats{grid-template-columns:1fr 1fr}
+  .sym-picker{gap:.2rem}
+  .sym-btn{width:26px;height:26px;font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <a href="index.html" class="back-link">← Back to portal</a>
+      <div class="page-title">Daily <em>Log</em></div>
+    </div>
+    <div class="today-badge" id="today-badge"></div>
+  </div>
+
+  <!-- SYMBOL LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><span class="legend-sym sym-task">•</span> Task</div>
+    <div class="legend-item"><span class="legend-sym sym-event">○</span> Event</div>
+    <div class="legend-item"><span class="legend-sym" style="color:rgba(255,255,255,.6)">—</span> Note</div>
+    <div class="legend-item"><span class="legend-sym sym-priority">*</span> Priority</div>
+    <div class="legend-item"><span class="legend-sym sym-prayer">†</span> Prayer</div>
+    <div class="legend-item"><span class="legend-sym sym-idea">!</span> Idea</div>
+    <div class="legend-item"><span class="legend-sym sym-migrated">›</span> Migrated</div>
+    <div class="legend-item"><span class="legend-sym" style="color:#82C4B5">×</span> Done</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="log-stats">
+    <div class="log-stat"><div class="log-stat-val" id="stat-today">0</div><div class="log-stat-label">Today</div></div>
+    <div class="log-stat"><div class="log-stat-val" id="stat-tasks">0</div><div class="log-stat-label">Tasks</div></div>
+    <div class="log-stat"><div class="log-stat-val" id="stat-done">0</div><div class="log-stat-label">Done</div></div>
+    <div class="log-stat"><div class="log-stat-val" id="stat-total">0</div><div class="log-stat-label">Total entries</div></div>
+  </div>
+
+  <!-- QUICK ENTRY -->
+  <div class="entry-box">
+    <div class="entry-top">
+      <span class="entry-label">Symbol</span>
+      <div class="sym-picker">
+        <button class="sym-btn selected sym-task" data-sym="•" data-type="task" onclick="selectSym(this)" title="Task">•</button>
+        <button class="sym-btn sym-event" data-sym="○" data-type="event" onclick="selectSym(this)" title="Event">○</button>
+        <button class="sym-btn" data-sym="—" data-type="note" onclick="selectSym(this)" title="Note" style="color:rgba(255,255,255,.6);font-size:12px">—</button>
+        <button class="sym-btn sym-priority" data-sym="*" data-type="priority" onclick="selectSym(this)" title="Priority">*</button>
+        <button class="sym-btn sym-prayer" data-sym="†" data-type="prayer" onclick="selectSym(this)" title="Prayer">†</button>
+        <button class="sym-btn sym-idea" data-sym="!" data-type="idea" onclick="selectSym(this)" title="Idea">!</button>
+      </div>
+    </div>
+    <textarea class="entry-input" id="entry-input" placeholder="What's on your mind? Log it here..." onkeydown="handleEntryKey(event)"></textarea>
+    <div class="entry-footer">
+      <div class="entry-tags">
+        <button class="tag-btn tag-home" onclick="toggleTag(this,'home')">🏠 Home</button>
+        <button class="tag-btn tag-business" onclick="toggleTag(this,'business')">💼 Business</button>
+        <button class="tag-btn tag-faith" onclick="toggleTag(this,'faith')">✝️ Faith</button>
+        <button class="tag-btn tag-people" onclick="toggleTag(this,'people')">👥 People</button>
+        <button class="tag-btn tag-mission" onclick="toggleTag(this,'mission')">🌱 Mission</button>
+        <button class="tag-btn tag-health" onclick="toggleTag(this,'health')">💪 Health</button>
+      </div>
+      <button class="log-btn" onclick="addEntry()">Log it</button>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterLog(this,'all')">All</button>
+    <button class="filter-btn" onclick="filterLog(this,'today')">Today</button>
+    <button class="filter-btn" onclick="filterLog(this,'task')">• Tasks</button>
+    <button class="filter-btn" onclick="filterLog(this,'priority')">* Priority</button>
+    <button class="filter-btn" onclick="filterLog(this,'prayer')">† Prayer</button>
+    <button class="filter-btn" onclick="filterLog(this,'idea')">! Ideas</button>
+    <button class="filter-btn" onclick="filterLog(this,'event')">○ Events</button>
+  </div>
+
+  <!-- LOG -->
+  <div id="log-container"></div>
+  <div class="log-empty" id="log-empty">Nothing logged yet · start capturing your day above</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var DB_URL='https://script.google.com/macros/s/AKfycbwACwmDOB3utDpsgmgAvJz4TnDTDyWkbG6tpwqmq4rocpL51vz5eNlKm8QwgdOowGis/exec';
+function sv(k,v){try{localStorage.setItem('log_'+k,JSON.stringify(v))}catch(e){}}
+function ld(k,d){try{var x=localStorage.getItem('log_'+k);return x?JSON.parse(x):d}catch(e){return d}}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+var TODAY=new Date().toDateString();
+var selectedSym='•';
+var selectedType='task';
+var selectedTags=[];
+var currentFilter='all';
+
+var SYM_COLORS={
+  task:'var(--peony)',event:'var(--amber)',note:'rgba(255,255,255,.5)',
+  priority:'#F1E56B',prayer:'var(--faith)',idea:'var(--sage)',migrated:'rgba(255,255,255,.3)'
+};
+
+var TAG_COLORS={
+  home:'var(--amber)',business:'var(--peony)',faith:'var(--faith)',
+  people:'var(--teal)',mission:'var(--sage)',health:'#82C4B5'
+};
+
+// ══ INIT ══
+function init(){
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var d=new Date();
+  document.getElementById('today-badge').textContent=days[d.getDay()]+' · '+months[d.getMonth()]+' '+d.getDate();
+  renderLog();
+  updateStats();
+}
+
+// ══ SYMBOL PICKER ══
+function selectSym(btn){
+  document.querySelectorAll('.sym-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedSym=btn.dataset.sym;
+  selectedType=btn.dataset.type;
+}
+
+function toggleTag(btn,tag){
+  btn.classList.toggle('on');
+  if(selectedTags.includes(tag)){
+    selectedTags=selectedTags.filter(t=>t!==tag);
+  }else{
+    selectedTags.push(tag);
+  }
+}
+
+function handleEntryKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();addEntry();}
+}
+
+// ══ ADD ENTRY ══
+function addEntry(){
+  var input=document.getElementById('entry-input');
+  var text=input.value.trim();
+  if(!text)return;
+
+  var now=new Date();
+  var entry={
+    id:Date.now(),
+    date:TODAY,
+    dateDisplay:now.toLocaleDateString(),
+    time:now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),
+    symbol:selectedSym,
+    type:selectedType,
+    text:text,
+    tags:[...selectedTags],
+    done:false,
+    migrated:false
+  };
+
+  var entries=ld('entries',[]);
+  entries.unshift(entry);
+  sv('entries',entries);
+
+  // Write to Sheets
+  dbWrite({
+    action:'saveDailyLog',
+    id:entry.id,
+    date:entry.dateDisplay,
+    time:entry.time,
+    symbol:entry.symbol,
+    type:entry.type,
+    text:entry.text,
+    tags:entry.tags.join(','),
+    linkedSection:entry.tags[0]||''
+  });
+
+  // Feed other portal sections
+  feedPortal(entry);
+
+  input.value='';
+  renderLog();
+  updateStats();
+  showToast('Logged ✓');
+}
+
+// ══ FEED OTHER SECTIONS ══
+function feedPortal(entry){
+  if(entry.type==='task'||entry.type==='priority'){
+    // Add to portal tasks
+    var allDumps=JSON.parse(localStorage.getItem('p_all_dumps')||'[]');
+    allDumps.unshift({id:entry.id,text:entry.text,cat:entry.tags[0]||'brain',date:entry.dateDisplay,source:'daily_log'});
+    localStorage.setItem('p_all_dumps',JSON.stringify(allDumps));
+  }
+  if(entry.type==='prayer'){
+    var prayers=JSON.parse(localStorage.getItem('p_faith_praying')||'[]');
+    prayers.unshift({id:entry.id,text:entry.text,person:entry.text,date:entry.dateDisplay});
+    localStorage.setItem('p_faith_praying',JSON.stringify(prayers));
+  }
+  if(entry.type==='idea'){
+    var brainDumps=JSON.parse(localStorage.getItem('p_brain_dumps')||'[]');
+    brainDumps.unshift({id:entry.id,text:entry.text,cat:'idea',date:entry.dateDisplay});
+    localStorage.setItem('p_brain_dumps',JSON.stringify(brainDumps));
+  }
+}
+
+// ══ RENDER LOG ══
+function renderLog(){
+  var entries=ld('entries',[]);
+  var container=document.getElementById('log-container');
+  var empty=document.getElementById('log-empty');
+
+  // Filter
+  var filtered=entries;
+  if(currentFilter==='today')filtered=entries.filter(e=>e.date===TODAY);
+  else if(currentFilter!=='all')filtered=entries.filter(e=>e.type===currentFilter);
+
+  if(!filtered.length){empty.style.display='block';container.innerHTML='';return;}
+  empty.style.display='none';
+
+  // Group by date
+  var groups={};
+  filtered.forEach(function(e){
+    var key=e.date||TODAY;
+    if(!groups[key])groups[key]=[];
+    groups[key].push(e);
+  });
+
+  container.innerHTML='';
+  Object.keys(groups).forEach(function(date){
+    var groupEntries=groups[date];
+    var today=date===TODAY;
+    var label=today?'Today — '+groupEntries[0].dateDisplay:groupEntries[0].dateDisplay;
+
+    var divider=document.createElement('div');
+    divider.className='date-divider';
+    divider.innerHTML=`<div class="date-line"></div><div class="date-label">${label}</div><div class="date-count">${groupEntries.length}</div><div class="date-line"></div>`;
+    container.appendChild(divider);
+
+    var entriesDiv=document.createElement('div');
+    entriesDiv.className='log-entries';
+    groupEntries.forEach(function(e){
+      entriesDiv.appendChild(makeEntryEl(e));
+    });
+    container.appendChild(entriesDiv);
+  });
+}
+
+function makeEntryEl(entry){
+  var div=document.createElement('div');
+  div.className='log-entry type-'+entry.type+(entry.done?' done':'')+(entry.migrated?' type-migrated':'');
+  div.dataset.id=entry.id;
+
+  var symColor=SYM_COLORS[entry.type]||'rgba(255,255,255,.5)';
+  var sym=entry.migrated?'›':(entry.done?'×':entry.symbol);
+  var symStyle=entry.done?'color:#82C4B5':('color:'+symColor);
+
+  var tagsHtml=entry.tags&&entry.tags.length?entry.tags.map(t=>`<span class="entry-tag" style="background:${TAG_COLORS[t]||'rgba(255,255,255,.1)'}20;color:${TAG_COLORS[t]||'rgba(255,255,255,.4)'}">${t}</span>`).join(''):'';
+
+  div.innerHTML=`
+    <div class="entry-sym" style="${symStyle}">${sym}</div>
+    <div class="entry-content">
+      <div class="entry-text" contenteditable="true" onblur="editEntry(${entry.id},this.textContent)">${esc(entry.text)}</div>
+      <div class="entry-meta">
+        <span class="entry-time">${entry.time||''}</span>
+        ${tagsHtml}
+      </div>
+    </div>
+    <div class="entry-actions">
+      ${(entry.type==='task'||entry.type==='priority')&&!entry.done?`<button class="act-btn done-btn" onclick="markDone(${entry.id})" title="Mark done">×</button>`:''}
+      <button class="act-btn migrate-btn" onclick="toggleMigrateMenu(${entry.id},this)" title="Migrate to section">›</button>
+      <button class="act-btn del-btn" onclick="deleteEntry(${entry.id})" title="Delete">✕</button>
+    </div>
+    <div class="migrate-menu" id="mm-${entry.id}">
+      <button class="migrate-opt" onclick="migrateEntry(${entry.id},'biz_tasks')">→ Business task</button>
+      <button class="migrate-opt" onclick="migrateEntry(${entry.id},'hl_tasks')">→ Home task</button>
+      <button class="migrate-opt" onclick="migrateEntry(${entry.id},'al_tasks')">→ Aligned Life</button>
+      <button class="migrate-opt" onclick="migrateEntry(${entry.id},'faith_praying')">→ Prayer list</button>
+      <button class="migrate-opt" onclick="migrateEntry(${entry.id},'brain_dumps')">→ Brain dump</button>
+      <button class="migrate-opt" onclick="migrateEntry(${entry.id},'followup_list')">→ Follow up</button>
+    </div>
+  `;
+  return div;
+}
+
+function editEntry(id,text){
+  var entries=ld('entries',[]);
+  var e=entries.find(x=>x.id==id);
+  if(e){e.text=text;sv('entries',entries);}
+}
+
+function markDone(id){
+  var entries=ld('entries',[]);
+  var e=entries.find(x=>x.id==id);
+  if(e){e.done=true;sv('entries',entries);}
+  renderLog();updateStats();
+  showToast('Done ✓');
+}
+
+function deleteEntry(id){
+  sv('entries',ld('entries',[]).filter(e=>e.id!=id));
+  renderLog();updateStats();
+}
+
+function toggleMigrateMenu(id,btn){
+  var menu=document.getElementById('mm-'+id);
+  if(menu){menu.classList.toggle('open');}
+}
+
+function migrateEntry(id,targetKey){
+  var entries=ld('entries',[]);
+  var e=entries.find(x=>x.id==id);
+  if(!e)return;
+
+  e.migrated=true;e.migratedTo=targetKey;sv('entries',entries);
+
+  // Add to target section in portal localStorage
+  var targets=JSON.parse(localStorage.getItem('p_'+targetKey)||'[]');
+  targets.unshift({id:Date.now(),text:e.text,done:false,date:e.dateDisplay,cat:e.type});
+  localStorage.setItem('p_'+targetKey,JSON.stringify(targets));
+
+  // Write migration to Sheets
+  dbWrite({action:'updateDailyLog',id:e.id,migrated:true,migratedTo:targetKey,approved:true});
+
+  var menu=document.getElementById('mm-'+e.id);
+  if(menu)menu.classList.remove('open');
+  renderLog();
+  showToast('Migrated to '+targetKey.replace('_',' ')+' ✓');
+}
+
+function filterLog(btn,filter){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter=filter;
+  renderLog();
+}
+
+function updateStats(){
+  var entries=ld('entries',[]);
+  var todayEntries=entries.filter(e=>e.date===TODAY);
+  var tasks=entries.filter(e=>(e.type==='task'||e.type==='priority')&&!e.migrated);
+  var done=tasks.filter(e=>e.done);
+  document.getElementById('stat-today').textContent=todayEntries.length;
+  document.getElementById('stat-tasks').textContent=tasks.length;
+  document.getElementById('stat-done').textContent=done.length;
+  document.getElementById('stat-total').textContent=entries.length;
+}
+
+async function dbWrite(data){
+  try{
+    await fetch(DB_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  }catch(e){console.log('DB write error:',e);}
+}
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// Close migrate menus on click outside
+document.addEventListener('click',function(e){
+  if(!e.target.classList.contains('migrate-btn')){
+    document.querySelectorAll('.migrate-menu.open').forEach(m=>m.classList.remove('open'));
+  }
+});
+
+init();
+</script>
+</body>
+</html>
