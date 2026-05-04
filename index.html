@@ -903,8 +903,133 @@ async function checkDbConnection(){
   try{
     var resp=await fetch(DB_URL+"?sheet=Config&t="+Date.now());
     var data=await resp.json();
-    if(data.status==="success"){DB_ONLINE=true;updateDbStatus(true);flushQueue();}
-  }catch(e){DB_ONLINE=false;updateDbStatus(false);}
+    // Connection works if we get any response back
+    if(data && (data.status==="success" || data.status==="error")){
+      DB_ONLINE=true;
+      updateDbStatus(true);
+      flushQueue();
+      loadFromSheets(); // load seeded data
+    }
+  }catch(e){
+    DB_ONLINE=false;
+    updateDbStatus(false);
+  }
+}
+
+async function loadFromSheets(){
+  try{
+    // Load People
+    var people=await dbRead('People');
+    if(people&&people.length>0){
+      var mapped=people.map(function(p){
+        return {
+          id:p['ID']||Date.now(),
+          name:p['Name']||'',
+          role:p['Role']||'',
+          color:p['Color']||'#C2738A',
+          praying:p['Praying For']==='TRUE'||p['Praying For']===true
+        };
+      }).filter(function(p){return p.name;});
+      if(mapped.length>0){sv('people',mapped);renderPeople();}
+    }
+
+    // Load Tasks
+    var tasks=await dbRead('Tasks');
+    if(tasks&&tasks.length>0){
+      var taskMap={
+        'mission_aligned':'al_tasks','mission_wtc':'wtc_tasks',
+        'mission_mustard':'ms_tasks','business':'biz_tasks',
+        'homelife':'hl_tasks','seth_legal':'seth_legal'
+      };
+      var grouped={};
+      tasks.forEach(function(t){
+        var section=t['Section']||'biz_tasks';
+        var key=taskMap[section]||section;
+        if(!grouped[key])grouped[key]=[];
+        grouped[key].push({id:t['ID']||Date.now(),text:t['Text']||'',done:t['Done']==='TRUE'||t['Done']===true});
+      });
+      Object.keys(grouped).forEach(function(key){
+        var existing=ld(key,[]);
+        if(existing.length===0){sv(key,grouped[key]);}
+      });
+    }
+
+    // Load Habits
+    var habits=await dbRead('Habits');
+    if(habits&&habits.length>0){
+      var existing=ld('habits',null);
+      if(!existing||existing.length===0){
+        var mapped=habits.map(function(h){
+          return {
+            id:parseInt(h['ID'])||Date.now(),
+            name:h['Name']||'',
+            emoji:h['Emoji']||'⭐',
+            freq:h['Frequency']||'daily',
+            points:parseInt(h['Points'])||5,
+            double:h['Double Points']==='TRUE'||h['Double Points']===true,
+            streak:parseInt(h['Streak'])||0,
+            lastDone:''
+          };
+        }).filter(function(h){return h.name;});
+        if(mapped.length>0)sv('habits',mapped);
+      }
+    }
+
+    // Load Faith
+    var faith=await dbRead('Faith');
+    if(faith&&faith.length>0){
+      var prayers=[];var selfPrayers=[];var general=[];var answered=[];var scripture=[];var gratitude=[];
+      faith.forEach(function(f){
+        var item={id:f['ID']||Date.now(),text:f['Text']||'',date:''};
+        switch(f['Type']){
+          case 'praying_for': prayers.push(item);break;
+          case 'for_myself': selfPrayers.push(item);break;
+          case 'general': general.push(item);break;
+          case 'answered': answered.push(item);break;
+          case 'scripture': scripture.push(Object.assign(item,{reference:f['Reference']||''}));break;
+          case 'gratitude': gratitude.push(item);break;
+        }
+      });
+      if(prayers.length>0&&ld('faith_praying',[]).length===0)sv('faith_praying',prayers);
+      if(selfPrayers.length>0&&ld('self_prayers',[]).length===0)sv('self_prayers',selfPrayers);
+      if(general.length>0&&ld('general_prayers',[]).length===0)sv('general_prayers',general);
+      if(answered.length>0&&ld('answered_prayers',[]).length===0)sv('answered_prayers',answered);
+      if(gratitude.length>0&&ld('gratitude_list',[]).length===0)sv('gratitude_list',gratitude);
+    }
+
+    // Load Goals
+    var goals=await dbRead('Goals');
+    if(goals&&goals.length>0){
+      var daily=[];var weekly=[];var monthly=[];
+      goals.forEach(function(g){
+        var item={id:g['ID']||Date.now(),text:g['Text']||'',done:g['Done']==='TRUE'||g['Done']===true};
+        switch(g['Period']){
+          case 'daily':daily.push(item);break;
+          case 'weekly':weekly.push(item);break;
+          case 'monthly':monthly.push(item);break;
+        }
+      });
+      if(daily.length>0&&ld('goals_daily',[]).length===0)sv('goals_daily',daily);
+      if(weekly.length>0&&ld('goals_weekly',[]).length===0)sv('goals_weekly',weekly);
+      if(monthly.length>0&&ld('goals_monthly',[]).length===0)sv('goals_monthly',monthly);
+    }
+
+    // Load Rewards
+    var rewards=await dbRead('Rewards');
+    if(rewards&&rewards.length>0&&ld('reward_items',[]).length===0){
+      var mapped=rewards.map(function(r){
+        return {id:r['ID']||Date.now(),name:r['Name']||'',points:parseInt(r['Points Required'])||500,done:r['Redeemed']==='TRUE'||r['Redeemed']===true};
+      }).filter(function(r){return r.name;});
+      if(mapped.length>0)sv('reward_items',mapped);
+    }
+
+    // Re-render everything
+    loadSaved();
+    showToast('Data loaded from your database ✓');
+
+  }catch(e){
+    console.log('Sheet load error:',e);
+  }
 }
 
 function updateDbStatus(online){
