@@ -358,6 +358,8 @@ select,select option{background:#1a2d4a;color:#fff;}
 
 .tool-card{display:flex;flex-direction:column;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:.8rem .6rem;font-size:11px;font-weight:500;color:rgba(255,255,255,.58);text-decoration:none;cursor:pointer;transition:all .15s;text-align:center}
 .tool-card:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.12)}
+.tool-link-sm{font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;padding:.2rem .6rem;border-radius:999px;border:1px solid rgba(255,255,255,.08);transition:all .15s;white-space:nowrap}
+.tool-link-sm:hover{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.2)}
 .tool-emoji{font-size:20px}
 
 /* TOAST */
@@ -699,6 +701,37 @@ select,select option{background:#1a2d4a;color:#fff;}
         </div>
       </div>
 
+      <!-- DAILY LOG WIDGET -->
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-hdr">
+          <div class="card-title">📓 Today's Log</div>
+          <div style="display:flex;gap:.4rem;align-items:center">
+            <select class="add-select" id="log-symbol-select" style="font-size:11px;padding:.28rem .5rem;max-width:110px">
+              <option value="•">• Task</option>
+              <option value="○">○ Event</option>
+              <option value="—">— Note</option>
+              <option value="*">* Priority</option>
+              <option value="†">† Prayer</option>
+              <option value="!">! Idea</option>
+            </select>
+            <select class="add-select" id="log-tag-select" style="font-size:11px;padding:.28rem .5rem;max-width:100px">
+              <option value="">No tag</option>
+              <option value="home">🏡 Home</option>
+              <option value="business">💼 Business</option>
+              <option value="faith">✝️ Faith</option>
+              <option value="people">👥 People</option>
+              <option value="health">💪 Health</option>
+              <option value="mission">🌱 Mission</option>
+            </select>
+            <a href="daily.html" style="font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;padding:.28rem .55rem;border:1px solid rgba(255,255,255,.1);border-radius:5px;transition:all .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Full log →</a>
+          </div>
+        </div>
+        <div class="add-row" style="margin-bottom:.5rem">
+          <input class="add-input" id="log-entry-input" placeholder="Log something for today..." style="flex:1" onkeydown="if(event.key==='Enter')addDailyLogEntry()"/>
+          <button class="add-btn" onclick="addDailyLogEntry()">Log</button>
+        </div>
+        <div id="home-log-list" style="display:flex;flex-direction:column;gap:3px;max-height:160px;overflow-y:auto"></div>
+      </div>
       <!-- QUICK ACCESS -->
       <div class="card">
         <div class="card-hdr"><div class="card-title">⚡ Quick Access</div></div>
@@ -1633,9 +1666,243 @@ function renderAppts(){
 function removeAppt(id){sv('appts',ld('appts',[]).filter(a=>a.id!=id));renderAppts();}
 
 // ══ PRIORITIES ══
-function savePriorities(){sv('prio_'+TODAY,{p1:document.getElementById('p1').value,p2:document.getElementById('p2').value,p3:document.getElementById('p3').value});}
-function loadPriorities(){var p=ld('prio_'+TODAY,{});if(p.p1)document.getElementById('p1').value=p.p1;if(p.p2)document.getElementById('p2').value=p.p2;if(p.p3)document.getElementById('p3').value=p.p3;}
-function clearPriorities(){['p1','p2','p3'].forEach(id=>document.getElementById(id).value='');savePriorities();}
+function savePriorities(){
+  var p = ld('prio_'+TODAY, {});
+  p.p1 = document.getElementById('p1').value;
+  p.p2 = document.getElementById('p2').value;
+  p.p3 = document.getElementById('p3').value;
+  sv('prio_'+TODAY, p);
+  d1Save('priorities', {id:TODAY, priority_date:TODAY, p1:p.p1, p2:p.p2, p3:p.p3});
+}
+
+function loadPriorities(){
+  var p = ld('prio_'+TODAY, {});
+  if(p.p1){var e=document.getElementById('p1');if(e)e.value=p.p1;}
+  if(p.p2){var e=document.getElementById('p2');if(e)e.value=p.p2;}
+  if(p.p3){var e=document.getElementById('p3');if(e)e.value=p.p3;}
+  // Restore done state + links
+  [1,2,3].forEach(function(n){
+    var pdata = ld('prio_'+TODAY, {});
+    if(pdata['p'+n+'_done']){
+      var cb = document.getElementById('p'+n+'-check');
+      if(cb) cb.checked = true;
+      var ta = document.getElementById('p'+n);
+      if(ta) ta.classList.add('done-text');
+      var row = document.getElementById('priority-row-'+n);
+      if(row) row.classList.add('done-priority');
+    }
+    if(pdata['p'+n+'_migrated']){
+      var badge = document.getElementById('p'+n+'-migrated');
+      if(badge) badge.style.display = 'inline';
+    }
+    if(pdata['p'+n+'_task_id']){
+      restorePriorityLink(n, pdata['p'+n+'_task_id'], pdata['p'+n+'_task_text'], pdata['p'+n+'_pts']);
+    }
+  });
+}
+
+function clearPriorities(){
+  if(!confirm('Clear all priorities for today?')) return;
+  ['p1','p2','p3'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.value = '';
+    var cb = document.getElementById(id+'-check');
+    if(cb) cb.checked = false;
+  });
+  [1,2,3].forEach(function(n){
+    var row = document.getElementById('priority-row-'+n);
+    if(row) row.classList.remove('done-priority','migrated-priority');
+    unlinkPriority(n);
+  });
+  sv('prio_'+TODAY, {});
+  d1Save('priorities', {id:TODAY, priority_date:TODAY, p1:'', p2:'', p3:''});
+}
+
+function completePriority(n, checked){
+  var ta = document.getElementById('p'+n);
+  var row = document.getElementById('priority-row-'+n);
+  var p = ld('prio_'+TODAY, {});
+  if(checked){
+    if(ta) ta.classList.add('done-text');
+    if(row) row.classList.add('done-priority');
+    var taskId = p['p'+n+'_task_id'];
+    var pts = p['p'+n+'_pts'] || 5;
+    if(taskId){
+      ['biz_tasks','hl_tasks','al_tasks','wtc_tasks','ms_tasks','personal','followup_list'].forEach(function(key){
+        var tasks = ld(key,[]);
+        var task = tasks.find(function(t){return String(t.id)===String(taskId);});
+        if(task){task.done=true;sv(key,tasks);}
+      });
+    }
+    var todayPts = ld('today_pts_'+TODAY,0) + pts;
+    sv('today_pts_'+TODAY, todayPts);
+    sv('total_pts', ld('total_pts',0) + pts);
+    updateSidebarPoints();
+    showToast('+'+pts+' pts — Priority '+n+' complete ✓');
+    p['p'+n+'_done'] = true;
+    sv('prio_'+TODAY, p);
+    var p1c = document.getElementById('p1-check');
+    var p2c = document.getElementById('p2-check');
+    var p3c = document.getElementById('p3-check');
+    if(p1c&&p2c&&p3c&&p1c.checked&&p2c.checked&&p3c.checked){
+      setTimeout(function(){showToast('🎉 All 3 priorities done!');},600);
+    }
+  } else {
+    if(ta) ta.classList.remove('done-text');
+    if(row) row.classList.remove('done-priority');
+    var pts2 = p['p'+n+'_pts'] || 5;
+    sv('today_pts_'+TODAY, Math.max(0, ld('today_pts_'+TODAY,0) - pts2));
+    sv('total_pts', Math.max(0, ld('total_pts',0) - pts2));
+    updateSidebarPoints();
+    p['p'+n+'_done'] = false;
+    sv('prio_'+TODAY, p);
+  }
+}
+
+function toggleLinkPanel(n){
+  var panel = document.getElementById('p'+n+'-link-panel');
+  if(!panel) return;
+  panel.classList.toggle('open');
+  if(panel.classList.contains('open')) populateLinkDropdown(n);
+}
+
+function populateLinkDropdown(n){
+  var select = document.getElementById('p'+n+'-task-select');
+  if(!select) return;
+  select.innerHTML = '<option value="">Select existing task...</option>';
+  var allKeys = [
+    {key:'biz_tasks',label:'💼'},
+    {key:'hl_tasks',label:'🏡'},
+    {key:'al_tasks',label:'🌱'},
+    {key:'wtc_tasks',label:'✝️'},
+    {key:'ms_tasks',label:'🌿'},
+    {key:'personal',label:'👤'},
+    {key:'followup_list',label:'📋'}
+  ];
+  allKeys.forEach(function(k){
+    var tasks = ld(k.key,[]).filter(function(t){return !t.done;});
+    tasks.forEach(function(t){
+      var opt = document.createElement('option');
+      opt.value = t.id;
+      opt.dataset.key = k.key;
+      opt.dataset.text = t.text;
+      opt.textContent = k.label + ' ' + (t.text||'').substring(0,40) + (t.text&&t.text.length>40?'...':'');
+      select.appendChild(opt);
+    });
+  });
+}
+
+function linkPriorityTask(n){
+  var select = document.getElementById('p'+n+'-task-select');
+  if(!select) return;
+  var opt = select.options[select.selectedIndex];
+  if(!opt || !opt.value) return;
+  var taskId = opt.value;
+  var taskText = opt.dataset.text || opt.textContent;
+  var pts = 5;
+  var bizTasks = ld('biz_tasks',[]);
+  if(bizTasks.find(function(t){return String(t.id)===String(taskId);})) pts = 10;
+  restorePriorityLink(n, taskId, taskText, pts);
+  var p = ld('prio_'+TODAY, {});
+  p['p'+n+'_task_id'] = taskId;
+  p['p'+n+'_task_text'] = taskText;
+  p['p'+n+'_pts'] = pts;
+  sv('prio_'+TODAY, p);
+  var panel = document.getElementById('p'+n+'-link-panel');
+  if(panel) panel.classList.remove('open');
+  showToast('Linked ✓');
+}
+
+function restorePriorityLink(n, taskId, taskText, pts){
+  var btn = document.getElementById('p'+n+'-link-btn');
+  var linked = document.getElementById('p'+n+'-linked-task');
+  var unlink = document.getElementById('p'+n+'-unlink');
+  var ptsEl = document.getElementById('p'+n+'-pts');
+  if(btn){btn.textContent='✓ Linked';btn.classList.add('linked');}
+  if(linked){linked.textContent='→ '+(taskText||'').substring(0,50);linked.style.display='block';}
+  if(unlink) unlink.style.display='inline-block';
+  if(ptsEl){ptsEl.textContent='+'+pts+' pts';ptsEl.style.display='inline';}
+}
+
+function createPriorityTask(n){
+  var text = document.getElementById('p'+n).value.trim();
+  if(!text){showToast('Type your priority first');return;}
+  var section = document.getElementById('p'+n+'-section-select').value;
+  var taskId = Date.now();
+  var task = {id:taskId, text:text, done:false};
+  var tasks = ld(section,[]);
+  tasks.push(task);
+  sv(section, tasks);
+  d1Save('tasks', {id:String(taskId), text:text, section:section, done:0, priority:'high'});
+  var sectionLabels = {biz_tasks:'Business',hl_tasks:'Home Life',al_tasks:'Aligned Life',wtc_tasks:'WTC',ms_tasks:'Mustard Seed',personal:'Personal'};
+  var pts = section==='biz_tasks' ? 10 : 5;
+  restorePriorityLink(n, taskId, text, pts);
+  var p = ld('prio_'+TODAY, {});
+  p['p'+n+'_task_id'] = taskId;
+  p['p'+n+'_task_text'] = text;
+  p['p'+n+'_pts'] = pts;
+  sv('prio_'+TODAY, p);
+  var panel = document.getElementById('p'+n+'-link-panel');
+  if(panel) panel.classList.remove('open');
+  showToast('Task created in '+(sectionLabels[section]||section)+' ✓');
+}
+
+function unlinkPriority(n){
+  var btn = document.getElementById('p'+n+'-link-btn');
+  var linked = document.getElementById('p'+n+'-linked-task');
+  var unlink = document.getElementById('p'+n+'-unlink');
+  var ptsEl = document.getElementById('p'+n+'-pts');
+  if(btn){btn.textContent='+ Link task';btn.classList.remove('linked');}
+  if(linked){linked.textContent='';linked.style.display='none';}
+  if(unlink) unlink.style.display='none';
+  if(ptsEl) ptsEl.style.display='none';
+  var p = ld('prio_'+TODAY, {});
+  delete p['p'+n+'_task_id'];
+  delete p['p'+n+'_task_text'];
+  delete p['p'+n+'_pts'];
+  sv('prio_'+TODAY, p);
+}
+
+function checkCarryForward(){
+  var yesterday = new Date();
+  yesterday.setDate(yesterday.getDate()-1);
+  var yKey = yesterday.toDateString();
+  var yp = ld('prio_'+yKey, {});
+  if(!yp.p1 && !yp.p2 && !yp.p3){showToast('No priorities from yesterday');return;}
+  var slots = [1,2,3].filter(function(n){
+    var ta = document.getElementById('p'+n);
+    return !ta || !ta.value.trim();
+  });
+  var unfinished = ['p1','p2','p3'].filter(function(k){return yp[k] && !yp[k+'_done'];});
+  var carried = 0;
+  unfinished.forEach(function(yk, i){
+    if(i >= slots.length) return;
+    var slot = slots[i];
+    var ta = document.getElementById('p'+slot);
+    if(ta && !ta.value.trim()){
+      ta.value = '› ' + yp[yk];
+      var badge = document.getElementById('p'+slot+'-migrated');
+      if(badge) badge.style.display = 'inline';
+      var row = document.getElementById('priority-row-'+slot);
+      if(row) row.classList.add('migrated-priority');
+      if(yp[yk+'_task_id']){
+        var pd = ld('prio_'+TODAY, {});
+        pd['p'+slot+'_task_id'] = yp[yk+'_task_id'];
+        pd['p'+slot+'_task_text'] = yp[yk+'_task_text'];
+        pd['p'+slot+'_pts'] = yp[yk+'_pts'];
+        sv('prio_'+TODAY, pd);
+        restorePriorityLink(slot, yp[yk+'_task_id'], yp[yk+'_task_text'], yp[yk+'_pts']||5);
+      }
+      carried++;
+    }
+  });
+  if(carried > 0){
+    savePriorities();
+    showToast(carried+' priorit'+(carried===1?'y':'ies')+' carried forward ✓');
+  } else {
+    showToast('No empty slots to carry into');
+  }
+}
 function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
 
 // ══ ITEMS ══
@@ -2645,6 +2912,7 @@ function loadSaved(){
   renderBrainRecent();
   renderBills();
   renderNeedTo();
+  renderHomeDailyLog();
   updateSidebarPoints();
   loadGlance();
 
@@ -3049,6 +3317,76 @@ function deleteNeedTo(id){
   sv('needto', ld('needto', []).filter(function(i){ return i.id != id; }));
   renderNeedTo();
 }
+
+
+
+// HOME DAILY LOG WIDGET
+function addDailyLogEntry(){
+  var input = document.getElementById('log-entry-input');
+  var text = input.value.trim();
+  if(!text) return;
+  var symbol = document.getElementById('log-symbol-select').value || '•';
+  var tag = document.getElementById('log-tag-select').value || '';
+  var entry = {
+    id: Date.now(),
+    symbol,
+    text,
+    tag,
+    date: TODAY,
+    time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
+  };
+  var log = ld('daily_log_entries', []);
+  log.unshift(entry);
+  sv('daily_log_entries', log);
+  d1Save('daily_log', {id:String(entry.id), symbol, text, tag, log_date:TODAY, log_time:entry.time});
+  input.value = '';
+  renderHomeDailyLog();
+  showToast('Logged ✓');
+}
+
+function renderHomeDailyLog(){
+  var list = document.getElementById('home-log-list');
+  if(!list) return;
+  var log = ld('daily_log_entries', []);
+  var todayEntries = log.filter(function(e){return e.date === TODAY;});
+  list.innerHTML = '';
+  if(!todayEntries.length){
+    list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,.18);font-style:italic">Nothing logged yet today</div>';
+    return;
+  }
+  var tagColors = {home:'var(--amber)',business:'var(--peony)',faith:'var(--faith)',people:'var(--sage)',health:'var(--sage)',mission:'var(--plum)'};
+  todayEntries.slice(0,8).forEach(function(entry){
+    var div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:flex-start;gap:.4rem;padding:.3rem .4rem;border-radius:5px;font-size:12px;color:rgba(255,255,255,.75)';
+    var symbolColor = {'+':'var(--sage)','*':'var(--amber)','†':'var(--faith)','!':'var(--peony)'}[entry.symbol] || 'rgba(255,255,255,.35)';
+    div.innerHTML =
+      '<span style="font-family:monospace;color:'+symbolColor+';flex-shrink:0;width:14px;font-size:13px">'+entry.symbol+'</span>'+
+      '<span style="flex:1;line-height:1.4">'+esc(entry.text)+'</span>'+
+      (entry.tag?'<span style="font-size:9px;font-weight:700;padding:1px 5px;border-radius:999px;background:rgba(255,255,255,.06);color:'+(tagColors[entry.tag]||'rgba(255,255,255,.35)')+'">'+entry.tag+'</span>':'')+
+      '<button class="item-btn del del-log-btn" data-eid="'+entry.id+'" style="flex-shrink:0">✕</button>';
+    list.appendChild(div);
+  });
+  if(todayEntries.length > 8){
+    var more = document.createElement('div');
+    more.style.cssText = 'font-size:10px;color:rgba(255,255,255,.25);text-align:center;padding:.2rem';
+    more.innerHTML = '+ '+(todayEntries.length - 8)+' more — <a href="daily.html" style="color:rgba(255,255,255,.35);text-decoration:none">view full log</a>';
+    list.appendChild(more);
+  }
+}
+
+function deleteDailyEntry(id){
+  var log = ld('daily_log_entries', []);
+  sv('daily_log_entries', log.filter(function(e){return e.id != id;}));
+  renderHomeDailyLog();
+}
+
+// Event delegation for daily log delete buttons
+document.addEventListener('click', function(e){
+  if(e.target.classList.contains('del-log-btn')){
+    var eid = e.target.dataset.eid;
+    if(eid) deleteDailyEntry(eid);
+  }
+});
 
 
 // BILLS TRACKER
