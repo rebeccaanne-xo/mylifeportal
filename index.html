@@ -139,6 +139,29 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
 .item-btn.del:hover{background:rgba(192,57,43,.18);color:#F1948A}
 
 
+
+/* NEED TO WIDGET */
+.needto-list{display:flex;flex-direction:column;gap:5px;margin-bottom:.5rem}
+.needto-item{display:flex;align-items:flex-start;gap:8px;padding:.6rem .75rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;transition:all .15s;position:relative}
+.needto-item:hover{background:rgba(255,255,255,.07)}
+.needto-item.done{opacity:.4}
+.needto-item.done .needto-text{text-decoration:line-through}
+.needto-type-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center;margin-top:1px}
+.needto-content{flex:1;min-width:0}
+.needto-person{font-size:10px;font-weight:700;color:var(--peony);margin-bottom:1px;letter-spacing:.04em;text-transform:uppercase}
+.needto-text{font-size:13px;color:rgba(255,255,255,.82);line-height:1.4}
+.needto-due{font-size:10px;color:rgba(255,255,255,.28);margin-top:2px}
+.needto-due.overdue{color:#F1948A}
+.needto-due.soon{color:var(--amber)}
+.needto-actions{display:flex;gap:3px;opacity:0;transition:opacity .15s;flex-shrink:0}
+.needto-item:hover .needto-actions{opacity:1}
+.needto-add-form{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.875rem;margin-top:.5rem;display:none}
+.needto-add-form.open{display:block}
+.needto-type-picker{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.6rem}
+.nt-btn{font-size:11px;padding:.3rem .75rem;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.4);cursor:pointer;font-family:inherit;transition:all .15s}
+.nt-btn:hover{border-color:rgba(255,255,255,.3);color:#fff}
+.nt-btn.selected{background:rgba(194,115,138,.2);border-color:var(--peony);color:var(--peony)}
+
 /* DRAG AND DROP */
 .drag-over{background:rgba(194,115,138,.1)!important;border:1px dashed var(--peony)!important}
 .dragging{opacity:.5;transform:scale(.98)}
@@ -252,11 +275,25 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
 .appt-del{background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-size:11px;padding:1px 4px}
 .appt-del:hover{color:#F1948A}
 
-.priority-row{display:flex;align-items:flex-start;gap:9px;padding:.55rem .7rem;background:rgba(255,255,255,.04);border-radius:7px;margin-bottom:5px}
+.priority-row{background:rgba(255,255,255,.04);border-radius:9px;margin-bottom:6px;border:1px solid rgba(255,255,255,.06);overflow:hidden;transition:border-color .2s}
+.priority-row:focus-within{border-color:rgba(194,115,138,.3)}
+.priority-row.done-priority{opacity:.5}
+.priority-row.migrated-priority{border-color:rgba(196,137,90,.2);background:rgba(196,137,90,.05)}
+.priority-top{display:flex;align-items:flex-start;gap:9px;padding:.55rem .7rem}
 .priority-num{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(255,255,255,.1);flex-shrink:0;width:16px;line-height:1}
+.priority-check{width:16px;height:16px;accent-color:var(--sage);flex-shrink:0;margin-top:3px;cursor:pointer}
 .priority-input{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:rgba(255,255,255,.8);resize:none;line-height:1.4;min-height:20px}
 .priority-input::placeholder{color:rgba(255,255,255,.2)}
 .priority-input:focus{color:#fff}
+.priority-input.done-text{text-decoration:line-through;color:rgba(255,255,255,.35)}
+.priority-meta{padding:.3rem .7rem .5rem 2.5rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.priority-link-btn{font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.3);cursor:pointer;font-family:inherit;transition:all .15s}
+.priority-link-btn:hover{border-color:var(--peony);color:var(--peony)}
+.priority-link-btn.linked{border-color:var(--sage);color:var(--sage);background:rgba(74,124,111,.1)}
+.priority-migrated-badge{font-size:9px;color:var(--amber);font-weight:700;letter-spacing:.06em}
+.priority-pts{font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(74,124,111,.15);color:var(--sage)}
+.priority-link-panel{padding:.4rem .7rem .6rem 2.5rem;display:none;border-top:1px solid rgba(255,255,255,.05)}
+.priority-link-panel.open{display:block}
 
 /* GBB LINK CARD */
 .gbb-portal-card{background:linear-gradient(135deg,rgba(194,115,138,.15),rgba(194,115,138,.08));border:1px solid rgba(194,115,138,.25);border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
@@ -325,6 +362,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
   <div class="nav-group">
     <div class="nav-group-label">Mind</div>
     <button class="nav-btn tab-brain" onclick="goTab('brain',this)"><span class="nav-emoji">🧠</span>Brain Dump</button>
+    <a class="nav-btn" href="projects.html" style="text-decoration:none"><span class="nav-emoji">📋</span>Project Board</a>
   </div>
 
   <div class="sidebar-footer">
@@ -419,15 +457,171 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
         <div class="card">
           <div class="card-hdr">
             <div class="card-title">🎯 Today's Focus</div>
-            <button class="s-action" onclick="clearPriorities()">Clear</button>
+            <div style="display:flex;gap:6px">
+              <button class="s-action" onclick="checkCarryForward()" title="Check for unfinished priorities from yesterday">↩ Carry</button>
+              <button class="s-action" onclick="clearPriorities()">Clear</button>
+            </div>
           </div>
-          <div class="priority-row"><div class="priority-num">1</div><textarea class="priority-input" id="p1" rows="1" placeholder="Most important thing today..." onblur="savePriorities()" oninput="autoGrow(this)"></textarea></div>
-          <div class="priority-row"><div class="priority-num">2</div><textarea class="priority-input" id="p2" rows="1" placeholder="Second priority..." onblur="savePriorities()" oninput="autoGrow(this)"></textarea></div>
-          <div class="priority-row"><div class="priority-num">3</div><textarea class="priority-input" id="p3" rows="1" placeholder="Third priority..." onblur="savePriorities()" oninput="autoGrow(this)"></textarea></div>
+          <div id="priority-1-wrap">
+            <div class="priority-row" id="priority-row-1">
+              <div class="priority-top">
+                <div class="priority-num">1</div>
+                <input type="checkbox" class="priority-check" id="p1-check" onchange="completePriority(1,this.checked)"/>
+                <textarea class="priority-input" id="p1" rows="1" placeholder="Most important thing today..." onblur="savePriorities()" oninput="autoGrow(this)"></textarea>
+              </div>
+              <div class="priority-meta" id="p1-meta">
+                <button class="priority-link-btn" onclick="toggleLinkPanel(1)" id="p1-link-btn">+ Link task</button>
+                <span class="priority-pts" id="p1-pts" style="display:none"></span>
+                <span class="priority-migrated-badge" id="p1-migrated" style="display:none">› carried forward</span>
+              </div>
+              <div class="priority-link-panel" id="p1-link-panel">
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:.4rem">Link to existing task or create new:</div>
+                <div class="add-row" style="margin-bottom:.4rem">
+                  <select class="add-select" id="p1-task-select" style="flex:1;font-size:11px">
+                    <option value="">Select existing task...</option>
+                  </select>
+                  <button class="add-btn" style="font-size:11px" onclick="linkPriorityTask(1)">Link</button>
+                </div>
+                <div style="font-size:10px;color:rgba(255,255,255,.25);margin:.3rem 0">or create new task:</div>
+                <div class="add-row">
+                  <select class="add-select" id="p1-section-select" style="font-size:11px">
+                    <option value="biz_tasks">💼 Business</option>
+                    <option value="hl_tasks">🏡 Home Life</option>
+                    <option value="al_tasks">🌱 Aligned Life</option>
+                    <option value="wtc_tasks">✝️ We The Church</option>
+                    <option value="ms_tasks">🌿 Mustard Seed</option>
+                    <option value="personal">👤 Personal</option>
+                  </select>
+                  <button class="add-btn" style="font-size:11px" onclick="createPriorityTask(1)">Create</button>
+                </div>
+                <div id="p1-linked-task" style="margin-top:.4rem;font-size:11px;color:var(--sage);display:none"></div>
+                <button class="priority-link-btn" onclick="unlinkPriority(1)" id="p1-unlink" style="display:none;margin-top:.3rem;border-color:#F1948A;color:#F1948A">Unlink</button>
+              </div>
+            </div>
+          </div>
+          <div id="priority-2-wrap">
+            <div class="priority-row" id="priority-row-2">
+              <div class="priority-top">
+                <div class="priority-num">2</div>
+                <input type="checkbox" class="priority-check" id="p2-check" onchange="completePriority(2,this.checked)"/>
+                <textarea class="priority-input" id="p2" rows="1" placeholder="Second priority..." onblur="savePriorities()" oninput="autoGrow(this)"></textarea>
+              </div>
+              <div class="priority-meta" id="p2-meta">
+                <button class="priority-link-btn" onclick="toggleLinkPanel(2)" id="p2-link-btn">+ Link task</button>
+                <span class="priority-pts" id="p2-pts" style="display:none"></span>
+                <span class="priority-migrated-badge" id="p2-migrated" style="display:none">› carried forward</span>
+              </div>
+              <div class="priority-link-panel" id="p2-link-panel">
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:.4rem">Link to existing task or create new:</div>
+                <div class="add-row" style="margin-bottom:.4rem">
+                  <select class="add-select" id="p2-task-select" style="flex:1;font-size:11px">
+                    <option value="">Select existing task...</option>
+                  </select>
+                  <button class="add-btn" style="font-size:11px" onclick="linkPriorityTask(2)">Link</button>
+                </div>
+                <div style="font-size:10px;color:rgba(255,255,255,.25);margin:.3rem 0">or create new task:</div>
+                <div class="add-row">
+                  <select class="add-select" id="p2-section-select" style="font-size:11px">
+                    <option value="biz_tasks">💼 Business</option>
+                    <option value="hl_tasks">🏡 Home Life</option>
+                    <option value="al_tasks">🌱 Aligned Life</option>
+                    <option value="wtc_tasks">✝️ We The Church</option>
+                    <option value="ms_tasks">🌿 Mustard Seed</option>
+                    <option value="personal">👤 Personal</option>
+                  </select>
+                  <button class="add-btn" style="font-size:11px" onclick="createPriorityTask(2)">Create</button>
+                </div>
+                <div id="p2-linked-task" style="margin-top:.4rem;font-size:11px;color:var(--sage);display:none"></div>
+                <button class="priority-link-btn" onclick="unlinkPriority(2)" id="p2-unlink" style="display:none;margin-top:.3rem;border-color:#F1948A;color:#F1948A">Unlink</button>
+              </div>
+            </div>
+          </div>
+          <div id="priority-3-wrap">
+            <div class="priority-row" id="priority-row-3">
+              <div class="priority-top">
+                <div class="priority-num">3</div>
+                <input type="checkbox" class="priority-check" id="p3-check" onchange="completePriority(3,this.checked)"/>
+                <textarea class="priority-input" id="p3" rows="1" placeholder="Third priority..." onblur="savePriorities()" oninput="autoGrow(this)"></textarea>
+              </div>
+              <div class="priority-meta" id="p3-meta">
+                <button class="priority-link-btn" onclick="toggleLinkPanel(3)" id="p3-link-btn">+ Link task</button>
+                <span class="priority-pts" id="p3-pts" style="display:none"></span>
+                <span class="priority-migrated-badge" id="p3-migrated" style="display:none">› carried forward</span>
+              </div>
+              <div class="priority-link-panel" id="p3-link-panel">
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:.4rem">Link to existing task or create new:</div>
+                <div class="add-row" style="margin-bottom:.4rem">
+                  <select class="add-select" id="p3-task-select" style="flex:1;font-size:11px">
+                    <option value="">Select existing task...</option>
+                  </select>
+                  <button class="add-btn" style="font-size:11px" onclick="linkPriorityTask(3)">Link</button>
+                </div>
+                <div style="font-size:10px;color:rgba(255,255,255,.25);margin:.3rem 0">or create new task:</div>
+                <div class="add-row">
+                  <select class="add-select" id="p3-section-select" style="font-size:11px">
+                    <option value="biz_tasks">💼 Business</option>
+                    <option value="hl_tasks">🏡 Home Life</option>
+                    <option value="al_tasks">🌱 Aligned Life</option>
+                    <option value="wtc_tasks">✝️ We The Church</option>
+                    <option value="ms_tasks">🌿 Mustard Seed</option>
+                    <option value="personal">👤 Personal</option>
+                  </select>
+                  <button class="add-btn" style="font-size:11px" onclick="createPriorityTask(3)">Create</button>
+                </div>
+                <div id="p3-linked-task" style="margin-top:.4rem;font-size:11px;color:var(--sage);display:none"></div>
+                <button class="priority-link-btn" onclick="unlinkPriority(3)" id="p3-unlink" style="display:none;margin-top:.3rem;border-color:#F1948A;color:#F1948A">Unlink</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- NEED TO -->
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-hdr">
+          <div class="card-title">⚡ Need To</div>
+          <button class="s-action" onclick="toggleNeedToForm()">+ Add</button>
+        </div>
+        <div class="needto-list" id="needto-list"></div>
+        <div id="needto-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;display:none">Nothing pending</div>
+        <div class="needto-add-form" id="needto-form">
+          <div class="needto-type-picker" id="needto-type-picker">
+            <button class="nt-btn selected" data-type="call" data-icon="📞" onclick="selectNTType(this)">📞 Call</button>
+            <button class="nt-btn" data-type="email" data-icon="✉️" onclick="selectNTType(this)">✉️ Email</button>
+            <button class="nt-btn" data-type="text" data-icon="💬" onclick="selectNTType(this)">💬 Text</button>
+            <button class="nt-btn" data-type="errand" data-icon="🚗" onclick="selectNTType(this)">🚗 Errand</button>
+            <button class="nt-btn" data-type="followup" data-icon="📋" onclick="selectNTType(this)">📋 Follow up</button>
+            <button class="nt-btn" data-type="pay" data-icon="💰" onclick="selectNTType(this)">💰 Pay</button>
+          </div>
+          <div class="add-row" style="margin-bottom:.5rem">
+            <select class="add-select" id="needto-person-select" style="flex:1">
+              <option value="">Select person...</option>
+            </select>
+            <input class="add-input" id="needto-person-other" placeholder="Or type name..." style="flex:1"/>
+          </div>
+          <div class="add-row">
+            <input class="add-input" id="needto-note" placeholder="What about? (optional)..." style="flex:1"/>
+            <input class="add-input" id="needto-due" type="date" style="max-width:140px"/>
+            <button class="add-btn" onclick="addNeedTo()">Add</button>
+          </div>
         </div>
       </div>
 
       <div class="grid2">
+        <!-- AT A GLANCE -->
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">👁 At a Glance</div></div>
+          <div class="glance-grid">
+            <div class="glance-item" onclick="goTab('business',document.querySelector('[data-tab=business]'))"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
+            <div class="glance-item" onclick="goTab('people',document.querySelector('[data-tab=people]'))"><div class="glance-val" id="g-followup">—</div><div class="glance-label">Follow ups</div><div class="glance-dot" id="gd-followup"></div></div>
+            <div class="glance-item" onclick="goTab('faith',document.querySelector('[data-tab=faith]'))"><div class="glance-val" id="g-prayers">—</div><div class="glance-label">Prayers</div><div class="glance-dot" id="gd-prayers"></div></div>
+            <div class="glance-item" onclick="goTab('shopping',document.querySelector('[data-tab=shopping]'))"><div class="glance-val" id="g-shopping">—</div><div class="glance-label">Shopping</div><div class="glance-dot" id="gd-shopping"></div></div>
+            <div class="glance-item" onclick="goTab('mission',document.querySelector('[data-tab=mission]'))"><div class="glance-val" id="g-mission">—</div><div class="glance-label">Mission</div><div class="glance-dot" id="gd-mission"></div></div>
+            <div class="glance-item" onclick="goTab('brain',document.querySelector('[data-tab=brain]'))"><div class="glance-val" id="g-brain">—</div><div class="glance-label">Brain</div><div class="glance-dot" id="gd-brain"></div></div>
+          </div>
+        </div>
+
         <!-- HABIT SNAPSHOT -->
         <div class="card">
           <div class="card-hdr">
@@ -441,31 +635,18 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
           </div>
           <div class="habit-dot-grid" id="habit-dots"></div>
         </div>
-
-        <!-- AT A GLANCE -->
-        <div class="card">
-          <div class="card-hdr"><div class="card-title">👁 At a Glance</div></div>
-          <div class="glance-grid">
-            <div class="glance-item" onclick="goTab('business',document.querySelector('[data-tab=business]'))"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
-            <div class="glance-item" onclick="goTab('people',document.querySelector('[data-tab=people]'))"><div class="glance-val" id="g-followup">—</div><div class="glance-label">Follow ups</div><div class="glance-dot" id="gd-followup"></div></div>
-            <div class="glance-item" onclick="goTab('faith',document.querySelector('[data-tab=faith]'))"><div class="glance-val" id="g-prayers">—</div><div class="glance-label">Prayers</div><div class="glance-dot" id="gd-prayers"></div></div>
-            <div class="glance-item" onclick="goTab('shopping',document.querySelector('[data-tab=shopping]'))"><div class="glance-val" id="g-shopping">—</div><div class="glance-label">Shopping</div><div class="glance-dot" id="gd-shopping"></div></div>
-            <div class="glance-item" onclick="goTab('mission',document.querySelector('[data-tab=mission]'))"><div class="glance-val" id="g-mission">—</div><div class="glance-label">Mission</div><div class="glance-dot" id="gd-mission"></div></div>
-            <div class="glance-item" onclick="goTab('brain',document.querySelector('[data-tab=brain]'))"><div class="glance-val" id="g-brain">—</div><div class="glance-label">Brain</div><div class="glance-dot" id="gd-brain"></div></div>
-          </div>
-        </div>
       </div>
 
       <!-- QUICK ACCESS -->
       <div class="card">
         <div class="card-hdr"><div class="card-title">⚡ Quick Access</div></div>
         <div class="grid4">
-          <a class="tool-card" href="daily.html" style="border-color:rgba(194,115,138,.3);background:rgba(194,115,138,.08)"><div class="tool-emoji">📓</div>Daily Log</a>
+          <div class="tool-card" onclick="goTab('faith',document.querySelector('[data-tab=faith]'))" style="border-color:rgba(107,140,184,.3);background:rgba(107,140,184,.08)"><div class="tool-emoji">✝️</div>Faith</div>
           <div class="tool-card" onclick="goTab('brain',document.querySelector('[data-tab=brain]'))"><div class="tool-emoji">🧠</div>Brain Dump</div>
+          <a class="tool-card" href="daily.html" style="border-color:rgba(194,115,138,.3);background:rgba(194,115,138,.08)"><div class="tool-emoji">📓</div>Daily Log</a>
           <div class="tool-card" onclick="goTab('habits',document.querySelector('[data-tab=habits]'))"><div class="tool-emoji">💪</div>Habits</div>
-          <div class="tool-card" onclick="goTab('shopping',document.querySelector('[data-tab=shopping]'))"><div class="tool-emoji">🛒</div>Shopping</div>
           <div class="tool-card" onclick="goTab('people',document.querySelector('[data-tab=people]'))"><div class="tool-emoji">👥</div>People</div>
-          <div class="tool-card" onclick="goTab('faith',document.querySelector('[data-tab=faith]'))"><div class="tool-emoji">✝️</div>Faith</div>
+          <div class="tool-card" onclick="goTab('shopping',document.querySelector('[data-tab=shopping]'))"><div class="tool-emoji">🛒</div>Shopping</div>
           <div class="tool-card" onclick="goTab('business',document.querySelector('[data-tab=business]'))"><div class="tool-emoji">💼</div>GBB</div>
           <div class="tool-card" onclick="goTab('mission',document.querySelector('[data-tab=mission]'))"><div class="tool-emoji">🌱</div>Mission</div>
           <div class="tool-card" onclick="goTab('homelife',document.querySelector('[data-tab=homelife]'))"><div class="tool-emoji">🏡</div>Home Life</div>
@@ -476,6 +657,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
           <a class="tool-card" href="https://github.com" target="_blank"><div class="tool-emoji">💻</div>GitHub</a>
           <a class="tool-card" href="https://script.google.com" target="_blank"><div class="tool-emoji">⚙️</div>Apps Script</a>
           <a class="tool-card" href="https://console.cloud.google.com" target="_blank"><div class="tool-emoji">🔑</div>Cloud Console</a>
+          <a class="tool-card" href="projects.html"><div class="tool-emoji">📋</div>Project Board</a>
           <a class="tool-card" href="https://getbookednbranded.pages.dev/prospecting-audit-tool.html" target="_blank"><div class="tool-emoji">🔍</div>Prospect Audit</a>
         </div>
       </div>
@@ -1129,21 +1311,117 @@ function innerTab(el,contentId){
 
 // ══ SCRIPTURE ══
 var SCRIPTURES=[
-  {t:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.",r:"Jeremiah 29:11 NIV"},
-  {t:"She is clothed with strength and dignity; she can laugh at the days to come.",r:"Proverbs 31:25 NIV"},
-  {t:"Trust in the Lord with all your heart and lean not on your own understanding.",r:"Proverbs 3:5 NIV"},
-  {t:"I can do all this through him who gives me strength.",r:"Philippians 4:13 NIV"},
-  {t:"The Lord your God is with you, the Mighty Warrior who saves.",r:"Zephaniah 3:17 NIV"},
-  {t:"Commit to the Lord whatever you do, and he will establish your plans.",r:"Proverbs 16:3 NIV"},
-  {t:"Be still and know that I am God.",r:"Psalm 46:10 NIV"},
-  {t:"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.",r:"Philippians 4:6 NIV"},
-  {t:"For we are God's handiwork, created in Christ Jesus to do good works.",r:"Ephesians 2:10 NIV"},
-  {t:"The heart of man plans his way, but the Lord establishes his steps.",r:"Proverbs 16:9 ESV"},
-  {t:"But seek first his kingdom and his righteousness, and all these things will be given to you as well.",r:"Matthew 6:33 NIV"},
-  {t:"And we know that in all things God works for the good of those who love him.",r:"Romans 8:28 NIV"},
-  {t:"Cast all your anxiety on him because he cares for you.",r:"1 Peter 5:7 NIV"},
-  {t:"The Lord is my shepherd, I lack nothing.",r:"Psalm 23:1 NIV"},
-  {t:"Now faith is confidence in what we hope for and assurance about what we do not see.",r:"Hebrews 11:1 NIV"}
+  {t:"For I know the plans I have for you, says the Lord. They are plans for good and not for disaster, to give you a future and a hope.",r:"Jeremiah 29:11 NLT"},
+  {t:"She is clothed with strength and dignity, and she laughs without fear of the future.",r:"Proverbs 31:25 NLT"},
+  {t:"Trust in the Lord with all your heart; do not depend on your own understanding.",r:"Proverbs 3:5 NLT"},
+  {t:"For I can do everything through Christ, who gives me strength.",r:"Philippians 4:13 NLT"},
+  {t:"For the Lord your God is living among you. He is a mighty savior. He will take delight in you with gladness.",r:"Zephaniah 3:17 NLT"},
+  {t:"Commit your actions to the Lord, and your plans will succeed.",r:"Proverbs 16:3 NLT"},
+  {t:"Be still, and know that I am God.",r:"Psalm 46:10 NLT"},
+  {t:"Don't worry about anything; instead, pray about everything. Tell God what you need, and thank him for all he has done.",r:"Philippians 4:6 NLT"},
+  {t:"For we are God's masterpiece. He has created us anew in Christ Jesus, so we can do the good things he planned for us long ago.",r:"Ephesians 2:10 NLT"},
+  {t:"We can make our plans, but the Lord determines our steps.",r:"Proverbs 16:9 NLT"},
+  {t:"Seek the Kingdom of God above all else, and live righteously, and he will give you everything you need.",r:"Matthew 6:33 NLT"},
+  {t:"And we know that God causes everything to work together for the good of those who love God.",r:"Romans 8:28 NLT"},
+  {t:"Give all your worries and cares to God, for he cares about you.",r:"1 Peter 5:7 NLT"},
+  {t:"The Lord is my shepherd; I have all that I need.",r:"Psalm 23:1 NLT"},
+  {t:"Faith is the confidence that what we hope for will actually happen; it gives us assurance about things we cannot see.",r:"Hebrews 11:1 NLT"},
+  {t:"This is the day the Lord has made. We will rejoice and be glad in it.",r:"Psalm 118:24 NLT"},
+  {t:"So humble yourselves under the mighty power of God, and at the right time he will lift you up in honor.",r:"1 Peter 5:6 NLT"},
+  {t:"The Lord directs the steps of the godly. He delights in every detail of their lives.",r:"Psalm 37:23 NLT"},
+  {t:"And the Holy Spirit helps us in our weakness. For example, we don't know what God wants us to pray for. But the Holy Spirit prays for us with groanings that cannot be expressed in words.",r:"Romans 8:26 NLT"},
+  {t:"No power in the sky above or in the earth below — indeed, nothing in all creation will ever be able to separate us from the love of God.",r:"Romans 8:39 NLT"},
+  {t:"So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you.",r:"Isaiah 41:10 NLT"},
+  {t:"But those who trust in the Lord will find new strength. They will soar high on wings like eagles.",r:"Isaiah 40:31 NLT"},
+  {t:"You are the light of the world — like a city on a hilltop that cannot be hidden.",r:"Matthew 5:14 NLT"},
+  {t:"For nothing is impossible with God.",r:"Luke 1:37 NLT"},
+  {t:"And I am certain that God, who began the good work within you, will continue his work until it is finally finished.",r:"Philippians 1:6 NLT"},
+  {t:"Always be joyful. Never stop praying. Be thankful in all circumstances.",r:"1 Thessalonians 5:16-18 NLT"},
+  {t:"For God has not given us a spirit of fear and timidity, but of power, love, and self-discipline.",r:"2 Timothy 1:7 NLT"},
+  {t:"You didn't choose me. I chose you. I appointed you to go and produce lasting fruit.",r:"John 15:16 NLT"},
+  {t:"The thief's purpose is to steal and kill and destroy. My purpose is to give them a rich and satisfying life.",r:"John 10:10 NLT"},
+  {t:"Don't copy the behavior and customs of this world, but let God transform you into a new person by changing the way you think.",r:"Romans 12:2 NLT"},
+  {t:"The Lord himself will fight for you. Just stay calm.",r:"Exodus 14:14 NLT"},
+  {t:"Be strong and courageous! Do not be afraid or discouraged. For the Lord your God is with you wherever you go.",r:"Joshua 1:9 NLT"},
+  {t:"But as for me and my family, we will serve the Lord.",r:"Joshua 24:15 NLT"},
+  {t:"The Lord is my light and my salvation — so why should I be afraid?",r:"Psalm 27:1 NLT"},
+  {t:"God is our refuge and strength, always ready to help in times of trouble.",r:"Psalm 46:1 NLT"},
+  {t:"Create in me a clean heart, O God. Renew a loyal spirit within me.",r:"Psalm 51:10 NLT"},
+  {t:"Give your burdens to the Lord, and he will take care of you.",r:"Psalm 55:22 NLT"},
+  {t:"The Lord is close to the brokenhearted; he rescues those whose spirits are crushed.",r:"Psalm 34:18 NLT"},
+  {t:"Delight yourself in the Lord, and he will give you your heart's desires.",r:"Psalm 37:4 NLT"},
+  {t:"He heals the brokenhearted and bandages their wounds.",r:"Psalm 147:3 NLT"},
+  {t:"Your word is a lamp to guide my feet and a light for my path.",r:"Psalm 119:105 NLT"},
+  {t:"I look up to the mountains — does my help come from there? My help comes from the Lord, who made heaven and earth!",r:"Psalm 121:1-2 NLT"},
+  {t:"Thank you for making me so wonderfully complex! Your workmanship is marvelous — how well I know it.",r:"Psalm 139:14 NLT"},
+  {t:"Search me, O God, and know my heart; test me and know my anxious thoughts.",r:"Psalm 139:23 NLT"},
+  {t:"Hope deferred makes the heart sick, but a dream fulfilled is a tree of life.",r:"Proverbs 13:12 NLT"},
+  {t:"A cheerful heart is good medicine, but a broken spirit saps a person's strength.",r:"Proverbs 17:22 NLT"},
+  {t:"The name of the Lord is a strong fortress; the godly run to him and are safe.",r:"Proverbs 18:10 NLT"},
+  {t:"When you go through deep waters, I will be with you. When you go through rivers of difficulty, you will not drown.",r:"Isaiah 43:2 NLT"},
+  {t:"See, I am doing a new thing! Now it springs up; do you not perceive it?",r:"Isaiah 43:19 NLT"},
+  {t:"He gives power to the weak and strength to the powerless.",r:"Isaiah 40:29 NLT"},
+  {t:"But those who trust in the Lord will find new strength. They will soar high on wings like eagles.",r:"Isaiah 40:31 NLT"},
+  {t:"For I hold you by your right hand — I, the Lord your God. And I say to you, Don't be afraid. I am here to help you.",r:"Isaiah 41:13 NLT"},
+  {t:"I have loved you, my people, with an everlasting love. With unfailing love I have drawn you to myself.",r:"Jeremiah 31:3 NLT"},
+  {t:"If you look for me wholeheartedly, you will find me.",r:"Jeremiah 29:13 NLT"},
+  {t:"The faithful love of the Lord never ends! His mercies never cease. Great is his faithfulness; his mercies begin afresh each morning.",r:"Lamentations 3:22-23 NLT"},
+  {t:"I will give you a new heart, and I will put a new spirit in you.",r:"Ezekiel 36:26 NLT"},
+  {t:"Come to me, all of you who are weary and carry heavy burdens, and I will give you rest.",r:"Matthew 11:28 NLT"},
+  {t:"Take my yoke upon you. Let me teach you, because I am humble and gentle at heart, and you will find rest for your souls.",r:"Matthew 11:29 NLT"},
+  {t:"And be sure of this: I am with you always, even to the end of the age.",r:"Matthew 28:20 NLT"},
+  {t:"What is impossible for people is possible with God.",r:"Luke 18:27 NLT"},
+  {t:"For this is how God loved the world: He gave his one and only Son, so that everyone who believes in him will not perish but have eternal life.",r:"John 3:16 NLT"},
+  {t:"I am leaving you with a gift — peace of mind and heart. And the peace I give is a gift the world cannot give. So don't be troubled or afraid.",r:"John 14:27 NLT"},
+  {t:"I am the vine; you are the branches. Those who remain in me, and I in them, will produce much fruit.",r:"John 15:5 NLT"},
+  {t:"I have told you all this so that you may have peace in me. Here on earth you will have many trials and sorrows. But take heart, because I have overcome the world.",r:"John 16:33 NLT"},
+  {t:"For everyone who calls on the name of the Lord will be saved.",r:"Romans 10:13 NLT"},
+  {t:"Don't just pretend to love others. Really love them. Hate what is wrong. Hold tightly to what is good.",r:"Romans 12:9 NLT"},
+  {t:"No eye has seen, no ear has heard, and no mind has imagined what God has prepared for those who love him.",r:"1 Corinthians 2:9 NLT"},
+  {t:"Love is patient and kind. Love is not jealous or boastful or proud or rude.",r:"1 Corinthians 13:4 NLT"},
+  {t:"Three things will last forever — faith, hope, and love — and the greatest of these is love.",r:"1 Corinthians 13:13 NLT"},
+  {t:"This means that anyone who belongs to Christ has become a new person. The old life is gone; a new life has begun!",r:"2 Corinthians 5:17 NLT"},
+  {t:"Each time he said, My grace is all you need. My power works best in weakness.",r:"2 Corinthians 12:9 NLT"},
+  {t:"So let's not get tired of doing what is good. At just the right time we will reap a harvest of blessing if we don't give up.",r:"Galatians 6:9 NLT"},
+  {t:"For by grace you have been saved through faith. And this is not your own doing; it is the gift of God.",r:"Ephesians 2:8 NLT"},
+  {t:"Now all glory to God, who is able, through his mighty power at work within us, to accomplish infinitely more than we might ask or think.",r:"Ephesians 3:20 NLT"},
+  {t:"Instead, be kind to each other, tenderhearted, forgiving one another, just as God through Christ has forgiven you.",r:"Ephesians 4:32 NLT"},
+  {t:"And the peace of God, which exceeds anything we can understand, will guard your hearts and minds as you live in Christ Jesus.",r:"Philippians 4:7 NLT"},
+  {t:"Fix your thoughts on what is true, and honorable, and right, and pure, and lovely, and admirable.",r:"Philippians 4:8 NLT"},
+  {t:"And my God will meet all your needs according to the riches of his glory in Christ Jesus.",r:"Philippians 4:19 NLT"},
+  {t:"Since God chose you to be the holy people he loves, you must clothe yourselves with tenderhearted mercy, kindness, humility, gentleness, and patience.",r:"Colossians 3:12 NLT"},
+  {t:"Whatever you do or say, do it as a representative of the Lord Jesus, giving thanks through him to God the Father.",r:"Colossians 3:17 NLT"},
+  {t:"This is the day the Lord has made. We will rejoice and be glad in it.",r:"Psalm 118:24 NLT"},
+  {t:"You keep track of all my sorrows. You have collected all my tears in your bottle.",r:"Psalm 56:8 NLT"},
+  {t:"Taste and see that the Lord is good. Oh, the joys of those who take refuge in him!",r:"Psalm 34:8 NLT"},
+  {t:"The Lord directs the steps of the godly. He delights in every detail of their lives.",r:"Psalm 37:23 NLT"},
+  {t:"You didn't choose me. I chose you. I appointed you to go and produce lasting fruit.",r:"John 15:16 NLT"},
+  {t:"The thief's purpose is to steal and kill and destroy. My purpose is to give them a rich and satisfying life.",r:"John 10:10 NLT"},
+  {t:"So humble yourselves under the mighty power of God, and at the right time he will lift you up in honor.",r:"1 Peter 5:6 NLT"},
+  {t:"Wait patiently for the Lord. Be brave and courageous. Yes, wait patiently for the Lord.",r:"Psalm 27:14 NLT"},
+  {t:"I waited patiently for the Lord to help me, and he turned to me and heard my cry.",r:"Psalm 40:1 NLT"},
+  {t:"As the deer longs for streams of water, so I long for you, O God.",r:"Psalm 42:1 NLT"},
+  {t:"How precious are your thoughts about me, O God. They cannot be numbered!",r:"Psalm 139:17 NLT"},
+  {t:"Fear of the Lord is the foundation of wisdom. Knowledge of the Holy One results in good judgment.",r:"Proverbs 9:10 NLT"},
+  {t:"Get all the advice and instruction you can, so you will be wise the rest of your life.",r:"Proverbs 19:20 NLT"},
+  {t:"The grass withers and the flowers fade, but the word of our God stands forever.",r:"Isaiah 40:8 NLT"},
+  {t:"But you will receive power when the Holy Spirit comes upon you. And you will be my witnesses.",r:"Acts 1:8 NLT"},
+  {t:"For the Son of Man came to seek and save those who are lost.",r:"Luke 19:10 NLT"},
+  {t:"For you are all children of God through faith in Christ Jesus.",r:"Galatians 3:26 NLT"},
+  {t:"Even before he made the world, God loved us and chose us in Christ to be holy and without fault in his eyes.",r:"Ephesians 1:4 NLT"},
+  {t:"Let your good deeds shine out for all to see, so that everyone will praise your heavenly Father.",r:"Matthew 5:16 NLT"},
+  {t:"Ask and it will be given to you; seek and you will find; knock and the door will be opened to you.",r:"Matthew 7:7 NLT"},
+  {t:"Your Father knows exactly what you need even before you ask him!",r:"Matthew 6:8 NLT"},
+  {t:"Truly I tell you, whatever you did for one of the least of these brothers and sisters of mine, you did for me.",r:"Matthew 25:40 NLT"},
+  {t:"And I am certain that God, who began the good work within you, will continue his work until it is finally finished.",r:"Philippians 1:6 NLT"},
+  {t:"Always be joyful. Never stop praying. Be thankful in all circumstances.",r:"1 Thessalonians 5:16-18 NLT"},
+  {t:"Let the message about Christ, in all its richness, fill your lives.",r:"Colossians 3:16 NLT"},
+  {t:"Do all that you can to live in peace with everyone.",r:"Romans 12:18 NLT"},
+  {t:"I planted the seed in your hearts, and Apollos watered it, but it was God who made it grow.",r:"1 Corinthians 3:6 NLT"},
+  {t:"But thank God! He gives us victory over sin and death through our Lord Jesus Christ.",r:"1 Corinthians 15:57 NLT"},
+  {t:"For God made Christ, who never sinned, to be the offering for our sin, so that we could be made right with God through Christ.",r:"2 Corinthians 5:21 NLT"},
+  {t:"He will cover you with his feathers. He will shelter you with his wings. His faithful promises are your armor and protection.",r:"Psalm 91:4 NLT"},
+  {t:"Those who live in the shelter of the Most High will find rest in the shadow of the Almighty.",r:"Psalm 91:1 NLT"}
 ];
 
 function loadScripture(){
@@ -1942,6 +2220,7 @@ function loadSaved(){
   renderHabitSnapshot();
   renderBrainRecent();
   renderBills();
+  renderNeedTo();
   updateSidebarPoints();
   loadGlance();
 
@@ -2022,6 +2301,152 @@ function hardRefresh(){
   showToast('Refreshing from database...');
   setTimeout(function(){loadFromSheets(true);},300);
 }
+
+
+// NEED TO
+var selectedNTType = {type:'call', icon:'📞'};
+
+function toggleNeedToForm(){
+  var form = document.getElementById('needto-form');
+  form.classList.toggle('open');
+  if(form.classList.contains('open')) populateNeedToPeople();
+}
+
+function populateNeedToPeople(){
+  var select = document.getElementById('needto-person-select');
+  var people = getPeople();
+  select.innerHTML = '<option value="">Select person...</option>';
+  people.forEach(function(p){
+    var opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.name + (p.role ? ' — ' + p.role.split('·')[0].trim() : '');
+    select.appendChild(opt);
+  });
+}
+
+function selectNTType(btn){
+  document.querySelectorAll('.nt-btn').forEach(function(b){b.classList.remove('selected');});
+  btn.classList.add('selected');
+  selectedNTType = {type: btn.dataset.type, icon: btn.dataset.icon};
+}
+
+function addNeedTo(){
+  var personSelect = document.getElementById('needto-person-select');
+  var personOther = document.getElementById('needto-person-other').value.trim();
+  var note = document.getElementById('needto-note').value.trim();
+  var due = document.getElementById('needto-due').value;
+
+  var personId = personSelect.value;
+  var personName = personOther || (personSelect.selectedIndex > 0 ? personSelect.options[personSelect.selectedIndex].text.split(' —')[0] : '');
+
+  if(!personName) { showToast('Select or enter a person'); return; }
+
+  var item = {
+    id: Date.now(),
+    type: selectedNTType.type,
+    icon: selectedNTType.icon,
+    personId: personId,
+    personName: personName,
+    note: note,
+    due: due,
+    done: false,
+    createdDate: new Date().toLocaleDateString()
+  };
+
+  var items = ld('needto', []);
+  items.unshift(item);
+  sv('needto', items);
+
+  // Add note to person card if linked to a contact
+  if(personId){
+    var noteText = selectedNTType.icon + ' ' + selectedNTType.type.charAt(0).toUpperCase() + selectedNTType.type.slice(1) + (note ? ': ' + note : '') + (due ? ' by ' + due : '');
+    var pNotes = ld('pnotes_' + personId, '');
+    sv('pnotes_' + personId, pNotes + (pNotes ? '\n' : '') + '[' + item.createdDate + '] ' + noteText);
+  }
+
+  // Save to Sheets
+  dbWrite('saveReminder', {
+    id: item.id,
+    title: selectedNTType.type + ' ' + personName,
+    notes: note,
+    personId: personId,
+    personName: personName,
+    type: selectedNTType.type,
+    dueDate: due,
+    priority: 'med',
+    section: 'needto'
+  });
+
+  // Clear form
+  document.getElementById('needto-person-select').value = '';
+  document.getElementById('needto-person-other').value = '';
+  document.getElementById('needto-note').value = '';
+  document.getElementById('needto-due').value = '';
+  document.getElementById('needto-form').classList.remove('open');
+
+  renderNeedTo();
+  showToast('Added ✓');
+}
+
+function renderNeedTo(){
+  var items = ld('needto', []);
+  var list = document.getElementById('needto-list');
+  var empty = document.getElementById('needto-empty');
+  if(!list) return;
+  list.innerHTML = '';
+  var pending = items.filter(function(i){ return !i.done; });
+  if(!pending.length){ empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  var today = new Date(); today.setHours(0,0,0,0);
+  pending.forEach(function(item){
+    var div = document.createElement('div');
+    div.className = 'needto-item' + (item.done ? ' done' : '');
+    var dueEl = '';
+    if(item.due){
+      var dueDate = new Date(item.due);
+      var overdue = dueDate < today;
+      var soon = !overdue && (dueDate - today) < 3*24*60*60*1000;
+      var dueClass = overdue ? 'overdue' : soon ? 'soon' : '';
+      dueEl = '<div class="needto-due ' + dueClass + '">' + (overdue ? 'Overdue — ' : soon ? 'Due soon — ' : 'By ') + new Date(item.due).toLocaleDateString() + '</div>';
+    }
+    div.innerHTML =
+      '<div class="needto-type-icon">' + (item.icon||'📋') + '</div>' +
+      '<div class="needto-content">' +
+        '<div class="needto-person">' + esc(item.personName) + '</div>' +
+        '<div class="needto-text">' + (item.type.charAt(0).toUpperCase()+item.type.slice(1)) + (item.note ? ' — ' + esc(item.note) : '') + '</div>' +
+        dueEl +
+      '</div>' +
+      '<div class="needto-actions">' +
+        '<button class="item-btn" style="color:var(--sage)" onclick="completeNeedTo(' + item.id + ')" title="Mark done">✓</button>' +
+        '<button class="item-btn del" onclick="deleteNeedTo(' + item.id + ')" title="Delete">✕</button>' +
+      '</div>';
+    list.appendChild(div);
+  });
+}
+
+function completeNeedTo(id){
+  var items = ld('needto', []);
+  var item = items.find(function(i){ return i.id == id; });
+  if(!item) return;
+  item.done = true;
+  sv('needto', items);
+
+  // Log completion on person card
+  if(item.personId){
+    var noteText = '✓ ' + item.icon + ' ' + item.type + (item.note ? ': ' + item.note : '') + ' — completed ' + new Date().toLocaleDateString();
+    var pNotes = ld('pnotes_' + item.personId, '');
+    sv('pnotes_' + item.personId, pNotes + '\n' + noteText);
+  }
+
+  renderNeedTo();
+  showToast('Done ✓ — logged on ' + item.personName + '\'s card');
+}
+
+function deleteNeedTo(id){
+  sv('needto', ld('needto', []).filter(function(i){ return i.id != id; }));
+  renderNeedTo();
+}
+
 
 // BILLS TRACKER
 function addBill(){
