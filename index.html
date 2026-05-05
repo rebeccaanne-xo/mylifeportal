@@ -936,7 +936,16 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
       <div class="tab-content-inner active" id="ppl-cards">
         <!-- ADD CONTACT FORM -->
         <div class="add-contact-form" id="add-contact-form">
-          <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:.75rem">New Contact</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+          <div style="font-size:13px;font-weight:600;color:#fff">New Contact</div>
+          <div style="display:flex;gap:.4rem;align-items:center">
+            <input type="file" id="vcard-file-input" accept=".vcf,.vcard" style="display:none" onchange="importVCard(this)"/>
+            <button class="contact-action-btn" onclick="document.getElementById('vcard-file-input').click()" style="font-size:11px">
+              📇 Import from vCard
+            </button>
+            <div style="font-size:10px;color:rgba(255,255,255,.25)">or fill in manually</div>
+          </div>
+        </div>
           <div class="grid2" style="margin-bottom:.5rem">
             <div>
               <div class="contact-field-label" style="margin-bottom:.25rem">Name</div>
@@ -1363,6 +1372,34 @@ async function flushQueue(){
   var queue=DB_QUEUE.splice(0);
   for(var p of queue){try{await fetch(DB_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});}catch(e){DB_QUEUE.push(p);}}
   if(queue.length>0)showToast("Synced "+queue.length+" items to database");
+}
+
+// d1Save / d1Delete — aliases that route to Google Sheets via dbWrite
+// When we switch to D1 these will point to the Worker instead
+async function d1Save(table, data){
+  if(!data.id) data.id = String(Date.now());
+  var actionMap = {
+    people:'savePerson', tasks:'saveTask', habits:'saveHabit',
+    faith:'saveFaith', goals:'saveGoal', rewards:'saveReward',
+    shopping:'saveShopItem', bills:'saveBill', appointments:'saveAppointment',
+    priorities:'savePriorities', brain_dumps:'saveBrainDump',
+    daily_log:'saveDailyLog', exercise_log:'logExercise',
+    reminders:'saveReminder', person_notes:'savePersonNote',
+    notes:'saveNote', finance:'saveFinance', seth:'saveSeth', dogs:'saveDog',
+    habit_log:'logHabit', points_ledger:'addPoints'
+  };
+  var action = actionMap[table] || 'save_'+table;
+  dbWrite(action, data);
+  // Also save to localStorage for offline access
+  var localKey = table+'_cache';
+  var cached = ld(localKey, []);
+  var idx = cached.findIndex(function(i){return String(i.id)===String(data.id);});
+  if(idx>=0) cached[idx] = data; else cached.push(data);
+  sv(localKey, cached);
+}
+
+async function d1Delete(table, id){
+  dbWrite('delete_'+table, {id});
 }
 
 function sv(k,v){try{localStorage.setItem('p_'+k,JSON.stringify(v))}catch(e){}}
@@ -2277,6 +2314,11 @@ function addPerson(){
     money_owed_to_them: 0,
     money_they_owe_you: 0
   };
+  // Apply any extra vCard fields
+  if (window._vcardExtra) {
+    Object.assign(p, window._vcardExtra);
+    window._vcardExtra = null;
+  }
   people.push(p);
   sv('people', people);
   d1Save('people', Object.assign({}, p, {id:String(p.id)}));
@@ -2659,6 +2701,113 @@ function hardRefresh(){
   sv('sheets_loaded_'+TODAY, false);
   showToast('Refreshing from database...');
   setTimeout(function(){loadFromSheets(true);},300);
+}
+
+
+
+// VCARD IMPORT
+function importVCard(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var text = e.target.result;
+    parseVCard(text);
+  };
+  reader.readAsText(file);
+  input.value = ''; // reset so same file can be picked again
+}
+
+function parseVCard(text) {
+  // Parse vCard fields
+  var get = function(field) {
+    var patterns = [
+      new RegExp(field + '[^:]*:([^\r\n]+)', 'i'),
+      new RegExp(field + ':([^\r\n]+)', 'i')
+    ];
+    for (var p of patterns) {
+      var m = text.match(p);
+      if (m) return m[1].trim().replace(/\\n/g, ' ').replace(/\\,/g, ',');
+    }
+    return '';
+  };
+
+  // Name — FN is full name
+  var fullName = get('FN');
+  if (!fullName) {
+    // Fall back to N field (Last;First;Middle;;)
+    var nField = get('^N');
+    if (nField) {
+      var parts = nField.split(';');
+      fullName = [parts[1], parts[0]].filter(Boolean).join(' ').trim();
+    }
+  }
+
+  // Phone — grab first TEL
+  var telMatch = text.match(/TEL[^:]*:([^\r\n]+)/i);
+  var phone = telMatch ? telMatch[1].trim() : '';
+
+  // Email
+  var emailMatch = text.match(/EMAIL[^:]*:([^\r\n]+)/i);
+  var email = emailMatch ? emailMatch[1].trim() : '';
+
+  // Birthday
+  var bday = get('BDAY');
+  if (bday) {
+    // Format YYYYMMDD to readable
+    if (bday.length === 8 && !bday.includes('-')) {
+      bday = bday.substring(4,6) + '/' + bday.substring(6,8) + '/' + bday.substring(0,4);
+    }
+  }
+
+  // Address — ADR field format: PO Box;Extended;Street;City;State;Zip;Country
+  var adrMatch = text.match(/ADR[^:]*:([^\r\n]+)/i);
+  var city = '', state = '';
+  if (adrMatch) {
+    var adrParts = adrMatch[1].split(';');
+    city = (adrParts[3] || '').trim();
+    state = (adrParts[4] || '').trim();
+  }
+
+  // Social — look for X- fields and URLs
+  var instagram = '';
+  var igMatch = text.match(/X-SOCIALPROFILE[^:]*instagram[^:]*:([^\r\n]+)/i) ||
+                text.match(/X-INSTAGRAM[^:]*:([^\r\n]+)/i);
+  if (igMatch) instagram = igMatch[1].trim();
+
+  // Organization / role
+  var org = get('ORG');
+  var title = get('TITLE');
+  var role = [title, org].filter(Boolean).join(' · ');
+
+  // Website
+  var urlMatch = text.match(/URL[^:]*:([^\r\n]+)/i);
+  var website = urlMatch ? urlMatch[1].trim() : '';
+
+  // Notes
+  var note = get('NOTE');
+
+  // Fill in the form
+  var setField = function(id, val) {
+    var el = document.getElementById(id);
+    if (el && val) el.value = val;
+  };
+
+  setField('ppl-name-in', fullName);
+  setField('ppl-phone-in', phone);
+  setField('ppl-email-in', email);
+  setField('ppl-role-in', role);
+
+  // Store extra fields for when person is saved
+  if (bday || city || state || website || note || instagram) {
+    window._vcardExtra = { birthday:bday, city, state, website, notes:note, instagram };
+    showToast('vCard imported — ' + (fullName||'contact') + ' · review and save ✓');
+  } else {
+    showToast('vCard imported — ' + (fullName||'contact') + ' ✓');
+  }
+
+  // Show the form if not already open
+  document.getElementById('add-contact-form').classList.add('open');
 }
 
 
