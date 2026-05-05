@@ -138,6 +138,14 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
 .item-btn:hover{background:rgba(255,255,255,.08);color:#fff}
 .item-btn.del:hover{background:rgba(192,57,43,.18);color:#F1948A}
 
+
+/* DRAG AND DROP */
+.drag-over{background:rgba(194,115,138,.1)!important;border:1px dashed var(--peony)!important}
+.dragging{opacity:.5;transform:scale(.98)}
+.check-item{cursor:grab}
+.check-item:active{cursor:grabbing}
+.drag-handle{color:rgba(255,255,255,.2);cursor:grab;font-size:12px;padding:0 4px;flex-shrink:0;user-select:none}
+.drag-handle:hover{color:rgba(255,255,255,.5)}
 .check-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:.62rem .875rem;display:flex;align-items:flex-start;gap:9px;transition:background .15s}
 .check-item:hover{background:rgba(255,255,255,.07)}
 .check-item input[type=checkbox]{width:15px;height:15px;accent-color:var(--peony);flex-shrink:0;margin-top:2px;cursor:pointer}
@@ -200,9 +208,9 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
 .flip-cal-dow{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem}
 .flip-divider{width:1px;height:60px;background:rgba(255,255,255,.08)}
 
-.scripture-block{background:linear-gradient(135deg,rgba(27,42,74,.9),rgba(45,65,112,.7));border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:1rem 1.25rem;margin-bottom:.875rem}
-.scripture-verse{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:rgba(255,255,255,.82);line-height:1.65;margin-bottom:.35rem}
-.scripture-cite{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.05em}
+.scripture-block{background:linear-gradient(135deg,rgba(27,42,74,.9),rgba(45,65,112,.7));border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:.875rem}
+.scripture-verse{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:rgba(255,255,255,.9);line-height:1.7;margin-bottom:.5rem;letter-spacing:.01em}
+.scripture-cite{font-size:13px;color:rgba(255,255,255,.45);letter-spacing:.05em;font-weight:500}
 
 .finance-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:.75rem}
 .finance-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:1rem}
@@ -1818,6 +1826,66 @@ function loadSaved(){
   }
 }
 
+
+
+
+// DRAG AND DROP TASKS
+function makeCheck(item,key){
+  var div=document.createElement('div');
+  div.className='check-item'+(item.done?' done':'');
+  div.dataset.id=item.id;
+  div.dataset.key=key;
+  div.draggable=true;
+  var handle=document.createElement('span');
+  handle.className='drag-handle';
+  handle.title='Drag to reorder';
+  handle.textContent='⠿';
+  var cb=document.createElement('input');
+  cb.type='checkbox';
+  cb.checked=item.done||false;
+  cb.onchange=function(){toggleCheck(this,key,item.id);};
+  var label=document.createElement('label');
+  label.textContent=item.text;
+  label.style.flex='1';
+  label.style.cursor='pointer';
+  var acts=document.createElement('div');
+  acts.className='check-actions';
+  var delBtn=document.createElement("button");delBtn.className="item-btn del";delBtn.textContent="✕";delBtn.onclick=function(){removeCheck(this,key,item.id);};acts.appendChild(delBtn);
+  div.appendChild(handle);div.appendChild(cb);div.appendChild(label);div.appendChild(acts);
+
+  div.addEventListener('dragstart',function(e){
+    e.dataTransfer.setData('text/plain',JSON.stringify({id:item.id,key:key}));
+    div.classList.add('dragging');
+  });
+  div.addEventListener('dragend',function(){div.classList.remove('dragging');});
+  div.addEventListener('dragover',function(e){e.preventDefault();div.classList.add('drag-over');});
+  div.addEventListener('dragleave',function(){div.classList.remove('drag-over');});
+  div.addEventListener('drop',function(e){
+    e.preventDefault();div.classList.remove('drag-over');
+    try{
+      var data=JSON.parse(e.dataTransfer.getData('text/plain'));
+      if(data.id!=item.id)reorderTask(data.id,item.id,data.key||key);
+    }catch(err){}
+  });
+  return div;
+}
+
+function reorderTask(dragId,dropId,key){
+  var items=ld(key,[]);
+  var dragIdx=items.findIndex(function(i){return i.id==dragId;});
+  var dropIdx=items.findIndex(function(i){return i.id==dropId;});
+  if(dragIdx<0||dropIdx<0)return;
+  var dragged=items.splice(dragIdx,1)[0];
+  items.splice(dropIdx,0,dragged);
+  sv(key,items);
+  document.querySelectorAll('[data-key="'+key+'"]').forEach(function(el){
+    var list=el.parentElement;
+    if(list){
+      list.innerHTML='';
+      items.forEach(function(item){list.appendChild(makeCheck(item,key));});
+    }
+  });
+}
 
 
 // BILLS TRACKER
