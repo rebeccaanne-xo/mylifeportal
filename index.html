@@ -140,6 +140,59 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
 
 
 
+
+/* CONTACT CARD */
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:.75rem}
+.contact-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.contact-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.contact-card:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);transform:translateY(-1px)}
+.contact-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin-bottom:.6rem;flex-shrink:0}
+.contact-name{font-size:14px;font-weight:600;color:#fff;margin-bottom:.15rem;line-height:1.3}
+.contact-role{font-size:10px;color:rgba(255,255,255,.35);line-height:1.4;margin-bottom:.5rem}
+.contact-badges{display:flex;gap:.3rem;flex-wrap:wrap}
+.contact-badge{font-size:9px;padding:1px 6px;border-radius:999px;font-weight:600}
+.contact-prayer-icon{position:absolute;top:.6rem;right:.6rem;font-size:13px}
+
+/* CONTACT DETAIL PANEL */
+.contact-detail{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;margin-bottom:.75rem;overflow:hidden}
+.contact-detail-header{display:flex;align-items:center;gap:1rem;padding:1.25rem;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03)}
+.contact-detail-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.contact-detail-name{font-size:18px;font-weight:600;color:#fff;font-family:'Cormorant Garamond',serif;margin-bottom:.2rem}
+.contact-detail-role{font-size:12px;color:rgba(255,255,255,.4)}
+.contact-detail-actions{margin-left:auto;display:flex;gap:.4rem}
+.contact-action-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);border-radius:7px;padding:.4rem .75rem;font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.contact-action-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.contact-action-btn.primary{background:var(--peony);border-color:var(--peony);color:#fff}
+
+.contact-detail-body{padding:1rem 1.25rem}
+.contact-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.875rem}
+.contact-field{display:flex;flex-direction:column;gap:.2rem}
+.contact-field-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+.contact-field-value{font-size:13px;color:rgba(255,255,255,.8);outline:none;background:none;border:none;font-family:'DM Sans',sans-serif;border-bottom:1px solid transparent;transition:border-color .15s;padding:.1rem 0;width:100%}
+.contact-field-value:focus{border-bottom-color:var(--peony);color:#fff}
+.contact-field-value::placeholder{color:rgba(255,255,255,.2)}
+.contact-section-divider{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);margin:.875rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.contact-social-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem;margin-bottom:.75rem}
+.contact-social-item{display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.04);border-radius:7px;padding:.4rem .6rem}
+.contact-social-icon{font-size:12px;flex-shrink:0;width:16px;text-align:center}
+.contact-social-input{background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.7);flex:1;width:100%}
+.contact-social-input::placeholder{color:rgba(255,255,255,.2)}
+.contact-social-input:focus{color:#fff}
+.contact-money-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
+.contact-money-card{background:rgba(255,255,255,.04);border-radius:8px;padding:.75rem}
+.contact-money-label{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem}
+.contact-money-val{font-size:20px;font-weight:700;color:#fff;font-family:'Cormorant Garamond',serif;outline:none;border-bottom:1px solid transparent;transition:border-color .15s;background:none;border:none;width:100%;font-family:'Cormorant Garamond',serif}
+.contact-money-val:focus{border-bottom-color:var(--amber)}
+.activity-log{display:flex;flex-direction:column;gap:4px;margin-top:.4rem}
+.activity-item{display:flex;align-items:flex-start;gap:.5rem;padding:.4rem .5rem;border-radius:6px;background:rgba(255,255,255,.03)}
+.activity-icon{font-size:12px;flex-shrink:0;margin-top:1px}
+.activity-text{font-size:11px;color:rgba(255,255,255,.6);flex:1;line-height:1.4}
+.activity-date{font-size:10px;color:rgba(255,255,255,.25);flex-shrink:0;font-family:'JetBrains Mono',monospace}
+
+/* ADD CONTACT FORM */
+.add-contact-form{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1.1rem;margin-bottom:.75rem;display:none}
+.add-contact-form.open{display:block}
+
 /* NEED TO WIDGET */
 .needto-list{display:flex;flex-direction:column;gap:5px;margin-bottom:.5rem}
 .needto-item{display:flex;align-items:flex-start;gap:8px;padding:.6rem .75rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;transition:all .15s;position:relative}
@@ -870,33 +923,83 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
     <!-- ══════════ PEOPLE ══════════ -->
     <div class="page" id="page-people">
       <div class="page-header">
-        <div class="page-eyebrow">Relationships · Community · Follow up · Prayer</div>
+        <div class="page-eyebrow">Contact cards · Relationships · Prayer · Follow up</div>
         <div class="page-title">The <em>People</em></div>
       </div>
       <div class="tabs-inner">
-        <button class="tab-inner active" onclick="innerTab(this,'ppl-cards')">My People</button>
+        <button class="tab-inner active" onclick="innerTab(this,'ppl-cards')">Contacts</button>
         <button class="tab-inner" onclick="innerTab(this,'ppl-followup')">Follow Up</button>
         <button class="tab-inner" onclick="innerTab(this,'ppl-praying')">Praying For</button>
         <button class="tab-inner" onclick="innerTab(this,'ppl-notes')">Notes</button>
       </div>
+
       <div class="tab-content-inner active" id="ppl-cards">
-        <div class="person-grid" id="people-grid"></div>
-        <div id="person-detail-wrap"></div>
-        <div class="add-row">
-          <input class="add-input" id="ppl-name-in" placeholder="Name..." style="max-width:150px"/>
-          <input class="add-input" id="ppl-role-in" placeholder="Role / relationship..."/>
-          <button class="add-btn" onclick="addPerson()">Add</button>
+        <!-- ADD CONTACT FORM -->
+        <div class="add-contact-form" id="add-contact-form">
+          <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:.75rem">New Contact</div>
+          <div class="grid2" style="margin-bottom:.5rem">
+            <div>
+              <div class="contact-field-label" style="margin-bottom:.25rem">Name</div>
+              <input class="add-input" id="ppl-name-in" placeholder="Full name..."/>
+            </div>
+            <div>
+              <div class="contact-field-label" style="margin-bottom:.25rem">Role / Relationship</div>
+              <input class="add-input" id="ppl-role-in" placeholder="e.g. GBB client · friend · mentor..."/>
+            </div>
+          </div>
+          <div class="grid2" style="margin-bottom:.5rem">
+            <div>
+              <div class="contact-field-label" style="margin-bottom:.25rem">Phone</div>
+              <input class="add-input" id="ppl-phone-in" placeholder="Mobile number..."/>
+            </div>
+            <div>
+              <div class="contact-field-label" style="margin-bottom:.25rem">Email</div>
+              <input class="add-input" id="ppl-email-in" placeholder="Email address..."/>
+            </div>
+          </div>
+          <div class="grid2" style="margin-bottom:.5rem">
+            <div>
+              <div class="contact-field-label" style="margin-bottom:.25rem">Best contact method</div>
+              <select class="add-select" id="ppl-best-in" style="width:100%">
+                <option value="text">💬 Text</option>
+                <option value="call">📞 Call</option>
+                <option value="email">✉️ Email</option>
+                <option value="in-person">🤝 In person</option>
+                <option value="instagram">📸 Instagram</option>
+                <option value="facebook">👥 Facebook</option>
+              </select>
+            </div>
+            <div>
+              <div class="contact-field-label" style="margin-bottom:.25rem">How you know them</div>
+              <input class="add-input" id="ppl-how-in" placeholder="e.g. Faith community · client..."/>
+            </div>
+          </div>
+          <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.5rem">
+            <button class="add-btn" style="background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.4)" onclick="document.getElementById('add-contact-form').classList.remove('open')">Cancel</button>
+            <button class="add-btn" onclick="addPerson()">Save Contact</button>
+          </div>
         </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+          <input class="add-input" id="ppl-search" placeholder="🔍 Search contacts..." style="max-width:220px" oninput="renderPeople()"/>
+          <button class="add-btn" onclick="document.getElementById('add-contact-form').classList.toggle('open')">+ Add Contact</button>
+        </div>
+
+        <div class="contact-grid" id="people-grid"></div>
+        <div id="person-detail-wrap"></div>
       </div>
+
       <div class="tab-content-inner" id="ppl-followup">
         <div class="add-row"><input class="add-input" id="fu-in" placeholder="Who needs follow up and why..." onkeydown="if(event.key==='Enter')addCheck('fu-in','fu-list','followup_list')"/><button class="add-btn" onclick="addCheck('fu-in','fu-list','followup_list')">Add</button></div>
         <div class="items" id="fu-list"></div>
       </div>
+
       <div class="tab-content-inner" id="ppl-praying">
         <div class="s-label">Praying for others</div>
         <div class="items" id="praying-for-list"></div>
         <div class="add-row"><input class="add-input" id="praying-in" placeholder="Add someone you're praying for..." onkeydown="if(event.key==='Enter')addPrayingFor()"/><button class="add-btn" onclick="addPrayingFor()">Add</button></div>
       </div>
+
       <div class="tab-content-inner" id="ppl-notes">
         <div class="dump-box"><textarea class="dump-textarea" id="ppl-notes-text" placeholder="Relationship notes, community thoughts, who's on your heart..." onblur="saveText('ppl-notes-text','ppl_notes')" style="min-height:150px"></textarea></div>
       </div>
@@ -1009,27 +1112,13 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
       </div>
       <div class="tab-content-inner active" id="m-aligned">
         <div class="s-label">Build queue</div>
-        <div class="items" id="al-list">
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>"What God Says About You" section → Workbook</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Values / True Aim / Anti-Vision → Life Plan (Aligned_Life.odt)</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Vol2 intro letter → Life Plan</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Rebuild Life Wheel in correct pillar colors</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Brand refresh → extras · dividers · Part B · Prayer+Spirit pages</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Merge Q2 files → master PDF + separate daily pages PDF</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>GoHighLevel setup + 3 business emails</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-        </div>
+        <div class="items" id="al-list"></div>
         <div class="add-row"><input class="add-input" id="al-task-in" placeholder="Add to build queue..." onkeydown="if(event.key==='Enter')addCheck('al-task-in','al-list','al_tasks')"/><button class="add-btn" onclick="addCheck('al-task-in','al-list','al_tasks')">Add</button></div>
         <div class="dump-box" style="margin-top:.4rem"><textarea class="dump-textarea" id="al-notes" placeholder="Aligned Life notes..." onblur="saveText('al-notes','al_notes')" style="min-height:80px"></textarea></div>
       </div>
       <div class="tab-content-inner" id="m-wtc">
         <div class="s-label">Build queue</div>
-        <div class="items" id="wtc-list">
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Complete Galatians HTML + study notes + discussion questions</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Finalize welcome email + newsletter first issue</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Lock reusable HTML template for future series</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Decide hosting — Netlify / GitHub Pages / own domain</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Build email list + distribution</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-        </div>
+        <div class="items" id="wtc-list"></div>
         <div class="add-row"><input class="add-input" id="wtc-task-in" placeholder="Add task..." onkeydown="if(event.key==='Enter')addCheck('wtc-task-in','wtc-list','wtc_tasks')"/><button class="add-btn" onclick="addCheck('wtc-task-in','wtc-list','wtc_tasks')">Add</button></div>
         <div class="dump-box" style="margin-top:.4rem"><textarea class="dump-textarea" id="wtc-notes" placeholder="We The Church notes..." onblur="saveText('wtc-notes','wtc_notes')" style="min-height:80px"></textarea></div>
       </div>
@@ -1098,7 +1187,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
 // ══ STORAGE ══
 
 // DATABASE CONNECTION — Google Sheets
-var DB_URL="https://script.google.com/macros/s/AKfycbyWqjL7MxquIleef7gRozobV2xgolWbTxmF7SuXIlUkBuyyVbme9wAuUJhhOFnro1sj/exec";
+var DB_URL="https://script.google.com/macros/s/AKfycbynyi3DsQZDwOHZg_Ue0HBdlMJtQ2BN4JeBPRMAW6vBBETAm_TuJNV48602D8snAQVJ/exec";
 var DB_ONLINE=false;
 var DB_QUEUE=[];
 
@@ -1119,24 +1208,29 @@ async function checkDbConnection(){
   }
 }
 
-async function loadFromD1(forceRefresh){
-  // Only load from Sheets once per session unless forced
-  // This prevents duplicates on every page load
-  if(!forceRefresh && ld('sheets_loaded_'+TODAY, false)){
-    console.log('Sheets already loaded today - skipping to prevent duplicates');
-    return;
+async function loadFromSheets(forceRefresh){
+  // Smart sync strategy:
+  // - Force refresh: always load from Sheets, overwrite everything
+  // - Auto: only load if data is empty or last sync was >30 mins ago
+  var lastSync = ld('last_sync_time', 0);
+  var syncInterval = 60 * 1000; // sync every 60 seconds for near real-time
+  var timeSinceSync = Date.now() - lastSync;
+  var hasData = ld('people',null) && ld('people',[]).length > 0;
+
+  if(!forceRefresh && hasData && timeSinceSync < syncInterval){
+    return; // data is fresh enough
   }
   try{
     // Load People
-    var people=await dbRead('People');
+    var people=await dbRead('people');
     if(people&&people.length>0){
       var mapped=people.map(function(p){
         return {
-          id:p['ID']||Date.now(),
-          name:p['Name']||'',
-          role:p['Role']||'',
-          color:p['Color']||'#C2738A',
-          praying:p['Praying For']==='TRUE'||p['Praying For']===true||p['Praying For']===1
+          id:p.id||p['ID']||Date.now(),
+          name:p.name||p['Name']||'',
+          role:p.role||p['Role']||'',
+          color:p.color||p['Color']||'#C2738A',
+          praying:p.praying===1||p.praying===true||p['Praying For']==='TRUE'
         };
       }).filter(function(p){return p.name;});
       var existingPeople=ld('people',null);
@@ -1146,7 +1240,7 @@ async function loadFromD1(forceRefresh){
     }
 
     // Load Tasks
-    var tasks=await dbRead('Tasks');
+    var tasks=await dbRead('tasks');
     if(tasks&&tasks.length>0){
       var taskMap={
         'mission_aligned':'al_tasks','mission_wtc':'wtc_tasks',
@@ -1155,10 +1249,10 @@ async function loadFromD1(forceRefresh){
       };
       var grouped={};
       tasks.forEach(function(t){
-        var section=t['Section']||'biz_tasks';
+        var section=t.section||t['Section']||'biz_tasks';
         var key=taskMap[section]||section;
         if(!grouped[key])grouped[key]=[];
-        grouped[key].push({id:t['ID']||Date.now(),text:t['Text']||'',done:t['Done']==='TRUE'||t['Done']===true||t['Done']===1});
+        grouped[key].push({id:t.id||t['ID']||Date.now(),text:t.text||t['Text']||'',done:t.done===1||t.done===true||t['Done']==='TRUE'});
       });
       Object.keys(grouped).forEach(function(key){
         var existing=ld(key,[]);
@@ -1169,20 +1263,20 @@ async function loadFromD1(forceRefresh){
     }
 
     // Load Habits
-    var habits=await dbRead('Habits');
+    var habits=await dbRead('habits');
     if(habits&&habits.length>0){
       var existing=ld('habits',null);
       if(!existing||existing.length===0){
         var mapped=habits.map(function(h){
           return {
-            id:parseInt(h['ID'])||Date.now(),
-            name:h['Name']||'',
-            emoji:h['Emoji']||'⭐',
-            freq:h['Frequency']||'daily',
-            points:parseInt(h['Points'])||5,
-            double:h['Double Points']==='TRUE'||h['Double Points']===true,
-            streak:parseInt(h['Streak'])||0,
-            lastDone:''
+            id:h.id||parseInt(h['ID'])||Date.now(),
+            name:h.name||h['Name']||'',
+            emoji:h.emoji||h['Emoji']||'⭐',
+            freq:h.freq||h['Frequency']||'daily',
+            points:parseInt(h.points||h['Points'])||5,
+            double:h.double_points===1||h['Double Points']==='TRUE'||h['Double Points']===true,
+            streak:parseInt(h.streak||h['Streak'])||0,
+            lastDone:h.last_done||''
           };
         }).filter(function(h){return h.name;});
         if(mapped.length>0)sv('habits',mapped);
@@ -1190,17 +1284,18 @@ async function loadFromD1(forceRefresh){
     }
 
     // Load Faith
-    var faith=await dbRead('Faith');
+    var faith=await dbRead('faith');
     if(faith&&faith.length>0){
       var prayers=[];var selfPrayers=[];var general=[];var answered=[];var scripture=[];var gratitude=[];
       faith.forEach(function(f){
-        var item={id:f['ID']||Date.now(),text:f['Text']||'',date:''};
-        switch(f['Type']){
+        var item={id:f.id||f['ID']||Date.now(),text:f.text||f['Text']||'',date:''};
+        var type=f.type||f['Type']||'';
+        switch(type){
           case 'praying_for': prayers.push(item);break;
           case 'for_myself': selfPrayers.push(item);break;
           case 'general': general.push(item);break;
           case 'answered': answered.push(item);break;
-          case 'scripture': scripture.push(Object.assign(item,{reference:f['Reference']||''}));break;
+          case 'scripture': scripture.push(Object.assign(item,{reference:f.reference||f['Reference']||''}));break;
           case 'gratitude': gratitude.push(item);break;
         }
       });
@@ -1212,12 +1307,13 @@ async function loadFromD1(forceRefresh){
     }
 
     // Load Goals
-    var goals=await dbRead('Goals');
+    var goals=await dbRead('goals');
     if(goals&&goals.length>0){
       var daily=[];var weekly=[];var monthly=[];
       goals.forEach(function(g){
-        var item={id:g['ID']||Date.now(),text:g['Text']||'',done:g['Done']==='TRUE'||g['Done']===true};
-        switch(g['Period']){
+        var item={id:g.id||g['ID']||Date.now(),text:g.text||g['Text']||'',done:g.done===1||g.done===true||g['Done']==='TRUE'};
+        var period=g.period||g['Period']||'';
+        switch(period){
           case 'daily':daily.push(item);break;
           case 'weekly':weekly.push(item);break;
           case 'monthly':monthly.push(item);break;
@@ -1229,7 +1325,7 @@ async function loadFromD1(forceRefresh){
     }
 
     // Load Rewards
-    var rewards=await dbRead('Rewards');
+    var rewards=await dbRead('rewards');
     if(rewards&&rewards.length>0&&ld('reward_items',[]).length===0){
       var mapped=rewards.map(function(r){
         return {id:r['ID']||Date.now(),name:r['Name']||'',points:parseInt(r['Points Required'])||500,done:r['Redeemed']==='TRUE'||r['Redeemed']===true};
@@ -1238,9 +1334,9 @@ async function loadFromD1(forceRefresh){
     }
 
     // Re-render everything
-    sv('sheets_loaded_'+TODAY, true);
+    sv('last_sync_time', Date.now());
     loadSaved();
-    showToast('Data loaded from your database ✓');
+    showToast('Synced with database ✓');
 
   }catch(e){
     console.log('Sheet load error:',e);
@@ -1890,54 +1986,310 @@ var DEFAULT_PEOPLE=[
   {id:4,name:'Kelly',role:'GBB client · Graphic Arts Print Shop · Missouri',color:'#2D6B6B',praying:false},
 ];
 function getPeople(){return ld('people',null)||DEFAULT_PEOPLE;}
+
 function renderPeople(){
-  var people=getPeople();
-  var grid=document.getElementById('people-grid');if(!grid)return;
-  grid.innerHTML='';
-  people.forEach(p=>{
-    var initials=p.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-    var card=document.createElement('div');
-    card.className='person-card';
-    card.innerHTML=`<div class="person-av" style="background:${p.color}20;color:${p.color}">${initials}</div><div class="person-name">${esc(p.name)}</div><div class="person-role">${esc(p.role)}</div>${p.praying?'<div class="person-prayer">🙏</div>':''}`;
-    card.onclick=()=>showPersonDetail(p);
+  var people = getPeople();
+  var search = document.getElementById('ppl-search');
+  var query = search ? search.value.toLowerCase() : '';
+  if(query) people = people.filter(function(p){
+    return (p.name||'').toLowerCase().includes(query) ||
+           (p.role||'').toLowerCase().includes(query) ||
+           (p.phone||'').includes(query) ||
+           (p.email||'').toLowerCase().includes(query);
+  });
+  var grid = document.getElementById('people-grid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  people.forEach(function(p){
+    var initials = (p.name||'?').split(' ').map(function(n){return n[0]||'';}).join('').substring(0,2).toUpperCase();
+    var color = p.color || '#C2738A';
+    var card = document.createElement('div');
+    card.className = 'contact-card';
+    card.style.cssText = '--card-color:'+color;
+    // Top color bar
+    card.innerHTML = '<div style="position:absolute;top:0;left:0;right:0;height:3px;background:'+color+';border-radius:12px 12px 0 0"></div>';
+    var av = document.createElement('div');
+    av.className = 'contact-av';
+    av.style.cssText = 'background:'+color+'20;color:'+color;
+    av.textContent = initials;
+    var name = document.createElement('div');
+    name.className = 'contact-name';
+    name.textContent = p.name;
+    var role = document.createElement('div');
+    role.className = 'contact-role';
+    role.textContent = (p.role||'').split('·')[0].trim();
+    var badges = document.createElement('div');
+    badges.className = 'contact-badges';
+    if(p.phone) badges.innerHTML += '<span class="contact-badge" style="background:rgba(74,124,111,.15);color:var(--sage)">📞</span>';
+    if(p.email) badges.innerHTML += '<span class="contact-badge" style="background:rgba(107,140,184,.15);color:var(--faith)">✉️</span>';
+    if(p.praying) {
+      var prayIcon = document.createElement('div');
+      prayIcon.className = 'contact-prayer-icon';
+      prayIcon.textContent = '🙏';
+      card.appendChild(prayIcon);
+    }
+    card.appendChild(av);
+    card.appendChild(name);
+    card.appendChild(role);
+    card.appendChild(badges);
+    card.onclick = function(){ showPersonDetail(p); };
     grid.appendChild(card);
   });
   renderPrayingFor();
 }
 function showPersonDetail(p){
-  var wrap=document.getElementById('person-detail-wrap');
-  var notes=ld('pnotes_'+p.id,'');
-  var contact=ld('pcontact_'+p.id,'');
-  var prayers=ld('pprayers_'+p.id,[]);
-  wrap.innerHTML=`
-    <div class="detail-panel active">
-      <div class="detail-hdr"><div class="detail-name">${esc(p.name)}</div><button class="close-btn" onclick="document.getElementById('person-detail-wrap').innerHTML=''">✕</button></div>
-      <div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.75rem">${esc(p.role)}</div>
-      <div class="tabs-inner">
-        <button class="tab-inner active" onclick="innerTab(this,'pd-notes')">Notes</button>
-        <button class="tab-inner" onclick="innerTab(this,'pd-prayer')">Prayer</button>
-        <button class="tab-inner" onclick="innerTab(this,'pd-contact')">Contact</button>
+  var wrap = document.getElementById('person-detail-wrap');
+  var color = p.color || '#C2738A';
+  var initials = (p.name||'?').split(' ').map(function(n){return n[0]||'';}).join('').substring(0,2).toUpperCase();
+  var notes = ld('pnotes_'+p.id, '');
+  var contact = ld('pcontact_'+p.id, '');
+  var prayers = ld('pprayers_'+p.id, []);
+  var activity = ld('pactivity_'+p.id, []);
+
+  wrap.innerHTML = '';
+  var panel = document.createElement('div');
+  panel.className = 'contact-detail';
+
+  // Header
+  panel.innerHTML = `
+    <div class="contact-detail-header">
+      <div class="contact-detail-av" style="background:${color}20;color:${color}">${initials}</div>
+      <div>
+        <div class="contact-detail-name">${esc(p.name)}</div>
+        <div class="contact-detail-role">${esc(p.role||'')}</div>
       </div>
-      <div class="tab-content-inner active" id="pd-notes">
-        <div class="dump-box"><textarea class="dump-textarea" id="pd-notes-text" placeholder="Notes about ${esc(p.name)}..." onblur="sv('pnotes_${p.id}',this.value)" style="min-height:80px">${notes}</textarea></div>
-      </div>
-      <div class="tab-content-inner" id="pd-prayer">
-        <div class="add-row"><input class="add-input" id="pd-pray-in" placeholder="Prayer for ${esc(p.name)}..."/><button class="add-btn" onclick="addPersonPrayer(${p.id},'${esc(p.name)}')">Add</button></div>
-        <div class="items" id="pd-pray-list">
-          ${prayers.map(pr=>`<div class="item"><div class="item-dot" style="background:var(--faith)"></div><div class="item-text">${esc(pr.text)}</div></div>`).join('')}
-        </div>
-        <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;margin-top:.4rem">
-          <input type="checkbox" ${p.praying?'checked':''} onchange="togglePersonPraying(${p.id},this.checked)" style="accent-color:var(--faith)"/>
-          Actively praying for ${esc(p.name)}
-        </label>
-      </div>
-      <div class="tab-content-inner" id="pd-contact">
-        <div class="dump-box"><textarea class="dump-textarea" id="pd-contact-text" placeholder="Phone, email, social handles, best way to reach them..." onblur="sv('pcontact_${p.id}',this.value)" style="min-height:80px">${contact}</textarea></div>
-        <a class="qlink" href="mailto:?subject=Checking in" target="_blank" style="margin-top:.4rem"><span class="qlink-emoji">✉️</span>Send email</a>
+      <div class="contact-detail-actions">
+        ${p.phone?`<a class="contact-action-btn" href="tel:${esc(p.phone)}">📞 Call</a>`:''}
+        ${p.phone?`<a class="contact-action-btn" href="sms:${esc(p.phone)}">💬 Text</a>`:''}
+        ${p.email?`<a class="contact-action-btn" href="mailto:${esc(p.email)}">✉️ Email</a>`:''}
+        <button class="contact-action-btn" onclick="document.getElementById('person-detail-wrap').innerHTML=''">✕ Close</button>
       </div>
     </div>
   `;
+
+  // Body with tabs
+  var body = document.createElement('div');
+  body.className = 'contact-detail-body';
+
+  // Inner tabs
+  body.innerHTML = `
+    <div class="tabs-inner" style="margin-bottom:.875rem">
+      <button class="tab-inner active" onclick="innerTab(this,'cd-info')">Contact Info</button>
+      <button class="tab-inner" onclick="innerTab(this,'cd-notes')">Notes</button>
+      <button class="tab-inner" onclick="innerTab(this,'cd-prayer')">Prayer</button>
+      <button class="tab-inner" onclick="innerTab(this,'cd-money')">Money</button>
+      <button class="tab-inner" onclick="innerTab(this,'cd-activity')">Activity</button>
+    </div>
+
+    <!-- CONTACT INFO -->
+    <div class="tab-content-inner active" id="cd-info">
+      <div class="contact-field-grid">
+        <div class="contact-field">
+          <div class="contact-field-label">Mobile phone</div>
+          <input class="contact-field-value" id="cd-phone" value="${esc(p.phone||'')}" placeholder="Phone number..." onblur="saveContactField(${p.id},'phone',this.value)"/>
+        </div>
+        <div class="contact-field">
+          <div class="contact-field-label">Email</div>
+          <input class="contact-field-value" id="cd-email" value="${esc(p.email||'')}" placeholder="Email address..." onblur="saveContactField(${p.id},'email',this.value)"/>
+        </div>
+        <div class="contact-field">
+          <div class="contact-field-label">Birthday</div>
+          <input class="contact-field-value" id="cd-birthday" value="${esc(p.birthday||'')}" placeholder="e.g. June 15" onblur="saveContactField(${p.id},'birthday',this.value)"/>
+        </div>
+        <div class="contact-field">
+          <div class="contact-field-label">Best contact method</div>
+          <input class="contact-field-value" id="cd-best" value="${esc(p.best_contact||p.bestContact||'')}" placeholder="Text · Call · Email..." onblur="saveContactField(${p.id},'best_contact',this.value)"/>
+        </div>
+        <div class="contact-field">
+          <div class="contact-field-label">City</div>
+          <input class="contact-field-value" id="cd-city" value="${esc(p.city||'')}" placeholder="City..." onblur="saveContactField(${p.id},'city',this.value)"/>
+        </div>
+        <div class="contact-field">
+          <div class="contact-field-label">State</div>
+          <input class="contact-field-value" id="cd-state" value="${esc(p.state||'')}" placeholder="State..." onblur="saveContactField(${p.id},'state',this.value)"/>
+        </div>
+        <div class="contact-field">
+          <div class="contact-field-label">How you know them</div>
+          <input class="contact-field-value" id="cd-how" value="${esc(p.how_you_know||p.howYouKnow||'')}" placeholder="How you met..." onblur="saveContactField(${p.id},'how_you_know',this.value)"/>
+        </div>
+        <div class="contact-field">
+          <div class="contact-field-label">Contact frequency</div>
+          <input class="contact-field-value" id="cd-freq" value="${esc(p.contact_frequency||p.contactFreq||'')}" placeholder="Weekly · Monthly..." onblur="saveContactField(${p.id},'contact_frequency',this.value)"/>
+        </div>
+      </div>
+
+      <div class="contact-section-divider">Social Media</div>
+      <div class="contact-social-grid">
+        <div class="contact-social-item"><span class="contact-social-icon">📸</span><input class="contact-social-input" value="${esc(p.instagram||'')}" placeholder="Instagram..." onblur="saveContactField(${p.id},'instagram',this.value)"/></div>
+        <div class="contact-social-item"><span class="contact-social-icon">👥</span><input class="contact-social-input" value="${esc(p.facebook||'')}" placeholder="Facebook..." onblur="saveContactField(${p.id},'facebook',this.value)"/></div>
+        <div class="contact-social-item"><span class="contact-social-icon">🎵</span><input class="contact-social-input" value="${esc(p.tiktok||'')}" placeholder="TikTok..." onblur="saveContactField(${p.id},'tiktok',this.value)"/></div>
+        <div class="contact-social-item"><span class="contact-social-icon">💼</span><input class="contact-social-input" value="${esc(p.linkedin||'')}" placeholder="LinkedIn..." onblur="saveContactField(${p.id},'linkedin',this.value)"/></div>
+        <div class="contact-social-item"><span class="contact-social-icon">🔗</span><input class="contact-social-input" value="${esc(p.other_social||p.otherSocial||'')}" placeholder="Other..." onblur="saveContactField(${p.id},'other_social',this.value)"/></div>
+        <div class="contact-social-item"><span class="contact-social-icon">🌐</span><input class="contact-social-input" value="${esc(p.website||'')}" placeholder="Website..." onblur="saveContactField(${p.id},'website',this.value)"/></div>
+      </div>
+
+      <div class="contact-section-divider">Relationship</div>
+      <div class="contact-field" style="margin-bottom:.5rem">
+        <div class="contact-field-label">Role / description</div>
+        <input class="contact-field-value" id="cd-role" value="${esc(p.role||'')}" placeholder="Role or relationship description..." onblur="saveContactField(${p.id},'role',this.value)"/>
+      </div>
+      <label style="display:flex;align-items:center;gap:.5rem;font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;margin-top:.4rem">
+        <input type="checkbox" ${p.praying?'checked':''} onchange="togglePersonPraying(${p.id},this.checked)" style="accent-color:var(--faith)"/>
+        Actively praying for ${esc(p.name)}
+      </label>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:1rem;gap:.5rem">
+        <button class="contact-action-btn" style="border-color:#F1948A;color:#F1948A" onclick="deletePerson(${p.id})">Delete contact</button>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="tab-content-inner" id="cd-notes">
+      <div class="dump-box" style="margin-bottom:.75rem">
+        <textarea class="dump-textarea" id="cd-notes-text" placeholder="Notes about ${esc(p.name)}... thoughts · observations · things to remember..." onblur="saveContactNotes(${p.id},this.value)" style="min-height:100px">${esc(notes)}</textarea>
+      </div>
+      <div class="s-label">Things to discuss</div>
+      <div class="add-row">
+        <input class="add-input" id="cd-discuss-in" placeholder="Something to bring up with ${esc(p.name)}..." onkeydown="if(event.key==='Enter')addContactDiscuss(${p.id},'${esc(p.name)}')"/>
+        <button class="add-btn" onclick="addContactDiscuss(${p.id},'${esc(p.name)}')">Add</button>
+      </div>
+      <div class="items" id="cd-discuss-list"></div>
+    </div>
+
+    <!-- PRAYER -->
+    <div class="tab-content-inner" id="cd-prayer">
+      <div class="add-row">
+        <input class="add-input" id="cd-pray-in" placeholder="Prayer for ${esc(p.name)}..."/>
+        <button class="add-btn" onclick="addPersonPrayer(${p.id},'${esc(p.name)}')">Add</button>
+      </div>
+      <div class="items" id="cd-pray-list">
+        ${prayers.map(function(pr){return '<div class="item"><div class="item-dot" style="background:var(--faith)"></div><div class="item-text">'+esc(pr.text)+'</div><div class="item-meta">'+esc(pr.date||'')+'</div></div>';}).join('')}
+      </div>
+    </div>
+
+    <!-- MONEY -->
+    <div class="tab-content-inner" id="cd-money">
+      <div class="contact-money-grid">
+        <div class="contact-money-card">
+          <div class="contact-money-label">They owe you</div>
+          <input class="contact-money-val" value="${esc(String(p.money_they_owe_you||p.moneyTheyOweYou||'$0'))}" onblur="saveContactField(${p.id},'money_they_owe_you',this.value)" style="font-size:24px;font-weight:700;color:#fff;width:100%"/>
+        </div>
+        <div class="contact-money-card">
+          <div class="contact-money-label">You owe them</div>
+          <input class="contact-money-val" style="color:var(--peony);font-size:24px;font-weight:700;width:100%" value="${esc(String(p.money_owed_to_them||p.moneyOwedToThem||'$0'))}" onblur="saveContactField(${p.id},'money_owed_to_them',this.value)"/>
+        </div>
+      </div>
+      <div class="contact-field">
+        <div class="contact-field-label">Money notes</div>
+        <textarea class="dump-textarea" style="min-height:60px;font-size:13px" placeholder="Payment plan · context · notes..." onblur="saveContactField(${p.id},'money_notes',this.value)">${esc(p.money_notes||p.moneyNotes||'')}</textarea>
+      </div>
+    </div>
+
+    <!-- ACTIVITY -->
+    <div class="tab-content-inner" id="cd-activity">
+      <div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:.5rem;font-style:italic">Auto-logged when you call · text · complete Need Tos · add prayers</div>
+      <div class="activity-log" id="cd-activity-log">
+        ${activity.length ? activity.slice().reverse().map(function(a){return '<div class="activity-item"><div class="activity-icon">'+a.icon+'</div><div class="activity-text">'+esc(a.text)+'</div><div class="activity-date">'+esc(a.date)+'</div></div>';}).join('') : '<div style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;padding:.5rem">No activity logged yet</div>'}
+      </div>
+    </div>
+  `;
+
+  panel.appendChild(body);
+  wrap.appendChild(panel);
+
+  // Load discuss items
+  var discuss = ld('pdiscuss_'+p.id, []);
+  var dlist = document.getElementById('cd-discuss-list');
+  if(dlist) discuss.forEach(function(d){
+    dlist.appendChild(makeCheck(d, 'pdiscuss_'+p.id));
+  });
 }
+
+function saveContactField(personId, field, value){
+  var people = getPeople();
+  var p = people.find(function(x){return x.id==personId;});
+  if(!p) return;
+  p[field] = value;
+  sv('people', people);
+  // Save to D1
+  var update = {id:String(personId)};
+  update[field] = value;
+  d1Save('people', update);
+}
+
+function saveContactNotes(personId, text){
+  sv('pnotes_'+personId, text);
+  d1Save('person_notes', {id:String(personId)+'_notes', person_id:String(personId), note_type:'general', text});
+  logActivity(personId, '📝', 'Notes updated');
+}
+
+function addContactDiscuss(personId, personName){
+  var input = document.getElementById('cd-discuss-in');
+  var text = input.value.trim();
+  if(!text) return;
+  var items = ld('pdiscuss_'+personId, []);
+  var item = {id:Date.now(), text, done:false};
+  items.push(item);
+  sv('pdiscuss_'+personId, items);
+  var list = document.getElementById('cd-discuss-list');
+  if(list) list.appendChild(makeCheck(item, 'pdiscuss_'+personId));
+  input.value = '';
+  logActivity(personId, '💬', 'Added: ' + text);
+}
+
+function logActivity(personId, icon, text){
+  var activity = ld('pactivity_'+personId, []);
+  activity.push({id:Date.now(), icon, text, date:new Date().toLocaleDateString()});
+  sv('pactivity_'+personId, activity.slice(-50)); // keep last 50
+  // Refresh activity log if panel open
+  var log = document.getElementById('cd-activity-log');
+  if(log){
+    var item = document.createElement('div');
+    item.className = 'activity-item';
+    item.innerHTML = '<div class="activity-icon">'+icon+'</div><div class="activity-text">'+esc(text)+'</div><div class="activity-date">'+new Date().toLocaleDateString()+'</div>';
+    log.insertBefore(item, log.firstChild);
+  }
+}
+
+function deletePerson(id){
+  if(!confirm('Delete this contact? This cannot be undone.')) return;
+  sv('people', getPeople().filter(function(p){return p.id!=id;}));
+  document.getElementById('person-detail-wrap').innerHTML = '';
+  renderPeople();
+  showToast('Contact deleted');
+}
+
+function addPerson(){
+  var name = document.getElementById('ppl-name-in').value.trim();
+  if(!name) return;
+  var people = getPeople();
+  var colors = ['#C2738A','#4A7C6F','#2D6B6B','#7A5C7A','#C4895A','#6B8CB8'];
+  var p = {
+    id: Date.now(),
+    name,
+    role: document.getElementById('ppl-role-in').value.trim(),
+    phone: document.getElementById('ppl-phone-in').value.trim(),
+    email: document.getElementById('ppl-email-in').value.trim(),
+    best_contact: document.getElementById('ppl-best-in').value,
+    how_you_know: document.getElementById('ppl-how-in').value.trim(),
+    color: colors[people.length % colors.length],
+    praying: 0,
+    money_owed_to_them: 0,
+    money_they_owe_you: 0
+  };
+  people.push(p);
+  sv('people', people);
+  d1Save('people', Object.assign({}, p, {id:String(p.id)}));
+  renderPeople();
+  // Clear form
+  ['ppl-name-in','ppl-role-in','ppl-phone-in','ppl-email-in','ppl-how-in'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('add-contact-form').classList.remove('open');
+  showToast(name + ' added ✓');
+}
+
 function addPersonPrayer(personId,personName){
   var input=document.getElementById('pd-pray-in');
   var text=input.value.trim();if(!text)return;
@@ -1959,7 +2311,10 @@ function addPerson(){
   var people=getPeople();
   var colors=['#C2738A','#4A7C6F','#2D6B6B','#7A5C7A','#C4895A','#6B8CB8'];
   people.push({id:Date.now(),name,role,color:colors[people.length%colors.length],praying:false});
-  sv('people',people);renderPeople();
+  sv('people',people);
+  var np=people[people.length-1];
+  d1Save('people',{id:String(np.id),name:np.name,role:np.role||'',color:np.color||'#C2738A',praying:0});
+  renderPeople();
   document.getElementById('ppl-name-in').value='';document.getElementById('ppl-role-in').value='';
 }
 function renderPrayingFor(){
@@ -2008,9 +2363,12 @@ function renderFaithPraying(){
 function addFaithPrayer(){
   var input=document.getElementById('f-pray-in');
   var text=input.value.trim();if(!text)return;
+  var id=Date.now();
   var fp=ld('faith_praying',[]);
-  fp.push({id:Date.now(),text,person:text,date:new Date().toLocaleDateString()});
-  sv('faith_praying',fp);renderFaithPraying();input.value='';
+  fp.push({id,text,person:text,date:new Date().toLocaleDateString()});
+  sv('faith_praying',fp);
+  d1Save('faith',{id:String(id),type:'praying_for',text,status:'active'});
+  renderFaithPraying();input.value='';
 }
 function removeFaithPraying(id,btn){sv('faith_praying',ld('faith_praying',[]).filter(i=>i.id!=id));btn.closest('.item').remove();}
 
@@ -2039,7 +2397,7 @@ function renderShopList(){
     list.appendChild(div);
   });
 }
-function toggleShop(id){var items=ld('shop_items',[]);var item=items.find(i=>i.id==id);if(item){item.got=!item.got;sv('shop_items',items);}renderShopList();}
+function toggleShop(id){var items=ld('shop_items',[]);var item=items.find(i=>i.id==id);if(item){item.got=!item.got;sv('shop_items',items);d1Save('shopping',{id:String(id),got:item.got?1:0});}renderShopList();}
 function removeShop(id,btn){sv('shop_items',ld('shop_items',[]).filter(i=>i.id!=id));btn.closest('.check-item').remove();}
 function clearGotShop(){sv('shop_items',ld('shop_items',[]).filter(i=>!i.got));renderShopList();}
 function addInvItem(type){
@@ -2186,6 +2544,7 @@ function loadSaved(){
   ];
   editables.forEach(([elId,key])=>{var v=ld(key,'');if(v){var el=document.getElementById(elId);if(el)el.textContent=v;}});
 
+  // Clear and rebuild lists to prevent duplicates
   var entryLists=[
     ['f-self-list','self_prayers','var(--faith)'],
     ['f-gen-list','general_prayers','var(--faith)'],
@@ -2198,7 +2557,7 @@ function loadSaved(){
   ];
   entryLists.forEach(([listId,key,color])=>{
     var items=ld(key,[]);var list=document.getElementById(listId);
-    if(list&&items.length>0)items.forEach(item=>{if(!document.querySelector(`#${listId} [data-id='${item.id}']`))list.appendChild(makeItem(item.text,color,item.date,item.id,key));});
+    if(list){list.innerHTML='';items.forEach(item=>list.appendChild(makeItem(item.text,color,item.date,item.id,key)));}
   });
 
   var checkLists=[
@@ -2210,7 +2569,7 @@ function loadSaved(){
   ];
   checkLists.forEach(([listId,key])=>{
     var items=ld(key,[]);var list=document.getElementById(listId);
-    if(list&&items.length>0)items.forEach(item=>{if(!document.querySelector(`#${listId} [data-id='${item.id}']`))list.appendChild(makeCheck(item,key));});
+    if(list){list.innerHTML='';items.forEach(item=>list.appendChild(makeCheck(item,key)));}
   });
 
   renderPeople();
@@ -2459,7 +2818,7 @@ function addBill(){
   bills.push(bill);
   sv('bills',bills);
   renderBills();
-  d1Save('bills',{id:String(bill.id),name,amount,due_date:due,category:'home',recurring:0,paid:0});
+  d1Save('bills',{id:String(bill.id),name,amount:amount||'',due_date:due||'',category:'home',recurring:0,paid:0});
   document.getElementById('bill-name-in').value='';
   document.getElementById('bill-amount-in').value='';
   document.getElementById('bill-due-in').value='';
@@ -2496,8 +2855,7 @@ function renderBills(){
 function toggleBill(id,paid){
   var bills=ld('bills',[]);
   var b=bills.find(x=>x.id==id);
-  if(b){b.paid=paid;sv('bills',bills);}
-  dbWrite('updateBill',{id,paid});
+  if(b){b.paid=paid;sv('bills',bills);d1Save('bills',{id:String(id),paid:paid?1:0});}
   renderBills();
 }
 
@@ -2544,6 +2902,10 @@ loadDate();
 loadScripture();
 loadSaved();
 checkDbConnection();
+// Auto-sync every 60 seconds for real-time across devices
+setInterval(function(){
+  if(DB_ONLINE) loadFromSheets(false);
+}, 60000);
 
 // ══ EXERCISE LOG RESTORE ══
 [['walking','walk-log'],['hiking','hike-log'],['pelvic','pelvic-log'],['core','core-log']].forEach(([k,logId])=>renderExLog(k,logId));
