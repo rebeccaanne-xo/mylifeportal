@@ -335,7 +335,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
         <div class="user-email">rebeccaannexo@gmail.com</div>
       </div>
     </div>
-    <div style="font-size:9px;color:rgba(255,255,255,.25);margin-bottom:.2rem" id="db-status">connecting...</div><div class="pts-display" id="sb-points">⭐ 0 points · 🔥 0 streak</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.2rem"><div style="font-size:9px;color:rgba(255,255,255,.25)" id="db-status">connecting...</div><button onclick="hardRefresh()" style="font-size:9px;background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-family:inherit;padding:0" title="Clear cache and reload all data from database">↻</button></div><div class="pts-display" id="sb-points">⭐ 0 points · 🔥 0 streak</div>
   </div>
 </div>
 
@@ -916,7 +916,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
 // ══ STORAGE ══
 
 // DATABASE CONNECTION — Google Sheets
-var DB_URL="https://script.google.com/macros/s/AKfycbwACwmDOB3utDpsgmgAvJz4TnDTDyWkbG6tpwqmq4rocpL51vz5eNlKm8QwgdOowGis/exec";
+var DB_URL="https://script.google.com/macros/s/AKfycbyWqjL7MxquIleef7gRozobV2xgolWbTxmF7SuXIlUkBuyyVbme9wAuUJhhOFnro1sj/exec";
 var DB_ONLINE=false;
 var DB_QUEUE=[];
 
@@ -937,7 +937,13 @@ async function checkDbConnection(){
   }
 }
 
-async function loadFromSheets(){
+async function loadFromD1(forceRefresh){
+  // Only load from Sheets once per session unless forced
+  // This prevents duplicates on every page load
+  if(!forceRefresh && ld('sheets_loaded_'+TODAY, false)){
+    console.log('Sheets already loaded today - skipping to prevent duplicates');
+    return;
+  }
   try{
     // Load People
     var people=await dbRead('People');
@@ -948,10 +954,13 @@ async function loadFromSheets(){
           name:p['Name']||'',
           role:p['Role']||'',
           color:p['Color']||'#C2738A',
-          praying:p['Praying For']==='TRUE'||p['Praying For']===true
+          praying:p['Praying For']==='TRUE'||p['Praying For']===true||p['Praying For']===1
         };
       }).filter(function(p){return p.name;});
-      if(mapped.length>0){sv('people',mapped);renderPeople();}
+      var existingPeople=ld('people',null);
+      if(mapped.length>0&&(forceRefresh||!existingPeople||existingPeople.length===0)){
+        sv('people',mapped);renderPeople();
+      }
     }
 
     // Load Tasks
@@ -967,11 +976,13 @@ async function loadFromSheets(){
         var section=t['Section']||'biz_tasks';
         var key=taskMap[section]||section;
         if(!grouped[key])grouped[key]=[];
-        grouped[key].push({id:t['ID']||Date.now(),text:t['Text']||'',done:t['Done']==='TRUE'||t['Done']===true});
+        grouped[key].push({id:t['ID']||Date.now(),text:t['Text']||'',done:t['Done']==='TRUE'||t['Done']===true||t['Done']===1});
       });
       Object.keys(grouped).forEach(function(key){
         var existing=ld(key,[]);
-        if(existing.length===0){sv(key,grouped[key]);}
+        if(forceRefresh || existing.length===0){
+          sv(key,grouped[key]);
+        }
       });
     }
 
@@ -1045,6 +1056,7 @@ async function loadFromSheets(){
     }
 
     // Re-render everything
+    sv('sheets_loaded_'+TODAY, true);
     loadSaved();
     showToast('Data loaded from your database ✓');
 
@@ -1316,9 +1328,98 @@ function renderHabitsPage(){
     var isDone=h.lastDone===TODAY;
     var div=document.createElement('div');
     div.className='item'+(isDone?' done':'');
-    div.style.cursor='pointer';
-    div.onclick=()=>{toggleHabit(h.id);};
-    div.innerHTML=`<div style="font-size:14px">${h.emoji||'⭐'}</div><div style="flex:1"><div class="item-text">${esc(h.name)}</div><div class="item-meta">${h.freq} · +${h.points} pts${h.streak>0?' · 🔥'+h.streak:''}</div></div><div class="item-actions"><button class="item-btn del" onclick="deleteHabit(event,${h.id})">✕</button></div>`;
+    div.style.borderLeft='3px solid '+(isDone?'var(--sage)':h.double?'var(--amber)':'rgba(255,255,255,.08)');
+
+    // Emoji - clickable to edit
+    var emojiEl=document.createElement('div');
+    emojiEl.style.cssText='font-size:18px;flex-shrink:0;cursor:text;min-width:24px;text-align:center';
+    emojiEl.contentEditable='true';
+    emojiEl.textContent=h.emoji||'⭐';
+    emojiEl.title='Click to edit emoji';
+    emojiEl.onblur=function(){editHabitField(h.id,'emoji',this.textContent.trim()||'⭐');};
+
+    // Content
+    var contentEl=document.createElement('div');
+    contentEl.style.flex='1';
+
+    var nameEl=document.createElement('div');
+    nameEl.className='item-text';
+    nameEl.contentEditable='true';
+    nameEl.textContent=h.name;
+    nameEl.title='Click to edit name';
+    nameEl.style.outline='none';
+    nameEl.onblur=function(){editHabitField(h.id,'name',this.textContent.trim()||h.name);};
+
+    var metaEl=document.createElement('div');
+    metaEl.className='item-meta';
+    metaEl.style.display='flex';metaEl.style.gap='6px';metaEl.style.alignItems='center';metaEl.style.flexWrap='wrap';
+
+    // Freq toggle
+    var freqBtn=document.createElement('button');
+    freqBtn.style.cssText='font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:none;color:rgba(255,255,255,.5);cursor:pointer;font-family:inherit';
+    freqBtn.textContent=h.freq||'daily';
+    freqBtn.title='Click to toggle daily/weekly';
+    freqBtn.onclick=function(e){
+      e.stopPropagation();
+      var newFreq=h.freq==='daily'?'weekly':'daily';
+      editHabitField(h.id,'freq',newFreq);
+      this.textContent=newFreq;
+    };
+
+    // Points selector
+    var ptsBtn=document.createElement('button');
+    ptsBtn.style.cssText='font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;background:'+(h.double?'rgba(196,137,90,.15)':'rgba(74,124,111,.15)')+';color:'+(h.double?'var(--amber)':'var(--sage)')+';border:none;cursor:pointer;font-family:inherit';
+    ptsBtn.textContent=(h.double?'⚡ ':'')+'+'+h.points+' pts';
+    ptsBtn.title='Click to change points';
+    ptsBtn.onclick=function(e){
+      e.stopPropagation();
+      var opts=[3,5,8,10,15];
+      var idx=opts.indexOf(h.points);
+      var newPts=opts[(idx+1)%opts.length];
+      editHabitField(h.id,'points',newPts);
+      editHabitField(h.id,'double',newPts===10);
+      this.textContent=(newPts===10?'⚡ ':'')+'+'+newPts+' pts';
+      this.style.background=newPts===10?'rgba(196,137,90,.15)':'rgba(74,124,111,.15)';
+      this.style.color=newPts===10?'var(--amber)':'var(--sage)';
+    };
+
+    if(h.streak>0){
+      var streakEl=document.createElement('span');
+      streakEl.style.cssText='font-size:10px;color:var(--amber)';
+      streakEl.textContent='🔥 '+h.streak;
+      metaEl.appendChild(streakEl);
+    }
+    metaEl.appendChild(freqBtn);
+    metaEl.appendChild(ptsBtn);
+    contentEl.appendChild(nameEl);
+    contentEl.appendChild(metaEl);
+
+    // Actions
+    var actEl=document.createElement('div');
+    actEl.className='item-actions';
+    actEl.style.opacity='0';
+    actEl.style.transition='opacity .15s';
+    div.onmouseenter=function(){actEl.style.opacity='1';};
+    div.onmouseleave=function(){actEl.style.opacity='0';};
+
+    var toggleBtn=document.createElement('button');
+    toggleBtn.className='item-btn';
+    toggleBtn.textContent=isDone?'↩':'✓';
+    toggleBtn.title=isDone?'Uncheck':'Mark done today';
+    toggleBtn.style.color=isDone?'rgba(255,255,255,.3)':'var(--sage)';
+    toggleBtn.onclick=function(e){e.stopPropagation();toggleHabit(h.id);};
+
+    var delBtn=document.createElement('button');
+    delBtn.className='item-btn del';
+    delBtn.textContent='✕';
+    delBtn.onclick=function(e){deleteHabit(e,h.id);};
+
+    actEl.appendChild(toggleBtn);
+    actEl.appendChild(delBtn);
+
+    div.appendChild(emojiEl);
+    div.appendChild(contentEl);
+    div.appendChild(actEl);
     allList.appendChild(div);
   });
 
@@ -1349,7 +1450,15 @@ function toggleHabit(id){
   updateSidebarPoints();
 }
 
-function deleteHabit(e,id){e.stopPropagation();saveHabits(getHabits().filter(h=>h.id!=id));renderHabitsPage();}
+function deleteHabit(e,id){e.stopPropagation();saveHabits(getHabits().filter(h=>h.id!=id));renderHabitsPage();showToast('Habit removed');}
+function editHabitField(id,field,val){
+  var habits=getHabits();
+  var h=habits.find(x=>x.id==id);
+  if(!h)return;
+  h[field]=val;
+  saveHabits(habits);
+  if(field==='name'||field==='emoji')renderHabitsPage();
+}
 function resetHabits(){if(!confirm('Reset all habits for today?'))return;var h=getHabits();h.forEach(x=>x.lastDone='');saveHabits(h);renderHabitsPage();renderHabitSnapshot();}
 function toggleHabitForm(){document.getElementById('add-habit-form').style.display=document.getElementById('add-habit-form').style.display==='none'?'block':'none';}
 function saveNewHabit(){
@@ -1599,7 +1708,22 @@ function renderFaithPraying(){
   var items=ld('faith_praying',[]);
   items.forEach(item=>{
     var div=document.createElement('div');div.className='item';
-    div.innerHTML=`<div class="item-dot" style="background:var(--faith)"></div><div class="item-text">🙏 ${esc(item.person||item.text)}</div><div class="item-actions"><button class="item-btn del" onclick="removeFaithPraying(${item.id},this)">✕</button></div>`;
+    var faithText=document.createElement('div');
+    faithText.className='item-text';
+    faithText.contentEditable='true';
+    faithText.textContent='🙏 '+(item.person||item.text);
+    faithText.style.outline='none';
+    faithText.onblur=function(){
+      var fp=ld('faith_praying',[]);
+      var fi=fp.find(i=>i.id==item.id);
+      if(fi){var t=this.textContent.replace('🙏 ','').trim();fi.text=t;fi.person=t;sv('faith_praying',fp);}
+    };
+    div.innerHTML='<div class="item-dot" style="background:var(--faith)"></div>';
+    div.appendChild(faithText);
+    var faithActs=document.createElement('div');faithActs.className='item-actions';
+    var faithDel=document.createElement('button');faithDel.className='item-btn del';faithDel.textContent='✕';
+    faithDel.onclick=function(){removeFaithPraying(item.id,this);};
+    faithActs.appendChild(faithDel);div.appendChild(faithActs);
     list.appendChild(div);
   });
 }
@@ -1888,6 +2012,17 @@ function reorderTask(dragId,dropId,key){
 }
 
 
+
+function hardRefresh(){
+  if(!confirm('Reload all data from database? This clears local cache.'))return;
+  // Clear the loaded flag so loadFromSheets will run again
+  var keys=Object.keys(localStorage).filter(k=>k.startsWith('p_sheets_loaded'));
+  keys.forEach(k=>localStorage.removeItem(k));
+  sv('sheets_loaded_'+TODAY, false);
+  showToast('Refreshing from database...');
+  setTimeout(function(){loadFromSheets(true);},300);
+}
+
 // BILLS TRACKER
 function addBill(){
   var name=document.getElementById('bill-name-in').value.trim();
@@ -1899,7 +2034,7 @@ function addBill(){
   bills.push(bill);
   sv('bills',bills);
   renderBills();
-  dbWrite('saveBill',{id:bill.id,name,amount,dueDate:due,category:'home',recurring:false,frequency:'',paid:false,notes:''});
+  d1Save('bills',{id:String(bill.id),name,amount,due_date:due,category:'home',recurring:0,paid:0});
   document.getElementById('bill-name-in').value='';
   document.getElementById('bill-amount-in').value='';
   document.getElementById('bill-due-in').value='';
