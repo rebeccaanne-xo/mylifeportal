@@ -13,6 +13,7 @@
   --sidebar-w:220px;
 }
 html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);color:#fff;line-height:1.6;overflow:hidden}
+select,select option{background:#1a2d4a;color:#fff;}
 
 /* ══ LAYOUT ══ */
 #app{display:flex;height:100vh}
@@ -368,8 +369,16 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
 .mob-toggle{display:none;position:fixed;top:.65rem;left:.65rem;z-index:200;background:var(--peony);border:none;border-radius:7px;padding:.4rem .55rem;cursor:pointer;color:#fff;font-size:15px}
 @media(max-width:768px){
   .mob-toggle{display:block}
-  .sidebar{position:fixed;inset:0;z-index:100;transform:translateX(-100%);transition:transform .25s;width:75vw;max-width:260px}
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;z-index:100;
+    transform:translateX(-100%);transition:transform .25s;
+    width:80vw;max-width:280px;
+    background:#0e1f35;
+    box-shadow:4px 0 24px rgba(0,0,0,.6);
+  }
   .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+  .sidebar.open ~ .sidebar-overlay{display:block}
   #app{display:block}
   .content{height:100vh}
   .page{padding:1rem .875rem}
@@ -991,11 +1000,25 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--navy);co
 
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
           <input class="add-input" id="ppl-search" placeholder="🔍 Search contacts..." style="max-width:220px" oninput="renderPeople()"/>
-          <button class="add-btn" onclick="document.getElementById('add-contact-form').classList.toggle('open')">+ Add Contact</button>
+          <button class="add-btn" onclick="document.getElementById('add-contact-form').classList.toggle('open')">+ Add manually</button>
         </div>
 
         <div class="contact-grid" id="people-grid"></div>
         <div id="person-detail-wrap"></div>
+
+        <!-- IMPORT BANNER — below contacts -->
+        <div style="background:linear-gradient(135deg,rgba(74,124,111,.1),rgba(74,124,111,.05));border:1px solid rgba(74,124,111,.18);border-radius:12px;padding:.875rem 1rem;margin-top:.75rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--sage);margin-bottom:.15rem">📱 Import from your phone</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.35)">iPhone: Contacts app → tap contact → Share Contact → Save to Files → select here</div>
+          </div>
+          <div style="display:flex;gap:.4rem;flex-shrink:0">
+            <input type="file" id="vcard-top-input" accept=".vcf,.vcard" multiple style="display:none" onchange="importVCardBulk(this)"/>
+            <button class="add-btn" style="background:var(--sage);border-color:var(--sage);color:#fff;white-space:nowrap;font-size:12px" onclick="document.getElementById('vcard-top-input').click()">
+              📇 Import vCard
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="tab-content-inner" id="ppl-followup">
@@ -2810,6 +2833,78 @@ function parseVCard(text) {
   document.getElementById('add-contact-form').classList.add('open');
 }
 
+
+
+// BULK VCARD IMPORT
+function importVCardBulk(input){
+  var files=Array.from(input.files);
+  if(!files.length)return;
+  var total=0;var done=0;
+  files.forEach(function(file){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var text=e.target.result;
+      var cards=text.split(/(?=BEGIN:VCARD)/i).filter(function(c){return c.trim().length>0;});
+      cards.forEach(function(card){
+        var contact=parseVCardData(card);
+        if(contact.name){saveContactFromVCard(contact);total++;}
+      });
+      done++;
+      if(done===files.length){
+        renderPeople();
+        showToast(total+' contact'+(total===1?'':'s')+' imported ✓');
+      }
+    };
+    reader.readAsText(file);
+  });
+  input.value='';
+}
+
+function parseVCardData(text){
+  function get(field){
+    var m=text.match(new RegExp(field+'[^:\r\n]*:([^\r\n]+)','i'));
+    return m?m[1].trim().replace(/\\n/g,' ').replace(/\\,/g,','):'';
+  }
+  var fullName=get('FN');
+  if(!fullName){
+    var n=get('N');
+    if(n){var p=n.split(';');fullName=[p[1],p[0]].filter(Boolean).join(' ').trim();}
+  }
+  var telM=text.match(/TEL[^:\r\n]*:([^\r\n]+)/i);
+  var phone=telM?telM[1].trim():'';
+  var emlM=text.match(/EMAIL[^:\r\n]*:([^\r\n]+)/i);
+  var email=emlM?emlM[1].trim():'';
+  var bday=get('BDAY');
+  if(bday&&bday.length===8&&!bday.includes('-')){bday=bday.substring(4,6)+'/'+bday.substring(6,8)+'/'+bday.substring(0,4);}
+  var adrM=text.match(/ADR[^:\r\n]*:([^\r\n]+)/i);
+  var city='',state='';
+  if(adrM){var ap=adrM[1].split(';');city=(ap[3]||'').trim();state=(ap[4]||'').trim();}
+  var org=get('ORG');
+  var title=get('TITLE');
+  var role=[title,org].filter(Boolean).join(' · ');
+  var urlM=text.match(/URL[^:\r\n]*:([^\r\n]+)/i);
+  var website=urlM?urlM[1].trim():'';
+  var note=get('NOTE');
+  var igM=text.match(/X-SOCIALPROFILE[^\r\n]*instagram[^:]*:([^\r\n]+)/i);
+  var instagram=igM?igM[1].trim():'';
+  return {name:fullName,phone,email,role,birthday:bday,city,state,website,notes:note,instagram};
+}
+
+function saveContactFromVCard(data){
+  if(!data.name)return;
+  var people=getPeople();
+  var exists=people.find(function(p){return p.name.toLowerCase()===data.name.toLowerCase();});
+  if(exists){return;}
+  var colors=['#C2738A','#4A7C6F','#2D6B6B','#7A5C7A','#C4895A','#6B8CB8'];
+  var p=Object.assign({
+    id:Date.now()+Math.floor(Math.random()*9999),
+    color:colors[people.length%colors.length],
+    praying:0,money_owed_to_them:0,money_they_owe_you:0
+  },data);
+  people.push(p);
+  sv('people',people);
+  d1Save('people',Object.assign({},p,{id:String(p.id)}));
+}
 
 // NEED TO
 var selectedNTType = {type:'call', icon:'📞'};
