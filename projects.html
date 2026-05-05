@@ -4,216 +4,252 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Project Board — Rebecca Holka</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --navy:#1B2A4A;--peony:#C2738A;--sage:#4A7C6F;--amber:#C4895A;
-  --plum:#7A5C7A;--teal:#2D6B6B;--faith:#6B8CB8;--cream:#F7EEF1;
+  --plum:#7A5C7A;--teal:#2D6B6B;--faith:#6B8CB8;
   --bg:#0F1E35;--surface:rgba(255,255,255,.04);--border:rgba(255,255,255,.07);
-
-  /* Project colors */
-  --gbb:var(--peony);--wtc:var(--faith);--aligned:var(--sage);
-  --mustard:var(--plum);--portal:var(--amber);--personal:#A89880;
+  --gbb:#C2738A;--wtc:#6B8CB8;--aligned:#4A7C6F;--mustard:#7A5C7A;--portal:#C4895A;
 }
 html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:#fff;line-height:1.6;overflow:hidden}
 #app{display:flex;height:100vh}
+select,select option{background:#1a2d4a;color:#fff}
 
-/* ══ SIDEBAR ══ */
-.sidebar{width:220px;flex-shrink:0;background:rgba(0,0,0,.4);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
-.sidebar-top{padding:1.25rem 1rem .875rem;border-bottom:1px solid var(--border)}
-.sidebar-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:#fff}
-.sidebar-sub{font-size:10px;color:rgba(255,255,255,.3);margin-top:.15rem;letter-spacing:.05em}
-.nav-section{padding:.5rem .75rem .1rem}
-.nav-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:0 .3rem;margin-bottom:.25rem}
-.nav-btn{display:flex;align-items:center;gap:8px;width:100%;padding:.45rem .6rem;border-radius:7px;font-size:12px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;margin-bottom:1px;background:none;border:none;font-family:'DM Sans',sans-serif;text-align:left}
+/* SIDEBAR */
+.sidebar{width:210px;flex-shrink:0;background:#0d1b2e;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.sidebar-top{padding:1.1rem 1rem .75rem;border-bottom:1px solid var(--border)}
+.sidebar-logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:#fff}
+.sidebar-sub{font-size:9px;color:rgba(255,255,255,.3);margin-top:.15rem}
+.nav-group{padding:.5rem .7rem .1rem}
+.nav-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:0 .3rem;margin-bottom:.25rem}
+.nav-btn{display:flex;align-items:center;gap:7px;width:100%;padding:.42rem .55rem;border-radius:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;margin-bottom:1px;background:none;border:none;font-family:'DM Sans',sans-serif;text-align:left}
 .nav-btn:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
 .nav-btn.active{color:#fff;font-weight:600;background:rgba(196,137,90,.15)}
-.nav-emoji{font-size:14px;width:18px;text-align:center;flex-shrink:0}
-.nav-count{margin-left:auto;font-size:9px;font-weight:700;padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
-
-.project-filter{padding:.5rem .75rem}
-.project-filter-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:0 .3rem;margin-bottom:.4rem}
-.proj-pill{display:flex;align-items:center;gap:7px;padding:.4rem .6rem;border-radius:7px;font-size:11px;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;margin-bottom:2px}
+.nav-emoji{font-size:13px;width:17px;text-align:center;flex-shrink:0}
+.nav-count{margin-left:auto;font-size:9px;font-weight:700;padding:1px 5px;border-radius:999px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
+.proj-pill{display:flex;align-items:center;gap:6px;padding:.38rem .55rem;border-radius:6px;font-size:11px;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;margin-bottom:2px}
 .proj-pill:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.8)}
 .proj-pill.active{color:#fff;background:rgba(255,255,255,.07)}
-.proj-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.proj-pill-count{margin-left:auto;font-size:9px;color:rgba(255,255,255,.3)}
-
-.sidebar-footer{margin-top:auto;padding:.875rem 1rem;border-top:1px solid var(--border)}
-.back-link{font-size:11px;color:rgba(255,255,255,.3);text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .15s}
+.proj-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sidebar-footer{margin-top:auto;padding:.75rem 1rem;border-top:1px solid var(--border)}
+.back-link{font-size:11px;color:rgba(255,255,255,.3);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .15s}
 .back-link:hover{color:rgba(255,255,255,.7)}
 
-/* ══ MAIN ══ */
+/* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-
-/* TOP BAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15);flex-shrink:0;gap:1rem;flex-wrap:wrap}
-.topbar-left{display:flex;align-items:center;gap:.75rem}
-.page-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:#fff}
-.view-tabs{display:flex;gap:3px;background:rgba(255,255,255,.05);border-radius:8px;padding:3px}
-.view-tab{font-size:11px;font-weight:500;padding:.3rem .75rem;border-radius:5px;cursor:pointer;color:rgba(255,255,255,.45);transition:all .15s;border:none;background:none;font-family:'DM Sans',sans-serif}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.1rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15);flex-shrink:0;gap:.75rem;flex-wrap:wrap}
+.topbar-left{display:flex;align-items:center;gap:.6rem}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#fff}
+.view-tabs{display:flex;gap:2px;background:rgba(255,255,255,.05);border-radius:7px;padding:3px}
+.view-tab{font-size:11px;font-weight:500;padding:.28rem .7rem;border-radius:4px;cursor:pointer;color:rgba(255,255,255,.4);transition:all .15s;border:none;background:none;font-family:'DM Sans',sans-serif}
 .view-tab:hover{color:rgba(255,255,255,.8)}
 .view-tab.active{background:rgba(255,255,255,.12);color:#fff}
-.topbar-right{display:flex;align-items:center;gap:.5rem}
-.time-display{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.25);padding:.3rem .6rem;background:rgba(255,255,255,.04);border-radius:6px}
-.add-task-btn{background:var(--peony);color:#fff;border:none;border-radius:8px;padding:.45rem 1rem;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .2s;white-space:nowrap}
-.add-task-btn:hover{opacity:.85}
+.topbar-right{display:flex;align-items:center;gap:.4rem}
+.time-badge{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.22);padding:.25rem .5rem;background:rgba(255,255,255,.04);border-radius:5px}
+.btn-primary{background:var(--peony);color:#fff;border:none;border-radius:7px;padding:.4rem .9rem;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .2s;white-space:nowrap}
+.btn-primary:hover{opacity:.85}
 
-/* ══ CONTENT ══ */
-.content{flex:1;overflow:hidden;position:relative}
-.view{display:none;height:100%;overflow-y:auto;padding:1.25rem}
+/* CONTENT */
+.content{flex:1;overflow:hidden}
+.view{display:none;height:100%;overflow-y:auto;padding:1.1rem}
 .view.active{display:block}
+.view.kanban-view{overflow:hidden;padding:1.1rem;display:none;flex-direction:column}
+.view.kanban-view.active{display:flex}
 
-/* ══ PROJECTS OVERVIEW ══ */
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:1.5rem}
-.project-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
-.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.project-card:hover{background:rgba(255,255,255,.07);transform:translateY(-1px)}
-.project-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.75rem}
-.project-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#fff}
-.project-status-badge{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;flex-shrink:0}
-.status-live{background:rgba(46,125,82,.2);color:#82C4B5}
-.status-building{background:rgba(196,137,90,.2);color:var(--amber)}
-.status-paused{background:rgba(122,92,122,.2);color:#C4A8C4}
-.status-planning{background:rgba(107,140,184,.2);color:var(--faith)}
-.project-desc{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:.875rem;line-height:1.5}
-.project-progress{margin-bottom:.75rem}
-.progress-label{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.3);margin-bottom:.3rem}
-.progress-bar{height:4px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden}
-.progress-fill{height:100%;border-radius:999px;transition:width .5s ease}
-.project-meta{display:flex;gap:.5rem;flex-wrap:wrap}
-.project-link{font-size:10px;color:rgba(255,255,255,.35);text-decoration:none;padding:2px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.1);transition:all .15s}
-.project-link:hover{border-color:rgba(255,255,255,.3);color:#fff}
-.project-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:.75rem}
-.proj-stat{background:rgba(255,255,255,.04);border-radius:7px;padding:.5rem;text-align:center}
-.proj-stat-val{font-size:18px;font-weight:700;color:#fff;line-height:1}
-.proj-stat-label{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.05em;margin-top:.15rem}
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:1.1rem;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
+.proj-card:hover{background:rgba(255,255,255,.07);transform:translateY(-1px)}
+.proj-card-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:13px 13px 0 0}
+.proj-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.6rem}
+.proj-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:#fff}
+.status-badge{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:999px;flex-shrink:0}
+.s-live{background:rgba(46,125,82,.2);color:#82C4B5}
+.s-building{background:rgba(196,137,90,.2);color:var(--amber)}
+.s-paused{background:rgba(122,92,122,.2);color:#C4A8C4}
+.s-planning{background:rgba(107,140,184,.2);color:var(--faith)}
+.proj-desc{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:.75rem;line-height:1.5}
+.proj-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:.6rem}
+.proj-stat{background:rgba(255,255,255,.04);border-radius:6px;padding:.45rem;text-align:center}
+.proj-stat-val{font-size:17px;font-weight:700;color:#fff;line-height:1;margin-bottom:.1rem}
+.proj-stat-label{font-size:8px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.05em}
+.proj-progress-wrap{margin-bottom:.6rem}
+.proj-progress-label{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.28);margin-bottom:.25rem}
+.proj-progress-bar{height:3px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden}
+.proj-progress-fill{height:100%;border-radius:999px;transition:width .5s}
+.proj-links{display:flex;gap:.35rem;flex-wrap:wrap}
+.proj-link{font-size:10px;color:rgba(255,255,255,.3);text-decoration:none;padding:2px 7px;border-radius:999px;border:1px solid rgba(255,255,255,.09);transition:all .15s}
+.proj-link:hover{border-color:rgba(255,255,255,.3);color:#fff}
 
-/* ══ KANBAN ══ */
-.kanban-board{display:flex;gap:12px;height:calc(100vh - 140px);overflow-x:auto;padding-bottom:1rem}
-.kanban-board::-webkit-scrollbar{height:4px}
-.kanban-board::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:999px}
-.kanban-col{flex-shrink:0;width:280px;display:flex;flex-direction:column}
-.kanban-col-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem .875rem;border-radius:10px 10px 0 0;margin-bottom:8px;background:rgba(255,255,255,.05)}
-.kanban-col-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6)}
-.kanban-col-count{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
-.kanban-cards{flex:1;overflow-y:auto;padding:2px;display:flex;flex-direction:column;gap:8px;min-height:100px;border-radius:0 0 10px 10px;padding:8px 4px}
-.kanban-cards::-webkit-scrollbar{width:3px}
-.kanban-cards::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1)}
-.kanban-col.drag-over .kanban-cards{background:rgba(255,255,255,.04);border-radius:8px}
+/* KANBAN */
+.kanban-wrap{display:flex;gap:10px;overflow-x:auto;flex:1;padding-bottom:.5rem}
+.kanban-wrap::-webkit-scrollbar{height:4px}
+.kanban-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:999px}
+.k-col{flex-shrink:0;width:272px;display:flex;flex-direction:column;max-height:100%}
+.k-col-header{display:flex;align-items:center;justify-content:space-between;padding:.5rem .75rem;border-radius:8px 8px 0 0;background:rgba(255,255,255,.05);margin-bottom:6px}
+.k-col-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.k-col-count{font-size:9px;font-weight:700;padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
+.k-cards{flex:1;overflow-y:auto;padding:3px;display:flex;flex-direction:column;gap:7px;min-height:80px;border-radius:0 0 8px 8px}
+.k-cards::-webkit-scrollbar{width:3px}
+.k-col.drag-over .k-cards{background:rgba(255,255,255,.03);border-radius:6px}
 
-.task-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.875rem;cursor:grab;transition:all .2s;position:relative}
-.task-card:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);transform:translateY(-1px)}
+/* TASK CARD */
+.task-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:.75rem;cursor:pointer;transition:all .2s;position:relative;border-left:3px solid transparent}
+.task-card:hover{background:rgba(255,255,255,.09);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
 .task-card.dragging{opacity:.4;transform:scale(.97)}
-.task-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.5rem}
-.task-title{font-size:13px;font-weight:500;color:#fff;line-height:1.4;flex:1}
-.task-priority-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.priority-high{background:#F1948A}
-.priority-med{background:var(--amber)}
-.priority-low{background:var(--sage)}
-.task-meta{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-top:.4rem}
-.task-project-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em}
-.task-due{font-size:10px;color:rgba(255,255,255,.3);font-family:'JetBrains Mono',monospace}
-.task-due.overdue{color:#F1948A}
-.task-due.soon{color:var(--amber)}
-.task-time{font-size:10px;color:rgba(255,255,255,.25)}
-.task-actions{display:flex;gap:3px;opacity:0;transition:opacity .15s;position:absolute;top:.5rem;right:.5rem}
-.task-card:hover .task-actions{opacity:1}
-.task-act-btn{background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:10px;padding:2px 6px;border-radius:4px;font-family:'DM Sans',sans-serif;transition:all .15s}
-.task-act-btn:hover{background:rgba(255,255,255,.15);color:#fff}
-.task-act-btn.del:hover{background:rgba(192,57,43,.2);color:#F1948A}
+.task-card-title{font-size:13px;font-weight:500;color:#fff;line-height:1.4;margin-bottom:.4rem;padding-right:1rem}
+.task-card-meta{display:flex;align-items:center;gap:.3rem;flex-wrap:wrap}
+.task-proj-tag{font-size:9px;font-weight:700;padding:1px 6px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.task-due-tag{font-size:10px;color:rgba(255,255,255,.3);font-family:'JetBrains Mono',monospace}
+.task-due-tag.overdue{color:#F1948A}
+.task-due-tag.soon{color:var(--amber)}
+.task-prio-dot{position:absolute;top:.6rem;right:.6rem;width:7px;height:7px;border-radius:50%}
+.task-card-footer{display:flex;align-items:center;gap:.4rem;margin-top:.4rem;padding-top:.4rem;border-top:1px solid rgba(255,255,255,.05)}
+.task-footer-item{font-size:10px;color:rgba(255,255,255,.3)}
 
-/* ══ LIST VIEW ══ */
-.list-controls{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}
-.list-search{flex:1;max-width:280px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:.5rem .875rem;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
-.list-search:focus{border-color:var(--peony)}
-.list-search::placeholder{color:rgba(255,255,255,.25)}
-.sort-btn{font-size:11px;padding:.4rem .8rem;border-radius:7px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.45);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
-.sort-btn:hover{border-color:rgba(255,255,255,.3);color:#fff}
-.sort-btn.active{background:rgba(255,255,255,.08);color:#fff}
+/* CARD MODAL */
+.card-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.card-modal-overlay.open{display:flex}
+.card-modal{background:#162338;border:1px solid rgba(255,255,255,.1);border-radius:16px;width:100%;max-width:680px;margin:auto;overflow:hidden}
+.card-modal-header{padding:1.1rem 1.25rem .75rem;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:flex-start;gap:.75rem}
+.card-color-bar{width:4px;border-radius:999px;flex-shrink:0;align-self:stretch;min-height:24px}
+.card-title-wrap{flex:1}
+.card-modal-title{font-size:17px;font-weight:600;color:#fff;outline:none;background:none;border:none;width:100%;font-family:'DM Sans',sans-serif;line-height:1.4;resize:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.card-modal-title:focus{border-bottom-color:var(--peony)}
+.card-proj-label{font-size:11px;color:rgba(255,255,255,.3);margin-top:.2rem}
+.card-close{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:18px;padding:2px 5px;flex-shrink:0;line-height:1;transition:color .15s}
+.card-close:hover{color:#fff}
+.card-modal-body{display:grid;grid-template-columns:1fr 210px}
+.card-main{padding:1.1rem 1.25rem;border-right:1px solid rgba(255,255,255,.06)}
+.card-sidebar{padding:.9rem 1rem}
+.card-section{margin-bottom:1rem}
+.card-section-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.4rem;display:flex;align-items:center;justify-content:space-between}
+.card-desc{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:.6rem .8rem;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;resize:vertical;min-height:75px;line-height:1.5;transition:border-color .2s}
+.card-desc:focus{border-color:var(--peony)}
+.card-desc::placeholder{color:rgba(255,255,255,.2)}
 
-.list-table{width:100%;border-collapse:separate;border-spacing:0 4px}
-.list-table th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.4rem .875rem;text-align:left;cursor:pointer}
-.list-table th:hover{color:rgba(255,255,255,.6)}
-.list-row{background:rgba(255,255,255,.04);border-radius:8px;transition:background .15s;cursor:pointer}
-.list-row:hover{background:rgba(255,255,255,.07)}
-.list-row td{padding:.65rem .875rem;font-size:13px;color:rgba(255,255,255,.8);vertical-align:middle}
-.list-row td:first-child{border-radius:8px 0 0 8px}
-.list-row td:last-child{border-radius:0 8px 8px 0}
-.list-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px}
-.list-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
-.list-row:hover .list-actions{opacity:1}
+/* CHECKLIST */
+.checklist-items{display:flex;flex-direction:column;gap:4px;margin-bottom:.4rem}
+.checklist-item{display:flex;align-items:center;gap:.45rem;padding:.3rem .4rem;border-radius:5px;transition:background .15s;group:true}
+.checklist-item:hover{background:rgba(255,255,255,.04)}
+.checklist-item input[type=checkbox]{width:14px;height:14px;accent-color:var(--sage);flex-shrink:0;cursor:pointer}
+.cl-text{flex:1;font-size:12px;color:rgba(255,255,255,.8);outline:none;background:none;border:none;font-family:'DM Sans',sans-serif;border-bottom:1px solid transparent;transition:border-color .2s;padding:.1rem 0}
+.cl-text:focus{border-bottom-color:rgba(255,255,255,.2)}
+.checklist-item.cl-done .cl-text{text-decoration:line-through;color:rgba(255,255,255,.3)}
+.cl-del{background:none;border:none;color:rgba(255,255,255,.0);cursor:pointer;font-size:11px;padding:1px 4px;transition:all .15s;flex-shrink:0}
+.checklist-item:hover .cl-del{color:rgba(255,255,255,.25)}
+.cl-del:hover{color:#F1948A!important}
+.cl-progress{height:3px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;margin-bottom:.4rem}
+.cl-progress-fill{height:100%;background:var(--sage);border-radius:999px;transition:width .3s}
+.cl-input-row{display:flex;gap:.35rem}
+.cl-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:6px;padding:.42rem .65rem;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none}
+.cl-input:focus{border-color:var(--peony)}
+.cl-input::placeholder{color:rgba(255,255,255,.2)}
+.cl-add-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);border-radius:6px;padding:.42rem .7rem;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.cl-add-btn:hover{background:var(--sage);border-color:var(--sage);color:#fff}
 
-/* ══ TIMELINE ══ */
-.timeline-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-.timeline-nav{display:flex;gap:.4rem}
-.timeline-nav-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);border-radius:7px;padding:.4rem .8rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;transition:all .15s}
-.timeline-nav-btn:hover{background:rgba(255,255,255,.1);color:#fff}
-.timeline-month{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#fff}
-.timeline-grid{display:grid;gap:10px}
-.timeline-project-row{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:1rem;display:flex;align-items:flex-start;gap:1rem}
-.timeline-proj-name{font-size:12px;font-weight:600;color:#fff;min-width:140px;flex-shrink:0}
-.timeline-proj-name small{display:block;font-size:10px;color:rgba(255,255,255,.3);font-weight:400;margin-top:1px}
-.timeline-bars{flex:1;position:relative;min-height:40px}
-.milestone-bar{position:relative;margin-bottom:6px;display:flex;align-items:center;gap:8px}
-.milestone-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.milestone-label{font-size:11px;color:rgba(255,255,255,.7)}
-.milestone-date{font-size:10px;color:rgba(255,255,255,.3);font-family:'JetBrains Mono',monospace;margin-left:auto}
-.milestone-bar.done .milestone-label{text-decoration:line-through;color:rgba(255,255,255,.3)}
+/* COMMENTS */
+.comment-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.5rem}
+.comment-item{background:rgba(255,255,255,.04);border-radius:7px;padding:.5rem .7rem}
+.comment-meta{font-size:9px;color:rgba(255,255,255,.28);margin-bottom:.15rem;display:flex;justify-content:space-between}
+.comment-text{font-size:12px;color:rgba(255,255,255,.75);line-height:1.5}
+.comment-row{display:flex;gap:.35rem}
+.comment-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:6px;padding:.42rem .65rem;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none}
+.comment-input:focus{border-color:var(--peony)}
+.comment-input::placeholder{color:rgba(255,255,255,.2)}
+.comment-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);border-radius:6px;padding:.42rem .7rem;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.comment-btn:hover{background:var(--peony);border-color:var(--peony);color:#fff}
 
-/* ══ TODAY VIEW ══ */
-.today-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.today-section-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.6rem}
-.today-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
+/* CARD SIDEBAR FIELDS */
+.cf{margin-bottom:.55rem}
+.cf-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.25rem}
+.cf-select{width:100%;background:#1a2d4a;border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:.4rem .6rem;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none}
+.cf-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:6px;padding:.4rem .6rem;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none}
+.cf-input:focus{border-color:var(--peony)}
+.cf-input::placeholder{color:rgba(255,255,255,.2)}
+.card-archive-btn{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.38);border-radius:6px;padding:.4rem;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;transition:all .15s;margin-top:.2rem}
+.card-archive-btn:hover{background:rgba(196,137,90,.12);border-color:var(--amber);color:var(--amber)}
+.card-del-btn{width:100%;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.18);color:#F1948A;border-radius:6px;padding:.4rem;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;transition:all .15s;margin-top:.2rem}
+.card-del-btn:hover{background:rgba(192,57,43,.2)}
 
-/* ══ DECISIONS LOG ══ */
-.decision-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;margin-bottom:.75rem}
-.decision-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.4rem}
-.decision-title{font-size:14px;font-weight:600;color:#fff}
-.decision-date{font-size:10px;color:rgba(255,255,255,.25);font-family:'JetBrains Mono',monospace;flex-shrink:0}
-.decision-why{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:.4rem;line-height:1.5}
-.decision-alts{font-size:11px;color:rgba(255,255,255,.3);font-style:italic}
-.decision-proj{font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em;display:inline-block;margin-bottom:.4rem}
-
-/* ══ INFRASTRUCTURE ══ */
-.infra-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:1rem}
-.infra-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.875rem 1rem}
-.infra-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:.2rem}
-.infra-url{font-size:11px;color:var(--peony);text-decoration:none;font-family:'JetBrains Mono',monospace;word-break:break-all;display:block;margin-bottom:.3rem}
-.infra-url:hover{text-decoration:underline}
-.infra-meta{font-size:10px;color:rgba(255,255,255,.3)}
-.infra-status{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;margin-top:.3rem}
-.infra-active{background:rgba(46,125,82,.2);color:#82C4B5}
-.infra-parked{background:rgba(196,137,90,.15);color:var(--amber)}
-.infra-free{background:rgba(107,140,184,.15);color:var(--faith)}
-
-/* ══ MODAL ══ */
+/* ADD TASK MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
-.modal{background:#162338;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:1.75rem;max-width:520px;width:100%;max-height:90vh;overflow-y:auto}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:1.25rem;color:#fff}
-.modal-label{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:.4rem;margin-top:.875rem}
-.modal-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;transition:border-color .2s}
+.modal{background:#162338;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.4rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:20px;margin-bottom:.875rem;color:#fff}
+.modal-label{font-size:9px;color:rgba(255,255,255,.38);margin-bottom:.25rem;margin-top:.65rem;letter-spacing:.06em;text-transform:uppercase}
+.modal-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:.55rem .8rem;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
 .modal-input:focus{border-color:var(--peony)}
 .modal-input::placeholder{color:rgba(255,255,255,.25)}
-.modal-select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
-.modal-textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;resize:vertical;min-height:80px}
+.modal-select{width:100%;background:#1a2d4a;border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:.55rem .8rem;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none}
+.modal-textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:.55rem .8rem;font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;resize:vertical;min-height:65px}
 .modal-textarea:focus{border-color:var(--peony)}
-.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-.modal-actions{display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.25rem}
-.modal-cancel{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);border-radius:8px;padding:.65rem 1.25rem;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer}
-.modal-save{background:var(--peony);color:#fff;border:none;border-radius:8px;padding:.65rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+.modal-actions{display:flex;gap:.55rem;justify-content:flex-end;margin-top:.875rem}
+.modal-cancel{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.38);border-radius:7px;padding:.5rem 1rem;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer}
+.modal-save{background:var(--peony);color:#fff;border:none;border-radius:7px;padding:.5rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer}
+
+/* LIST */
+.list-controls{display:flex;align-items:center;gap:.4rem;margin-bottom:.875rem;flex-wrap:wrap}
+.list-search{flex:1;max-width:240px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:7px;padding:.42rem .7rem;font-family:'DM Sans',sans-serif;font-size:12px;color:#fff;outline:none}
+.list-search:focus{border-color:var(--peony)}
+.list-search::placeholder{color:rgba(255,255,255,.25)}
+.sort-pill{font-size:11px;padding:.28rem .65rem;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.38);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.sort-pill:hover{border-color:rgba(255,255,255,.28);color:#fff}
+.sort-pill.active{background:rgba(255,255,255,.09);color:#fff}
+.list-table{width:100%;border-collapse:separate;border-spacing:0 3px}
+.list-table th{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.22);padding:.32rem .7rem;text-align:left;white-space:nowrap}
+.list-row{background:rgba(255,255,255,.04);border-radius:7px;cursor:pointer;transition:background .15s}
+.list-row:hover{background:rgba(255,255,255,.07)}
+.list-row td{padding:.5rem .7rem;font-size:12px;color:rgba(255,255,255,.8);vertical-align:middle}
+.list-row td:first-child{border-radius:7px 0 0 7px}
+.list-row td:last-child{border-radius:0 7px 7px 0}
+
+/* TODAY */
+.today-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.today-sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.45rem}
+.today-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:.55rem .8rem;margin-bottom:4px;cursor:pointer;transition:background .15s;display:flex;align-items:flex-start;gap:.45rem}
+.today-item:hover{background:rgba(255,255,255,.08)}
+.today-item-bar{width:3px;border-radius:999px;flex-shrink:0;align-self:stretch;min-height:14px}
+.today-item-title{font-size:12px;font-weight:500;color:#fff;line-height:1.3;margin-bottom:.1rem}
+.today-item-meta{font-size:10px;color:rgba(255,255,255,.28);display:flex;gap:.35rem}
+
+/* DECISIONS */
+.decision-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem .95rem;margin-bottom:.55rem}
+.dec-proj-tag{font-size:9px;font-weight:700;padding:1px 6px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em;display:inline-block;margin-bottom:.3rem}
+.dec-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:.2rem}
+.dec-why{font-size:12px;color:rgba(255,255,255,.48);line-height:1.5;margin-bottom:.15rem}
+.dec-alts{font-size:11px;color:rgba(255,255,255,.26);font-style:italic}
+.dec-date{font-size:10px;color:rgba(255,255,255,.18);font-family:'JetBrains Mono',monospace;margin-top:.25rem}
+
+/* SESSION LOG */
+.session-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem .95rem;margin-bottom:.55rem}
+.ses-date{font-size:10px;color:rgba(255,255,255,.22);font-family:'JetBrains Mono',monospace;margin-bottom:.25rem}
+.ses-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:.2rem}
+.ses-body{font-size:12px;color:rgba(255,255,255,.45);line-height:1.5}
+
+/* INFRA */
+.infra-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:9px}
+.infra-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.75rem .875rem}
+.infra-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:.12rem}
+.infra-url{font-size:10px;color:var(--peony);text-decoration:none;font-family:'JetBrains Mono',monospace;word-break:break-all;display:block;margin-bottom:.2rem}
+.infra-url:hover{text-decoration:underline}
+.infra-detail{font-size:10px;color:rgba(255,255,255,.26)}
+.infra-pill{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:999px;margin-top:.22rem}
+.i-active{background:rgba(46,125,82,.18);color:#82C4B5}
+.i-parked{background:rgba(196,137,90,.15);color:var(--amber)}
+.i-planning{background:rgba(107,140,184,.15);color:var(--faith)}
 
 /* TOAST */
-.toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--sage);color:#fff;padding:.65rem 1.1rem;border-radius:9px;font-size:12px;font-weight:500;display:none;z-index:200}
+.toast{position:fixed;bottom:1rem;right:1rem;background:var(--sage);color:#fff;padding:.55rem .95rem;border-radius:8px;font-size:12px;font-weight:500;display:none;z-index:400}
 .toast.show{display:block}
 
-/* MOBILE */
 @media(max-width:768px){
   .sidebar{display:none}
-  .kanban-board{height:calc(100vh - 120px)}
-  .today-grid{grid-template-columns:1fr}
+  .card-modal-body{grid-template-columns:1fr}
+  .today-cols{grid-template-columns:1fr}
   .modal-row{grid-template-columns:1fr}
 }
 </style>
@@ -221,43 +257,36 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 <body>
 <div id="app">
 
-<!-- ══ SIDEBAR ══ -->
+<!-- SIDEBAR -->
 <div class="sidebar">
   <div class="sidebar-top">
     <div class="sidebar-logo">Build Board</div>
-    <div class="sidebar-sub">Rebecca Holka · rebeccaannexo@gmail.com</div>
+    <div class="sidebar-sub">Rebecca Holka</div>
   </div>
-
-  <div class="nav-section">
+  <div class="nav-group">
     <div class="nav-label">Views</div>
-    <button class="nav-btn active" onclick="switchView('projects',this)"><span class="nav-emoji">📋</span>Projects<span class="nav-count" id="nc-projects">5</span></button>
+    <button class="nav-btn active" onclick="switchView('projects',this)"><span class="nav-emoji">📋</span>Projects<span class="nav-count">5</span></button>
     <button class="nav-btn" onclick="switchView('today',this)"><span class="nav-emoji">⚡</span>Today<span class="nav-count" id="nc-today">0</span></button>
     <button class="nav-btn" onclick="switchView('kanban',this)"><span class="nav-emoji">🗂</span>Kanban</button>
     <button class="nav-btn" onclick="switchView('list',this)"><span class="nav-emoji">📝</span>All Tasks<span class="nav-count" id="nc-tasks">0</span></button>
-    <button class="nav-btn" onclick="switchView('timeline',this)"><span class="nav-emoji">📅</span>Timeline</button>
     <button class="nav-btn" onclick="switchView('decisions',this)"><span class="nav-emoji">🧭</span>Decisions</button>
+    <button class="nav-btn" onclick="switchView('sessions',this)"><span class="nav-emoji">📓</span>Session Log</button>
     <button class="nav-btn" onclick="switchView('infra',this)"><span class="nav-emoji">⚙️</span>Infrastructure</button>
   </div>
-
-  <div class="project-filter">
-    <div class="project-filter-label">Filter by project</div>
-    <div class="proj-pill active" onclick="filterProject('all',this)"><div class="proj-dot" style="background:rgba(255,255,255,.3)"></div>All projects<span class="proj-pill-count" id="pf-all">0</span></div>
-    <div class="proj-pill" onclick="filterProject('gbb',this)"><div class="proj-dot" style="background:var(--gbb)"></div>Get Booked & Branded<span class="proj-pill-count" id="pf-gbb">0</span></div>
-    <div class="proj-pill" onclick="filterProject('wtc',this)"><div class="proj-dot" style="background:var(--wtc)"></div>We The Church<span class="proj-pill-count" id="pf-wtc">0</span></div>
-    <div class="proj-pill" onclick="filterProject('aligned',this)"><div class="proj-dot" style="background:var(--aligned)"></div>Aligned Life<span class="proj-pill-count" id="pf-aligned">0</span></div>
-    <div class="proj-pill" onclick="filterProject('mustard',this)"><div class="proj-dot" style="background:var(--mustard)"></div>Mustard Seed<span class="proj-pill-count" id="pf-mustard">0</span></div>
-    <div class="proj-pill" onclick="filterProject('portal',this)"><div class="proj-dot" style="background:var(--portal)"></div>My Life Portal<span class="proj-pill-count" id="pf-portal">0</span></div>
+  <div class="nav-group">
+    <div class="nav-label">Filter</div>
+    <div class="proj-pill active" onclick="setFilter('all',this)"><div class="proj-dot" style="background:rgba(255,255,255,.3)"></div>All<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-all">0</span></div>
+    <div class="proj-pill" onclick="setFilter('gbb',this)"><div class="proj-dot" style="background:var(--gbb)"></div>GBB<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-gbb">0</span></div>
+    <div class="proj-pill" onclick="setFilter('wtc',this)"><div class="proj-dot" style="background:var(--wtc)"></div>WTC<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-wtc">0</span></div>
+    <div class="proj-pill" onclick="setFilter('aligned',this)"><div class="proj-dot" style="background:var(--aligned)"></div>Aligned Life<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-aligned">0</span></div>
+    <div class="proj-pill" onclick="setFilter('mustard',this)"><div class="proj-dot" style="background:var(--mustard)"></div>Mustard Seed<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-mustard">0</span></div>
+    <div class="proj-pill" onclick="setFilter('portal',this)"><div class="proj-dot" style="background:var(--portal)"></div>Portal<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-portal">0</span></div>
   </div>
-
-  <div class="sidebar-footer">
-    <a href="index.html" class="back-link">← Back to portal</a>
-  </div>
+  <div class="sidebar-footer"><a href="index.html" class="back-link">← Portal</a></div>
 </div>
 
-<!-- ══ MAIN ══ -->
+<!-- MAIN -->
 <div class="main">
-
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-left">
       <div class="page-title" id="view-title">Projects</div>
@@ -266,119 +295,89 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
         <button class="view-tab" onclick="switchViewTab('today')">⚡</button>
         <button class="view-tab" onclick="switchViewTab('kanban')">🗂</button>
         <button class="view-tab" onclick="switchViewTab('list')">📝</button>
-        <button class="view-tab" onclick="switchViewTab('timeline')">📅</button>
         <button class="view-tab" onclick="switchViewTab('decisions')">🧭</button>
+        <button class="view-tab" onclick="switchViewTab('sessions')">📓</button>
         <button class="view-tab" onclick="switchViewTab('infra')">⚙️</button>
       </div>
     </div>
     <div class="topbar-right">
-      <div class="time-display" id="time-display"></div>
-      <button class="add-task-btn" onclick="openAddTask()">+ Add Task</button>
+      <div class="time-badge" id="time-badge"></div>
+      <button class="btn-primary" onclick="openAddTask()">+ Add Task</button>
     </div>
   </div>
 
-  <!-- ══ VIEWS ══ -->
   <div class="content">
 
-    <!-- PROJECTS -->
+    <!-- PROJECTS VIEW -->
     <div class="view active" id="view-projects">
       <div class="projects-grid" id="projects-grid"></div>
     </div>
 
-    <!-- TODAY -->
+    <!-- TODAY VIEW -->
     <div class="view" id="view-today">
-      <div class="today-grid">
+      <div class="today-cols">
         <div>
-          <div class="today-section-title">⚡ Due today & overdue</div>
+          <div class="today-sec-label">🔴 Overdue + Due today</div>
           <div id="today-urgent"></div>
-          <div class="today-section-title" style="margin-top:1rem">📋 In progress</div>
-          <div id="today-inprogress"></div>
+          <div class="today-sec-label" style="margin-top:1rem">🟡 In progress</div>
+          <div id="today-inprog"></div>
         </div>
         <div>
-          <div class="today-section-title">🎯 High priority</div>
+          <div class="today-sec-label">⚡ High priority</div>
           <div id="today-high"></div>
-          <div class="today-section-title" style="margin-top:1rem">✓ Completed recently</div>
-          <div id="today-done"></div>
+          <div class="today-sec-label" style="margin-top:1rem">✅ Done recently</div>
+          <div id="today-done-list"></div>
         </div>
       </div>
     </div>
 
-    <!-- KANBAN -->
-    <div class="view" id="view-kanban" style="padding:1.25rem;overflow:hidden">
-      <div class="kanban-board" id="kanban-board">
-        <div class="kanban-col" data-status="backlog">
-          <div class="kanban-col-header"><span class="kanban-col-title">Backlog</span><span class="kanban-col-count" id="kc-backlog">0</span></div>
-          <div class="kanban-cards" id="col-backlog" ondragover="dragOver(event)" ondrop="drop(event,'backlog')"></div>
-        </div>
-        <div class="kanban-col" data-status="todo">
-          <div class="kanban-col-header"><span class="kanban-col-title">To Do</span><span class="kanban-col-count" id="kc-todo">0</span></div>
-          <div class="kanban-cards" id="col-todo" ondragover="dragOver(event)" ondrop="drop(event,'todo')"></div>
-        </div>
-        <div class="kanban-col" data-status="inprogress">
-          <div class="kanban-col-header"><span class="kanban-col-title" style="color:var(--amber)">In Progress</span><span class="kanban-col-count" id="kc-inprogress">0</span></div>
-          <div class="kanban-cards" id="col-inprogress" ondragover="dragOver(event)" ondrop="drop(event,'inprogress')"></div>
-        </div>
-        <div class="kanban-col" data-status="blocked">
-          <div class="kanban-col-header"><span class="kanban-col-title" style="color:#F1948A">Blocked</span><span class="kanban-col-count" id="kc-blocked">0</span></div>
-          <div class="kanban-cards" id="col-blocked" ondragover="dragOver(event)" ondrop="drop(event,'blocked')"></div>
-        </div>
-        <div class="kanban-col" data-status="done">
-          <div class="kanban-col-header"><span class="kanban-col-title" style="color:var(--sage)">Done</span><span class="kanban-col-count" id="kc-done">0</span></div>
-          <div class="kanban-cards" id="col-done" ondragover="dragOver(event)" ondrop="drop(event,'done')"></div>
-        </div>
+    <!-- KANBAN VIEW -->
+    <div class="view kanban-view" id="view-kanban">
+      <div class="kanban-wrap" id="kanban-wrap">
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title">Backlog</span><span class="k-col-count" id="kc-backlog">0</span></div><div class="k-cards" id="col-backlog" ondragover="onDragOver(event)" ondrop="onDrop(event,'backlog')"></div></div>
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title">To Do</span><span class="k-col-count" id="kc-todo">0</span></div><div class="k-cards" id="col-todo" ondragover="onDragOver(event)" ondrop="onDrop(event,'todo')"></div></div>
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title" style="color:var(--amber)">In Progress</span><span class="k-col-count" id="kc-inprogress">0</span></div><div class="k-cards" id="col-inprogress" ondragover="onDragOver(event)" ondrop="onDrop(event,'inprogress')"></div></div>
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title" style="color:#F1948A">Blocked</span><span class="k-col-count" id="kc-blocked">0</span></div><div class="k-cards" id="col-blocked" ondragover="onDragOver(event)" ondrop="onDrop(event,'blocked')"></div></div>
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title" style="color:var(--sage)">Done</span><span class="k-col-count" id="kc-done">0</span></div><div class="k-cards" id="col-done" ondragover="onDragOver(event)" ondrop="onDrop(event,'done')"></div></div>
       </div>
     </div>
 
-    <!-- LIST -->
+    <!-- LIST VIEW -->
     <div class="view" id="view-list">
       <div class="list-controls">
         <input class="list-search" id="list-search" placeholder="Search tasks..." oninput="renderList()"/>
-        <button class="sort-btn active" onclick="sortList('project',this)">Project</button>
-        <button class="sort-btn" onclick="sortList('priority',this)">Priority</button>
-        <button class="sort-btn" onclick="sortList('due',this)">Due Date</button>
-        <button class="sort-btn" onclick="sortList('status',this)">Status</button>
+        <button class="sort-pill active" onclick="setSort('project',this)">Project</button>
+        <button class="sort-pill" onclick="setSort('priority',this)">Priority</button>
+        <button class="sort-pill" onclick="setSort('due',this)">Due</button>
+        <button class="sort-pill" onclick="setSort('status',this)">Status</button>
+        <button class="sort-pill" onclick="setSort('updated',this)">Recent</button>
       </div>
       <table class="list-table">
-        <thead>
-          <tr>
-            <th>Task</th>
-            <th>Project</th>
-            <th>Status</th>
-            <th>Priority</th>
-            <th>Due</th>
-            <th>Time</th>
-            <th></th>
-          </tr>
-        </thead>
+        <thead><tr><th>Task</th><th>Project</th><th>Status</th><th>Priority</th><th>Due</th><th>Time</th></tr></thead>
         <tbody id="list-body"></tbody>
       </table>
     </div>
 
-    <!-- TIMELINE -->
-    <div class="view" id="view-timeline">
-      <div class="timeline-header">
-        <div class="timeline-month" id="timeline-month"></div>
-        <div class="timeline-nav">
-          <button class="timeline-nav-btn" onclick="changeMonth(-1)">← Prev</button>
-          <button class="timeline-nav-btn" onclick="changeMonth(0)">Today</button>
-          <button class="timeline-nav-btn" onclick="changeMonth(1)">Next →</button>
-        </div>
-      </div>
-      <div class="timeline-grid" id="timeline-grid"></div>
-    </div>
-
-    <!-- DECISIONS -->
+    <!-- DECISIONS VIEW -->
     <div class="view" id="view-decisions">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-        <div style="font-size:13px;color:rgba(255,255,255,.4)">Key decisions made · what was decided and why</div>
-        <button class="add-task-btn" onclick="openAddDecision()">+ Add Decision</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.875rem">
+        <div style="font-size:12px;color:rgba(255,255,255,.32)">Key decisions and why they were made</div>
+        <button class="btn-primary" onclick="openAddDecision()">+ Log Decision</button>
       </div>
       <div id="decisions-list"></div>
     </div>
 
-    <!-- INFRASTRUCTURE -->
+    <!-- SESSION LOG VIEW -->
+    <div class="view" id="view-sessions">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.875rem">
+        <div style="font-size:12px;color:rgba(255,255,255,.32)">What was built each session</div>
+        <button class="btn-primary" onclick="openAddSession()">+ Log Session</button>
+      </div>
+      <div id="sessions-list"></div>
+    </div>
+
+    <!-- INFRA VIEW -->
     <div class="view" id="view-infra">
-      <div style="margin-bottom:1rem;font-size:13px;color:rgba(255,255,255,.4)">All services · tools · APIs · accounts</div>
       <div class="infra-grid" id="infra-grid"></div>
     </div>
 
@@ -386,94 +385,140 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 </div>
 </div>
 
-<!-- ADD TASK MODAL -->
-<div class="modal-overlay" id="task-modal">
-  <div class="modal">
-    <div class="modal-title">Add Task</div>
-    <div class="modal-label">Task title</div>
-    <input class="modal-input" id="task-title-in" placeholder="What needs to be done..."/>
-    <div class="modal-row">
-      <div>
-        <div class="modal-label">Project</div>
-        <select class="modal-select" id="task-project-in">
-          <option value="gbb">💼 Get Booked & Branded</option>
-          <option value="wtc">✝️ We The Church</option>
-          <option value="aligned">🌱 Aligned Life</option>
-          <option value="mustard">🌿 Mustard Seed</option>
-          <option value="portal">⚡ My Life Portal</option>
-          <option value="personal">👤 Personal</option>
-        </select>
+<!-- CARD DETAIL MODAL -->
+<div class="card-modal-overlay" id="card-modal">
+  <div class="card-modal">
+    <div class="card-modal-header">
+      <div class="card-color-bar" id="cm-color-bar"></div>
+      <div class="card-title-wrap">
+        <textarea class="card-modal-title" id="cm-title" rows="2" onblur="saveField('title')"></textarea>
+        <div class="card-proj-label" id="cm-proj-label"></div>
       </div>
-      <div>
-        <div class="modal-label">Status</div>
-        <select class="modal-select" id="task-status-in">
-          <option value="backlog">Backlog</option>
-          <option value="todo">To Do</option>
-          <option value="inprogress">In Progress</option>
-          <option value="blocked">Blocked</option>
-          <option value="done">Done</option>
-        </select>
-      </div>
+      <button class="card-close" onclick="closeCardModal()">✕</button>
     </div>
-    <div class="modal-row">
-      <div>
-        <div class="modal-label">Priority</div>
-        <select class="modal-select" id="task-priority-in">
-          <option value="high">🔴 High</option>
-          <option value="med">🟡 Medium</option>
-          <option value="low">🟢 Low</option>
-        </select>
+    <div class="card-modal-body">
+      <div class="card-main">
+        <div class="card-section">
+          <div class="card-section-label">📝 Description</div>
+          <textarea class="card-desc" id="cm-desc" placeholder="Add context, links, dependencies..." onblur="saveField('description')"></textarea>
+        </div>
+        <div class="card-section">
+          <div class="card-section-label">✅ Checklist <span id="cm-cl-pct" style="font-size:10px;color:rgba(255,255,255,.28)">0%</span></div>
+          <div class="cl-progress"><div class="cl-progress-fill" id="cm-cl-bar" style="width:0%"></div></div>
+          <div class="checklist-items" id="cm-checklist"></div>
+          <div class="cl-input-row">
+            <input class="cl-input" id="cm-cl-input" placeholder="Add item..." onkeydown="if(event.key==='Enter')addClItem()"/>
+            <button class="cl-add-btn" onclick="addClItem()">Add</button>
+          </div>
+        </div>
+        <div class="card-section">
+          <div class="card-section-label">💬 Comments</div>
+          <div class="comment-list" id="cm-comments"></div>
+          <div class="comment-row">
+            <input class="comment-input" id="cm-comment" placeholder="Add a comment..." onkeydown="if(event.key==='Enter')addComment()"/>
+            <button class="comment-btn" onclick="addComment()">Save</button>
+          </div>
+        </div>
       </div>
-      <div>
-        <div class="modal-label">Due date</div>
-        <input class="modal-input" id="task-due-in" type="date"/>
+      <div class="card-sidebar">
+        <div class="cf"><div class="cf-label">Status</div>
+          <select class="cf-select" id="cm-status" onchange="saveField('status')">
+            <option value="backlog">Backlog</option><option value="todo">To Do</option>
+            <option value="inprogress">In Progress</option><option value="blocked">Blocked</option><option value="done">Done</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Priority</div>
+          <select class="cf-select" id="cm-priority" onchange="saveField('priority')">
+            <option value="high">🔴 High</option><option value="med">🟡 Medium</option><option value="low">🟢 Low</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Project</div>
+          <select class="cf-select" id="cm-project" onchange="saveField('project')">
+            <option value="gbb">💼 GBB</option><option value="wtc">✝️ WTC</option>
+            <option value="aligned">🌱 Aligned Life</option><option value="mustard">🌿 Mustard Seed</option>
+            <option value="portal">⚡ Portal</option><option value="personal">👤 Personal</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Due Date</div><input class="cf-input" type="date" id="cm-due" onchange="saveField('due')"/></div>
+        <div class="cf"><div class="cf-label">Time (hrs)</div><input class="cf-input" type="number" id="cm-time" placeholder="e.g. 2" min="0" step="0.5" onblur="saveField('time')"/></div>
+        <div class="cf"><div class="cf-label">Assigned to</div>
+          <select class="cf-select" id="cm-assignee" onchange="saveField('assignee')">
+            <option value="rebecca">Rebecca</option><option value="seth">Seth</option><option value="team">Team</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Blocker</div><input class="cf-input" id="cm-blocker" placeholder="Why blocked?" onblur="saveField('blocker')"/></div>
+        <button class="card-archive-btn" onclick="archiveCard()">Archive</button>
+        <button class="card-del-btn" onclick="deleteCard()">Delete task</button>
       </div>
-    </div>
-    <div class="modal-row">
-      <div>
-        <div class="modal-label">Time estimate (hrs)</div>
-        <input class="modal-input" id="task-time-in" type="number" placeholder="e.g. 2" min="0" step="0.5"/>
-      </div>
-      <div>
-        <div class="modal-label">Assigned to</div>
-        <select class="modal-select" id="task-assignee-in">
-          <option value="rebecca">Rebecca</option>
-          <option value="seth">Seth</option>
-          <option value="team">Team</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-label">Notes / dependencies</div>
-    <textarea class="modal-textarea" id="task-notes-in" placeholder="Any notes, blockers, or dependencies..."></textarea>
-    <div class="modal-actions">
-      <button class="modal-cancel" onclick="closeModal('task-modal')">Cancel</button>
-      <button class="modal-save" onclick="saveTask()">Save Task</button>
     </div>
   </div>
 </div>
 
-<!-- ADD DECISION MODAL -->
-<div class="modal-overlay" id="decision-modal">
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="add-task-modal">
+  <div class="modal">
+    <div class="modal-title">Add Task</div>
+    <div class="modal-label">Title</div><input class="modal-input" id="at-title" placeholder="What needs to be done..."/>
+    <div class="modal-row">
+      <div><div class="modal-label">Project</div>
+        <select class="modal-select" id="at-project">
+          <option value="gbb">💼 GBB</option><option value="wtc">✝️ WTC</option>
+          <option value="aligned">🌱 Aligned Life</option><option value="mustard">🌿 Mustard Seed</option>
+          <option value="portal">⚡ Portal</option><option value="personal">👤 Personal</option>
+        </select></div>
+      <div><div class="modal-label">Status</div>
+        <select class="modal-select" id="at-status">
+          <option value="backlog">Backlog</option><option value="todo">To Do</option>
+          <option value="inprogress">In Progress</option><option value="blocked">Blocked</option>
+        </select></div>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-label">Priority</div>
+        <select class="modal-select" id="at-priority">
+          <option value="high">🔴 High</option><option value="med">🟡 Medium</option><option value="low">🟢 Low</option>
+        </select></div>
+      <div><div class="modal-label">Due date</div><input class="modal-input" type="date" id="at-due"/></div>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-label">Time (hrs)</div><input class="modal-input" type="number" id="at-time" placeholder="2" min="0" step="0.5"/></div>
+      <div><div class="modal-label">Assigned to</div>
+        <select class="modal-select" id="at-assignee">
+          <option value="rebecca">Rebecca</option><option value="seth">Seth</option><option value="team">Team</option>
+        </select></div>
+    </div>
+    <div class="modal-label">Description</div>
+    <textarea class="modal-textarea" id="at-desc" placeholder="Context, links, dependencies..."></textarea>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal('add-task-modal')">Cancel</button>
+      <button class="modal-save" onclick="saveNewTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- DECISION MODAL -->
+<div class="modal-overlay" id="add-decision-modal">
   <div class="modal">
     <div class="modal-title">Log a Decision</div>
-    <div class="modal-label">What was decided</div>
-    <input class="modal-input" id="dec-title-in" placeholder="e.g. Use Google Sheets as primary database for now"/>
+    <div class="modal-label">What was decided</div><input class="modal-input" id="ad-title" placeholder="e.g. Use Google Sheets as primary database"/>
     <div class="modal-label">Project</div>
-    <select class="modal-select" id="dec-project-in">
-      <option value="portal">My Life Portal</option>
-      <option value="gbb">Get Booked & Branded</option>
-      <option value="wtc">We The Church</option>
-      <option value="aligned">Aligned Life</option>
-      <option value="mustard">Mustard Seed</option>
-      <option value="infra">Infrastructure</option>
+    <select class="modal-select" id="ad-project">
+      <option value="portal">Portal</option><option value="gbb">GBB</option><option value="wtc">WTC</option>
+      <option value="aligned">Aligned Life</option><option value="mustard">Mustard Seed</option><option value="infra">Infrastructure</option>
     </select>
-    <div class="modal-label">Why this decision</div>
-    <textarea class="modal-textarea" id="dec-why-in" placeholder="Reasoning behind the decision..."></textarea>
-    <div class="modal-label">Alternatives considered</div>
-    <input class="modal-input" id="dec-alts-in" placeholder="e.g. D1, Supabase, Firebase"/>
+    <div class="modal-label">Why</div><textarea class="modal-textarea" id="ad-why" placeholder="Reasoning..."></textarea>
+    <div class="modal-label">Alternatives considered</div><input class="modal-input" id="ad-alts" placeholder="e.g. D1, Supabase..."/>
     <div class="modal-actions">
-      <button class="modal-cancel" onclick="closeModal('decision-modal')">Cancel</button>
-      <button class="modal-save" onclick="saveDecision()">Save Decision</button>
+      <button class="modal-cancel" onclick="closeModal('add-decision-modal')">Cancel</button>
+      <button class="modal-save" onclick="saveDecision()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- SESSION MODAL -->
+<div class="modal-overlay" id="add-session-modal">
+  <div class="modal">
+    <div class="modal-title">Log Session</div>
+    <div class="modal-label">Title</div><input class="modal-input" id="as-title" placeholder="e.g. Built contact card system"/>
+    <div class="modal-label">What happened</div><textarea class="modal-textarea" id="as-body" placeholder="Summary..." style="min-height:90px"></textarea>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal('add-session-modal')">Cancel</button>
+      <button class="modal-save" onclick="saveSession()">Save</button>
     </div>
   </div>
 </div>
@@ -481,621 +526,606 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 <div class="toast" id="toast"></div>
 
 <script>
-// ══ STORAGE ══
-function sv(k,v){try{localStorage.setItem('pm_'+k,JSON.stringify(v))}catch(e){}}
-function ld(k,d){try{var x=localStorage.getItem('pm_'+k);return x?JSON.parse(x):d}catch(e){return d}}
-function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+// STORAGE
+function sv(k,v){try{localStorage.setItem('pb_'+k,JSON.stringify(v))}catch(e){}}
+function ld(k,d){try{var x=localStorage.getItem('pb_'+k);return x?JSON.parse(x):d}catch(e){return d}}
+function esc(t){return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
-// ══ PROJECT DEFINITIONS ══
-var PROJECTS = {
-  gbb: {
-    name: 'Get Booked & Branded',
-    color: '#C2738A',
-    status: 'live',
-    desc: 'Marketing consultancy. First client: Kelly — Graphic Arts Print Shop, Missouri.',
-    urls: [
-      {label:'Public Site', url:'https://getbookednbranded.pages.dev'},
-      {label:'Prospect Audit', url:'https://getbookednbranded.pages.dev/prospecting-audit-tool.html'},
-      {label:'Calendly', url:'https://calendly.com/rebeccaannexo/meet'}
-    ],
-    repo: 'getbookednbranded',
-    stack: 'HTML · Cloudflare Pages · Google Sheets · Apps Script'
-  },
-  wtc: {
-    name: 'We The Church',
-    color: '#6B8CB8',
-    status: 'building',
-    desc: 'Faith community app. Galatians series active. Needs backend, accounts, admin panel, PWA.',
-    urls: [
-      {label:'Live App', url:'https://wethechurch.pages.dev'},
-      {label:'Discord', url:'https://discord.gg/My8nfmBP'},
-      {label:'Newsletter', url:'https://wethechurch.beehiiv.com'}
-    ],
-    repo: 'wethechurch',
-    stack: 'HTML · Cloudflare Pages · Supabase (planned) · PWA (planned)'
-  },
-  aligned: {
-    name: 'Aligned Life Co.',
-    color: '#4A7C6F',
-    status: 'paused',
-    desc: 'Faith-first planning system for women. 5.5x8.5" discbound. Three parts, one system. Platform: GoHighLevel.',
-    urls: [
-      {label:'Domain', url:'https://alignedlifeco.com'}
-    ],
-    repo: null,
-    stack: 'GoHighLevel (not started) · Docx files · PDF'
-  },
-  mustard: {
-    name: 'Mustard Seed Ministries',
-    color: '#7A5C7A',
-    status: 'planning',
-    desc: 'Nonprofit. WA State. AOI filed. Supporting Olivia — first year widowhood. 501c3 pending.',
-    urls: [],
-    repo: null,
-    stack: 'TBD'
-  },
-  portal: {
-    name: 'My Life Portal',
-    color: '#C4895A',
-    status: 'live',
-    desc: 'Personal OS. All life sections in one place. Google Sheets backend. Cloudflare Pages.',
-    urls: [
-      {label:'Live Portal', url:'https://mylifeportal.pages.dev'},
-      {label:'Daily Log', url:'https://mylifeportal.pages.dev/daily.html'},
-      {label:'Apps Script', url:'https://script.google.com'}
-    ],
-    repo: 'mylifeportal',
-    stack: 'HTML · Cloudflare Pages · Google Sheets · Apps Script · D1 (parked)'
-  }
+// CONSTANTS
+var PC={gbb:'#C2738A',wtc:'#6B8CB8',aligned:'#4A7C6F',mustard:'#7A5C7A',portal:'#C4895A',personal:'#A89880',infra:'#A89880'};
+var PN={gbb:'GBB',wtc:'WTC',aligned:'Aligned Life',mustard:'Mustard Seed',portal:'Portal',personal:'Personal',infra:'Infra'};
+var SL={backlog:'Backlog',todo:'To Do',inprogress:'In Progress',blocked:'Blocked',done:'Done'};
+var SC={backlog:'rgba(255,255,255,.1)',todo:'rgba(107,140,184,.22)',inprogress:'rgba(196,137,90,.22)',blocked:'rgba(241,148,138,.22)',done:'rgba(46,125,82,.22)'};
+var PR={high:'#F1948A',med:'#C4895A',low:'#4A7C6F'};
+
+// PROJECTS
+var PROJECTS={
+  gbb:{name:'Get Booked & Branded',color:'#C2738A',status:'building',
+    desc:'Marketing consultancy. Background: trained under Sarah Mae Ives · sold her FB Ads program · proven closer. Target: small/mid service businesses. Not limited to local.',
+    offer:'GBB Visibility Audit — $297 · research + audit + 45min Zoom debrief + branded PDF',
+    goal:'$2,500 month 1 · anything is a win',
+    urls:[{label:'Public Site',url:'https://getbookednbranded.pages.dev'},{label:'Prospect Audit',url:'https://getbookednbranded.pages.dev/prospecting-audit-tool.html'},{label:'Calendly',url:'https://calendly.com/rebeccaannexo/meet'}],
+    repo:'getbookednbranded'},
+  wtc:{name:'We The Church',color:'#6B8CB8',status:'building',
+    desc:'Faith community app. Galatians series active. Ongoing — runs parallel to everything. Never paused. Needs Supabase backend + PWA + admin panel.',
+    offer:'Community · Bible study · prayer circles · Galatians series',
+    goal:'Complete Galatians · launch Supabase backend · PWA installable',
+    urls:[{label:'Live App',url:'https://wethechurch.pages.dev'},{label:'Newsletter',url:'https://wethechurch.beehiiv.com'}],
+    repo:'wethechurch'},
+  aligned:{name:'Aligned Life Co.',color:'#4A7C6F',status:'paused',
+    desc:'Faith-first planning system for women. Physical planner + digital + future app. 5.5x8.5" discbound. Three parts, one system. Waiting behind GBB for primary focus.',
+    offer:'Physical planner $67 · Digital $27 · Bundle $77+$17/mo · Membership $17/mo',
+    goal:'Q2 merge → master PDF · GoHighLevel trial when assets ready',
+    urls:[],repo:null},
+  mustard:{name:'Mustard Seed Ministries',color:'#7A5C7A',status:'planning',
+    desc:'Nonprofit. WA State. AOI filed. Supporting Olivia — first year widowhood. 501c3 pending. Olivia-led vision.',
+    offer:'Ministry · reentry support · community · widows',
+    goal:'501c3 filing · donation setup · mission statement',
+    urls:[],repo:null},
+  portal:{name:'My Life Portal',color:'#C4895A',status:'live',
+    desc:'Personal OS hub. Hub and spoke architecture. All life sections in one place. Real-time across devices via D1 + Google Sheets.',
+    offer:'Personal operating system — Faith · People · Habits · Home · Brain · GBB spoke',
+    goal:'Zero Trust setup · Morning Alignment Agent · GBB admin spoke',
+    urls:[{label:'Live Portal',url:'https://mylifeportal.pages.dev'},{label:'Projects',url:'https://mylifeportal.pages.dev/projects.html'}],
+    repo:'mylifeportal'}
 };
 
-// ══ DEFAULT TASKS ══
-var DEFAULT_TASKS = [
-  // GBB
-  {id:1,title:'Complete Kelly welcome landing page',project:'gbb',status:'inprogress',priority:'high',due:'',time:3,assignee:'rebecca',notes:'Waiting to hear back from Kelly',done:false},
-  {id:2,title:'Formalize GBB offer structure',project:'gbb',status:'todo',priority:'high',due:'',time:2,assignee:'rebecca',notes:'',done:false},
-  {id:3,title:'Build public GBB website',project:'gbb',status:'backlog',priority:'high',due:'',time:8,assignee:'rebecca',notes:'',done:false},
-  {id:4,title:'Register getbookednbranded.com domain',project:'gbb',status:'blocked',priority:'high',due:'',time:0.5,assignee:'rebecca',notes:'Waiting on Seth — ~$9-10 at Cloudflare',done:false},
-  {id:5,title:'Connect Google Places API key to prospecting tool',project:'gbb',status:'todo',priority:'high',due:'',time:1,assignee:'rebecca',notes:'console.cloud.google.com',done:false},
-  {id:6,title:'Set up GBB admin portal repo',project:'gbb',status:'backlog',priority:'med',due:'',time:4,assignee:'rebecca',notes:'Separate Cloudflare Pages project',done:false},
-  {id:7,title:'Document Kelly as first case study',project:'gbb',status:'backlog',priority:'med',due:'',time:2,assignee:'rebecca',notes:'',done:false},
+// DEFAULT TASKS
+var DEFAULT_TASKS=[
+  // GBB — income first
+  {id:'g1',title:'Connect Google Places API key to prospect audit tool',project:'gbb',status:'todo',priority:'high',due:'',time:1,assignee:'rebecca',description:'console.cloud.google.com → enable Places API → get key → paste into prospecting-audit-tool.html. This makes the audit tool pull live data automatically.',checklist:[{text:'Go to console.cloud.google.com',done:false},{text:'Enable Places API',done:false},{text:'Generate API key',done:false},{text:'Paste into audit tool HTML',done:false}],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'g2',title:'Define and document GBB Visibility Audit offer — $297',project:'gbb',status:'inprogress',priority:'high',due:'',time:2,assignee:'rebecca',description:'Productized offer: research a business, run audit, deliver branded PDF snapshot, walk through on 45min Zoom. No domain needed. Calendly already set up.',checklist:[{text:'Write what client gets (deliverables)',done:false},{text:'Write delivery process step by step',done:false},{text:'Create Calendly event for audit call',done:false},{text:'Draft outreach message template',done:false}],comments:[{text:'Offer framework: research → audit tool → Canva PDF → Zoom debrief → next steps CTA',date:'2026-05-05'}],blocker:'',archived:false,created:Date.now()},
+  {id:'g3',title:'Build GBB Visibility Snapshot PDF template in Canva',project:'gbb',status:'todo',priority:'high',due:'',time:3,assignee:'rebecca',description:'5-page branded report. Cover · Audit scores · Top 3 recommendations · 90-day action plan · Next steps CTA. Peony #C2738A leads.',checklist:[{text:'Cover page with client name + GBB brand',done:false},{text:'Audit score page (6 categories)',done:false},{text:'Top 3 recommendations page',done:false},{text:'90-day action plan page',done:false},{text:'Next steps + CTA page',done:false}],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'g4',title:'Follow up with Kelly — Graphic Arts Print Shop',project:'gbb',status:'todo',priority:'high',due:'',time:0.5,assignee:'rebecca',description:'Kelly is a long-time friend who has not responded to the welcome link. Follow up personally — phone or text. Keep it warm. She needs: reach · referral · recurring.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'g5',title:'Identify 10 prospect businesses to audit this week',project:'gbb',status:'backlog',priority:'high',due:'',time:2,assignee:'rebecca',description:'Local service businesses — contractors · roofers · home renovation · real estate · coaches · women entrepreneurs. Use prospecting audit tool. Not limited to local.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'g6',title:'Register getbookednbranded.com domain at Cloudflare (~$9-10)',project:'gbb',status:'blocked',priority:'high',due:'',time:0.5,assignee:'rebecca',description:'Can use pages.dev URL in the meantime — no blocker to selling. Domain just makes it cleaner.',checklist:[],comments:[],blocker:'Waiting on Seth for funds',archived:false,created:Date.now()},
+  {id:'g7',title:'Build GBB admin portal with Cloudflare Zero Trust',project:'gbb',status:'backlog',priority:'med',due:'',time:8,assignee:'rebecca',description:'Client management · pipeline · revenue · prospect audit · build queue per client. Login button in GBB public site header. Link from portal Business tab.',checklist:[{text:'Create new Cloudflare Pages project',done:false},{text:'Set up Zero Trust policy',done:false},{text:'Build client management view',done:false},{text:'Build pipeline kanban',done:false},{text:'Add Login button to GBB public site header',done:false}],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'g8',title:'Build prospect outreach system — track who was contacted',project:'gbb',status:'backlog',priority:'med',due:'',time:3,assignee:'rebecca',description:'Who you contacted · when · what you sent · what happened · next follow-up date. Lives in GBB admin.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
 
-  // WTC
-  {id:8,title:'Set up Supabase project for WTC',project:'wtc',status:'todo',priority:'high',due:'',time:2,assignee:'rebecca',notes:'supabase.com · rebeccaannexo@gmail.com',done:false},
-  {id:9,title:'Convert WTC to PWA (installable)',project:'wtc',status:'backlog',priority:'high',due:'',time:4,assignee:'rebecca',notes:'manifest.json + service worker',done:false},
-  {id:10,title:'Build WTC user auth (email + Google)',project:'wtc',status:'backlog',priority:'high',due:'',time:6,assignee:'rebecca',notes:'Supabase auth',done:false},
-  {id:11,title:'Build WTC admin panel',project:'wtc',status:'backlog',priority:'high',due:'',time:8,assignee:'rebecca',notes:'admin.wethechurch.pages.dev',done:false},
-  {id:12,title:'Move WTC content to database',project:'wtc',status:'backlog',priority:'high',due:'',time:6,assignee:'rebecca',notes:'Studies · chapters · discussion questions',done:false},
-  {id:13,title:'Connect WTC to life portal Faith tab',project:'wtc',status:'backlog',priority:'med',due:'',time:3,assignee:'rebecca',notes:'Show current study + prayer requests in portal',done:false},
-  {id:14,title:'Complete Galatians series through chapter 6',project:'wtc',status:'inprogress',priority:'high',due:'2026-05-18',time:4,assignee:'rebecca',notes:'Ch 3 active · Ch 4-6 need pages',done:false},
+  // WTC — always parallel
+  {id:'w1',title:'Set up Supabase project for WTC backend',project:'wtc',status:'todo',priority:'high',due:'',time:2,assignee:'rebecca',description:'supabase.com → rebeccaannexo@gmail.com → create project → name it wethechurch → note database URL + anon key.',checklist:[{text:'Create Supabase account at supabase.com',done:false},{text:'Create new project: wethechurch',done:false},{text:'Note project URL and anon key',done:false},{text:'Set up first table: users',done:false}],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'w2',title:'Complete Galatians Chapter 4 — pages + discussion questions',project:'wtc',status:'inprogress',priority:'high',due:'2026-05-11',time:3,assignee:'rebecca',description:'Same format as Chapter 3. Full chapter HTML + study notes + 5 discussion questions.',checklist:[{text:'Write chapter 4 study content',done:false},{text:'Write 5 discussion questions',done:false},{text:'Build HTML page',done:false},{text:'Test and review',done:false}],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'w3',title:'Complete Galatians Chapter 5',project:'wtc',status:'todo',priority:'high',due:'2026-05-18',time:3,assignee:'rebecca',description:'',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'w4',title:'Complete Galatians Chapter 6',project:'wtc',status:'todo',priority:'high',due:'2026-05-25',time:3,assignee:'rebecca',description:'',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'w5',title:'Convert WTC to PWA — manifest.json + service worker',project:'wtc',status:'backlog',priority:'high',due:'',time:4,assignee:'rebecca',description:'Installable on iPhone and Android. Works offline. Push notifications (iOS 16.4+).',checklist:[{text:'Create manifest.json',done:false},{text:'Create service worker',done:false},{text:'Add install prompt',done:false},{text:'Test on iPhone',done:false}],comments:[],blocker:'Supabase setup first',archived:false,created:Date.now()},
+  {id:'w6',title:'Build WTC user auth — email + Google via Supabase',project:'wtc',status:'backlog',priority:'high',due:'',time:6,assignee:'rebecca',description:'',checklist:[],comments:[],blocker:'Needs Supabase setup first',archived:false,created:Date.now()},
+  {id:'w7',title:'Build WTC admin panel at admin.wethechurch.pages.dev',project:'wtc',status:'backlog',priority:'high',due:'',time:8,assignee:'rebecca',description:'Add/edit studies · chapters · discussion questions · manage community · send push notifications.',checklist:[],comments:[],blocker:'Needs Supabase + auth first',archived:false,created:Date.now()},
+  {id:'w8',title:'Connect WTC to portal Faith tab',project:'wtc',status:'backlog',priority:'med',due:'',time:3,assignee:'rebecca',description:'Show current study + upcoming session + prayer count in hub Faith tab.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'w9',title:'Galatians Chapter 3 — COMPLETE',project:'wtc',status:'done',priority:'high',due:'',time:0,assignee:'rebecca',description:'Complete. Live at wethechurch.pages.dev',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
 
-  // ALIGNED LIFE
-  {id:15,title:'Add What God Says About You section to Workbook',project:'aligned',status:'backlog',priority:'high',due:'',time:3,assignee:'rebecca',notes:'Part 1',done:false},
-  {id:16,title:'Add Values / True Aim / Anti-Vision to Life Plan',project:'aligned',status:'backlog',priority:'high',due:'',time:2,assignee:'rebecca',notes:'Source: Aligned_Life.odt',done:false},
-  {id:17,title:'Add Vol2 intro letter to Life Plan',project:'aligned',status:'backlog',priority:'med',due:'',time:1,assignee:'rebecca',notes:'',done:false},
-  {id:18,title:'Rebuild Life Wheel in correct pillar colors',project:'aligned',status:'backlog',priority:'med',due:'',time:2,assignee:'rebecca',notes:'',done:false},
-  {id:19,title:'Merge Q2 files to master PDF + daily pages PDF',project:'aligned',status:'backlog',priority:'high',due:'',time:3,assignee:'rebecca',notes:'',done:false},
-  {id:20,title:'Start GoHighLevel 14-day trial',project:'aligned',status:'backlog',priority:'high',due:'',time:1,assignee:'rebecca',notes:'Hold until assets and direction ready',done:false},
+  // ALIGNED LIFE — paused behind GBB
+  {id:'a1',title:'"What God Says About You" section → Workbook Part 1',project:'aligned',status:'backlog',priority:'high',due:'',time:3,assignee:'rebecca',description:'',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'a2',title:'Values / True Aim / Anti-Vision → Life Plan (source: Aligned_Life.odt)',project:'aligned',status:'backlog',priority:'high',due:'',time:2,assignee:'rebecca',description:'',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'a3',title:'Merge Q2 files → master PDF + separate daily pages PDF',project:'aligned',status:'backlog',priority:'high',due:'',time:3,assignee:'rebecca',description:'Digital product structure: one master Q2 PDF + separate loose daily pages PDF. Instruction page directs buyers to Staples for discbound binding at 5.5x8.5" color.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'a4',title:'GoHighLevel 14-day trial — hold until assets ready',project:'aligned',status:'backlog',priority:'high',due:'',time:1,assignee:'rebecca',description:'Do NOT start the trial until content and direction are ready. Trial is the only shot. Set up 3 business emails when trial starts.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'a5',title:'Workbook Part 1 — 10 sections COMPLETE ✓',project:'aligned',status:'done',priority:'high',due:'',time:0,assignee:'rebecca',description:'10 sections: Intro, S1 Faith, S2 Heart, S3 Story, S4 Wounds, S5 Gifts, S6 Wiring, S7 People, S8 Spiritual Gifts, S9 Purpose, S10 Final',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'a6',title:'Life Plan Part 2 — v4 COMPLETE ✓',project:'aligned',status:'done',priority:'high',due:'',time:0,assignee:'rebecca',description:'life_plan_v4.docx — 12 sections including Life Wheel, Life Pillars, Long-Range Vision, Legacy, Goals by Pillar, etc.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'a7',title:'Daily Pages Part 3 — v4 COMPLETE ✓',project:'aligned',status:'done',priority:'high',due:'',time:0,assignee:'rebecca',description:'4 pages/day. P1: Today/Morning. P2: Action & Execution. P3: Notes & Thinking Space. P4: Evening & Reflection.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
 
   // MUSTARD SEED
-  {id:21,title:'501c3 filing — Washington State',project:'mustard',status:'todo',priority:'high',due:'',time:4,assignee:'rebecca',notes:'',done:false},
-  {id:22,title:'Set up donation acceptance',project:'mustard',status:'backlog',priority:'high',due:'',time:2,assignee:'rebecca',notes:'',done:false},
-  {id:23,title:'Write mission statement + founding documents',project:'mustard',status:'todo',priority:'high',due:'',time:3,assignee:'rebecca',notes:'',done:false},
-  {id:24,title:'Articles of Incorporation filed — WA SOS',project:'mustard',status:'done',priority:'high',due:'',time:0,assignee:'rebecca',notes:'✓ Complete',done:true},
+  {id:'m1',title:'Articles of Incorporation filed — WA SOS ✓',project:'mustard',status:'done',priority:'high',due:'',time:0,assignee:'rebecca',description:'Complete. AOI filed with Washington Secretary of State.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'m2',title:'501c3 filing — Washington State',project:'mustard',status:'todo',priority:'high',due:'',time:4,assignee:'rebecca',description:'',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'m3',title:'Set up donation acceptance',project:'mustard',status:'backlog',priority:'high',due:'',time:2,assignee:'rebecca',description:'',checklist:[],comments:[],blocker:'Needs 501c3 first',archived:false,created:Date.now()},
+  {id:'m4',title:'Write mission statement + founding documents',project:'mustard',status:'todo',priority:'high',due:'',time:3,assignee:'rebecca',description:'Olivia-led vision. Supporting women in widowhood, reentry, recovery.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
 
   // PORTAL
-  {id:25,title:'Set up Cloudflare Zero Trust on mylifeportal.pages.dev',project:'portal',status:'todo',priority:'high',due:'',time:1,assignee:'rebecca',notes:'Google login restricted to rebeccaannexo@gmail.com',done:false},
-  {id:26,title:'Get Anthropic API key for brain dump processor',project:'portal',status:'todo',priority:'high',due:'',time:0.5,assignee:'rebecca',notes:'~$5 credit · console.anthropic.com',done:false},
-  {id:27,title:'Build Morning Alignment Agent',project:'portal',status:'backlog',priority:'med',due:'',time:6,assignee:'rebecca',notes:'Voice dump → Claude → daily plan',done:false},
-  {id:28,title:'Connect Google Calendar API',project:'portal',status:'backlog',priority:'med',due:'',time:4,assignee:'rebecca',notes:'Read calendar into appointments section',done:false},
+  {id:'p1',title:'Set up Cloudflare Zero Trust on mylifeportal.pages.dev',project:'portal',status:'todo',priority:'high',due:'',time:1,assignee:'rebecca',description:'Google login restricted to rebeccaannexo@gmail.com only. Zero Trust Access policy.',checklist:[{text:'Go to Cloudflare dashboard → Access',done:false},{text:'Create application for mylifeportal.pages.dev',done:false},{text:'Set policy to allow rebeccaannexo@gmail.com',done:false}],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'p2',title:'Get Anthropic API key for brain dump processor',project:'portal',status:'todo',priority:'high',due:'',time:0.5,assignee:'rebecca',description:'~$5 credit · console.anthropic.com · plug into brain dump section in portal',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
+  {id:'p3',title:'Connect WTC to portal Faith tab',project:'portal',status:'backlog',priority:'med',due:'',time:3,assignee:'rebecca',description:'Pull current study title + upcoming session date + prayer count into hub Faith tab.',checklist:[],comments:[],blocker:'Needs WTC Supabase backend first',archived:false,created:Date.now()},
+  {id:'p4',title:'Build Morning Alignment Agent',project:'portal',status:'backlog',priority:'med',due:'',time:6,assignee:'rebecca',description:'Voice dump → Claude processes → routes to right sections (tasks · reminders · ideas · prayers · parking lot). Needs Anthropic API key.',checklist:[],comments:[],blocker:'Needs Anthropic API key',archived:false,created:Date.now()},
+  {id:'p5',title:'Connect Google Calendar to appointments section',project:'portal',status:'backlog',priority:'med',due:'',time:4,assignee:'rebecca',description:'Read calendar events into portal appointments section. Real-time.',checklist:[],comments:[],blocker:'',archived:false,created:Date.now()},
 ];
 
-// ══ DEFAULT DECISIONS ══
-var DEFAULT_DECISIONS = [
-  {id:1,project:'portal',title:'Use Google Sheets as primary database (not D1)',why:'D1 adds complexity for current scale. Google Sheets already set up, free, working. D1 ready to switch when GBB has team members needing real-time sync.',alts:'Cloudflare D1, Supabase, Firebase',date:'2026-05-05'},
-  {id:2,project:'portal',title:'Hub and spoke architecture for all apps',why:'Personal portal = hub. Each brand (GBB, WTC, Aligned Life) gets its own admin portal as a spoke. Data surfaces to hub. Clean separation between personal and business.',alts:'Single monolithic app, separate apps with no connection',date:'2026-05-05'},
-  {id:3,project:'gbb',title:'GBB admin portal separate from personal portal',why:'Different audiences, different security levels, different data. Personal portal stays personal. GBB admin is business infrastructure.',alts:'One combined portal, GBB section inside personal portal',date:'2026-05-05'},
-  {id:4,project:'wtc',title:'WTC needs Supabase backend (not Google Sheets)',why:'WTC needs real user accounts, notes synced per user, prayer requests tied to accounts. Google Sheets not designed for multi-user auth. Supabase handles auth + database cleanly.',alts:'Google Sheets with session tokens, Firebase, Cloudflare D1',date:'2026-05-05'},
-  {id:5,project:'infra',title:'All infrastructure under one Cloudflare account',why:'Single pane of glass. One login. Easy to manage DNS, Pages, Workers, D1, Zero Trust all in one place.',alts:'Netlify, Vercel, separate accounts per project',date:'2026-05-05'},
-  {id:6,project:'aligned',title:'GoHighLevel trial held until assets ready',why:'14-day trial is the only shot. Starting it before content and direction are ready wastes the trial window.',alts:'Start immediately, use different platform',date:'2026-05-05'},
+// DEFAULT DECISIONS
+var DEFAULT_DECISIONS=[
+  {id:'d1',project:'portal',title:'Hub and spoke architecture — personal portal is the hub',why:'Personal OS stays personal. Each brand gets its own admin spoke. Data surfaces to hub as summaries. Clean separation between personal life and business.',alts:'Single monolithic app, completely separate apps with no connection',date:'2026-05-05'},
+  {id:'d2',project:'portal',title:'Google Sheets as primary database — D1 parked until team needed',why:'D1 adds complexity for current solo scale. Sheets already set up, working. D1 deployed and ready — switch when GBB has team members needing real-time.',alts:'Cloudflare D1 now, Supabase, Firebase',date:'2026-05-05'},
+  {id:'d3',project:'gbb',title:'GBB Visibility Audit at $297 — productized one-time deliverable',why:'Fastest path to cash from home. No domain needed. Audit tool already built. Calendly set up. Scales without ongoing time commitment. Each audit is a potential retainer.',alts:'Monthly retainer only, hourly consulting, done-for-you social management',date:'2026-05-05'},
+  {id:'d4',project:'gbb',title:'GBB not limited to local clients — remote delivery via Zoom',why:'Rebecca has no car. Remote delivery removes that constraint entirely. Zoom + email + PDF is a complete delivery stack.',alts:'Local only, in-person discovery meetings required',date:'2026-05-05'},
+  {id:'d5',project:'wtc',title:'WTC runs parallel to everything — never paused',why:'Ministry is not a business. It does not wait on income milestones. It runs on its own timeline regardless of GBB status.',alts:'Pause WTC until GBB profitable',date:'2026-05-05'},
+  {id:'d6',project:'aligned',title:'Aligned Life paused behind GBB — GoHighLevel trial held',why:'GBB is fastest path to revenue with no upfront investment. Aligned Life needs GHL trial — hold until assets and direction are ready so the 14-day trial is used for execution not planning.',alts:'Start GHL trial now, focus on Aligned Life before GBB',date:'2026-05-05'},
+  {id:'d7',project:'portal',title:'Priority order: GBB → WTC (parallel) → Aligned Life → Mustard Seed',why:'GBB = fastest revenue, no upfront cost, proven skills. WTC = ministry, never waits. Aligned Life = needs investment. Mustard Seed = needs 501c3 first.',alts:'Equal priority, Aligned Life first (existing product), WTC first',date:'2026-05-05'},
 ];
 
-// ══ DEFAULT INFRASTRUCTURE ══
-var INFRA = [
-  {name:'My Life Portal',url:'https://mylifeportal.pages.dev',account:'rebeccaannexo@gmail.com',service:'Cloudflare Pages',cost:'Free',status:'active',notes:'Personal OS · GitHub: rebeccaanne-xo/mylifeportal'},
-  {name:'GBB Public Site',url:'https://getbookednbranded.pages.dev',account:'rebeccaannexo@gmail.com',service:'Cloudflare Pages',cost:'Free',status:'active',notes:'GitHub: rebeccaanne-xo/getbookednbranded'},
-  {name:'We The Church App',url:'https://wethechurch.pages.dev',account:'rebeccaannexo@gmail.com',service:'Cloudflare Pages',cost:'Free',status:'active',notes:'Needs backend rebuild'},
-  {name:'Google Sheets Database',url:'https://docs.google.com/spreadsheets/d/1hsUIV99MoU9p8fAoZiX4igf8oxpQmwGXJPF0JFj_eTg',account:'rebeccaannexo@gmail.com',service:'Google Sheets',cost:'Free',status:'active',notes:'lifehub_Rebecca · portal database'},
-  {name:'Apps Script Web App',url:'https://script.google.com/macros/s/AKfycbyWqjL7MxquIleef7gRozobV2xgolWbTxmF7SuXIlUkBuyyVbme9wAuUJhhOFnro1sj/exec',account:'rebeccaannexo@gmail.com',service:'Google Apps Script',cost:'Free',status:'active',notes:'Portal API · handles all read/write'},
-  {name:'Cloudflare D1 Database',url:'https://dash.cloudflare.com',account:'rebeccaannexo@gmail.com',service:'Cloudflare D1',cost:'Free',status:'parked',notes:'Database ID: 10cd4914-4514-403c-9a1d-d76fc60399c9 · 25 tables deployed · ready for future'},
-  {name:'D1 Worker API',url:'https://rebecca-portal-api.rebeccaannexo.workers.dev',account:'rebeccaannexo@gmail.com',service:'Cloudflare Workers',cost:'Free',status:'parked',notes:'Worker live · parked · switch when ready'},
-  {name:'GitHub',url:'https://github.com/rebeccaanne-xo',account:'rebeccaanne-xo',service:'GitHub',cost:'Free',status:'active',notes:'Repos: mylifeportal · getbookednbranded · wethechurch · rebecca-portal-api'},
-  {name:'Cloudflare Account',url:'https://dash.cloudflare.com',account:'rebeccaannexo@gmail.com',service:'Cloudflare',cost:'Free',status:'active',notes:'All infrastructure lives here'},
-  {name:'Google Cloud Console',url:'https://console.cloud.google.com',account:'rebeccaannexo@gmail.com',service:'Google Cloud',cost:'Free tier',status:'active',notes:'API keys · Places API needed for prospecting tool'},
-  {name:'Calendly',url:'https://calendly.com/rebeccaannexo/meet',account:'rebeccaannexo@gmail.com',service:'Calendly',cost:'Free',status:'active',notes:'GBB discovery calls'},
-  {name:'Claude.ai',url:'https://claude.ai',account:'rebeccaannexo@gmail.com',service:'Anthropic',cost:'$20/mo',status:'active',notes:'Primary build tool · Sonnet 4.6'},
-  {name:'Beehiiv Newsletter',url:'https://wethechurch.beehiiv.com',account:'rebeccaannexo@gmail.com',service:'Beehiiv',cost:'Free',status:'active',notes:'WTC newsletter'},
-  {name:'Supabase',url:'https://supabase.com',account:'rebeccaannexo@gmail.com',service:'Supabase',cost:'Free',status:'planning',notes:'Planned for WTC backend · auth + database'},
-  {name:'GoHighLevel',url:'https://gohighlevel.com',account:'rebeccaannexo@gmail.com',service:'GoHighLevel',cost:'$97/mo',status:'planning',notes:'14-day trial not started · holding until Aligned Life assets ready'},
+// DEFAULT SESSIONS
+var DEFAULT_SESSIONS=[
+  {id:'s1',date:'2026-05-05',title:'Full portal rebuild — D1 + contact cards + vCard import + project board',body:'Rebuilt People section as full contact card system with 5-tab detail panel (Contact Info · Notes · Prayer · Money · Activity). Added vCard import with bulk support. Switched DB layer to d1Save aliases pointing to Google Sheets. Fixed mobile sidebar (solid background + overlay). Fixed all dropdown colors. Added prominent import banner below contact grid. Built Trello-level project board with card drill-down, checklists, comments, drag-and-drop, session log, decisions, infra.'},
+  {id:'s2',date:'2026-05-05',title:'Infrastructure setup — D1 · Worker · Cloudflare Pages · GitHub',body:'Set up Cloudflare D1 database (rebecca-portal, 25 tables deployed). Deployed Cloudflare Worker API at rebecca-portal-api.rebeccaannexo.workers.dev. Set up nvm + Node.js + Wrangler. Connected GitHub repos to Cloudflare Pages auto-deploy. Apps Script Web App deployed at current URL. Added anniversary · website · country columns to people table.'},
+  {id:'s3',date:'2026-05-05',title:'Portal features — habits · shopping · daily log · priority linking · Need To',body:'Built Health & Habits with gamification (points · streaks · rewards). Built Shopping with Seth share link (?shared=1). Built daily log bullet journal. Added flip clock + NLT scriptures (111 verses, full year). Added Need To widget with contact linking and activity logging. Added full priority system with task linking, carry forward, points, income double-points. Added At a Glance above Habits Today.'},
 ];
 
-// ══ STATE ══
-var currentView = 'projects';
-var currentFilter = 'all';
-var currentSort = 'project';
-var draggedTaskId = null;
-var timelineMonth = new Date();
+// INFRA
+var INFRA=[
+  {name:'My Life Portal',url:'https://mylifeportal.pages.dev',service:'Cloudflare Pages',cost:'Free',status:'active',notes:'Personal OS · GitHub: mylifeportal'},
+  {name:'GBB Public Site',url:'https://getbookednbranded.pages.dev',service:'Cloudflare Pages',cost:'Free',status:'active',notes:'GitHub: getbookednbranded'},
+  {name:'GBB Prospect Audit Tool',url:'https://getbookednbranded.pages.dev/prospecting-audit-tool.html',service:'Cloudflare Pages',cost:'Free',status:'active',notes:'Needs Google Places API key to pull live data'},
+  {name:'We The Church',url:'https://wethechurch.pages.dev',service:'Cloudflare Pages',cost:'Free',status:'active',notes:'GitHub: wethechurch · needs Supabase backend'},
+  {name:'Google Sheets Database',url:'https://docs.google.com/spreadsheets/d/1hsUIV99MoU9p8fAoZiX4igf8oxpQmwGXJPF0JFj_eTg',service:'Google Sheets',cost:'Free',status:'active',notes:'lifehub_Rebecca · primary portal database'},
+  {name:'Apps Script Web App',url:'https://script.google.com/macros/s/AKfycbynyi3DsQZDwOHZg_Ue0HBdlMJtQ2BN4JeBPRMAW6vBBETAm_TuJNV48602D8snAQVJ/exec',service:'Google Apps Script',cost:'Free',status:'active',notes:'Current deployment · portal read/write API'},
+  {name:'D1 Worker API',url:'https://rebecca-portal-api.rebeccaannexo.workers.dev',service:'Cloudflare Workers',cost:'Free',status:'active',notes:'Worker ID: 51a57480 · D1 connected · Current Version: 51a57480'},
+  {name:'D1 Database',url:'https://dash.cloudflare.com',service:'Cloudflare D1',cost:'Free',status:'active',notes:'ID: 10cd4914-4514-403c-9a1d-d76fc60399c9 · 25 tables deployed'},
+  {name:'GitHub',url:'https://github.com/rebeccaanne-xo',service:'GitHub',cost:'Free',status:'active',notes:'Repos: mylifeportal · getbookednbranded · wethechurch · rebecca-portal-api'},
+  {name:'Calendly',url:'https://calendly.com/rebeccaannexo/meet',service:'Calendly',cost:'Free',status:'active',notes:'GBB discovery + audit calls'},
+  {name:'Claude.ai',url:'https://claude.ai',service:'Anthropic',cost:'$20/mo',status:'active',notes:'Primary build tool · Sonnet 4.6'},
+  {name:'Google Cloud Console',url:'https://console.cloud.google.com',service:'Google Cloud',cost:'Free tier',status:'active',notes:'Places API needed for GBB audit tool'},
+  {name:'Supabase (WTC)',url:'https://supabase.com',service:'Supabase',cost:'Free',status:'planning',notes:'Needed for WTC user accounts + backend'},
+  {name:'GoHighLevel',url:'https://gohighlevel.com',service:'GoHighLevel',cost:'$97/mo',status:'planning',notes:'14-day trial NOT started · hold until Aligned Life assets ready'},
+  {name:'Beehiiv',url:'https://wethechurch.beehiiv.com',service:'Beehiiv',cost:'Free',status:'active',notes:'WTC newsletter'},
+];
 
-function getTasks(){return ld('tasks', DEFAULT_TASKS);}
+// STATE
+var currentView='projects';
+var currentFilter='all';
+var currentSort='project';
+var draggedId=null;
+var activeCardId=null;
+
+function getTasks(){return ld('tasks',DEFAULT_TASKS).filter(function(t){return !t.archived;});}
+function getAllTasks(){return ld('tasks',DEFAULT_TASKS);}
 function saveTasks(t){sv('tasks',t);}
-function getDecisions(){return ld('decisions', DEFAULT_DECISIONS);}
-function saveDecisions(d){sv('decisions',d);}
+function getDecisions(){return ld('decisions',DEFAULT_DECISIONS);}
+function getSessions(){return ld('sessions',DEFAULT_SESSIONS);}
 
-// ══ NAVIGATION ══
-function switchView(id, btn){
-  currentView = id;
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+// NAVIGATION
+var VTITLES={projects:'Projects',today:'Today',kanban:'Kanban Board',list:'All Tasks',decisions:'Decisions Log',sessions:'Session Log',infra:'Infrastructure'};
+var TAB_IDS=['projects','today','kanban','list','decisions','sessions','infra'];
+
+function switchView(id,btn){
+  currentView=id;
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
   if(btn) btn.classList.add('active');
-  document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
-  var titles = {projects:'Projects',today:'Today',kanban:'Kanban Board',list:'All Tasks',timeline:'Timeline',decisions:'Decisions Log',infra:'Infrastructure'};
-  document.getElementById('view-title').textContent = titles[id]||id;
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.getElementById('view-'+id).classList.add('active');
-  renderView(id);
+  document.querySelectorAll('.view-tab').forEach(function(t,i){
+    if(TAB_IDS[i]===id) t.classList.add('active'); else t.classList.remove('active');
+  });
+  document.getElementById('view-title').textContent=VTITLES[id]||id;
+  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
+  var el=document.getElementById('view-'+id);
+  if(el) el.classList.add('active');
+  render();
 }
 
 function switchViewTab(id){
-  var btns = document.querySelectorAll('.nav-btn');
-  btns.forEach(b=>{
-    if(b.textContent.toLowerCase().includes(id)||b.onclick&&b.onclick.toString().includes("'"+id+"'")){
-      b.classList.add('active');
-    } else {
-      b.classList.remove('active');
-    }
-  });
-  switchView(id, null);
-  document.querySelectorAll('.view-tab').forEach((t,i)=>{
-    var ids=['projects','today','kanban','list','timeline','decisions','infra'];
-    if(ids[i]===id)t.classList.add('active'); else t.classList.remove('active');
+  switchView(id,null);
+  // also highlight sidebar btn
+  document.querySelectorAll('.nav-btn').forEach(function(b){
+    if(b.onclick&&b.onclick.toString().includes("'"+id+"'")) b.classList.add('active');
   });
 }
 
-function renderView(id){
-  switch(id){
-    case 'projects': renderProjects(); break;
-    case 'today': renderToday(); break;
-    case 'kanban': renderKanban(); break;
-    case 'list': renderList(); break;
-    case 'timeline': renderTimeline(); break;
-    case 'decisions': renderDecisions(); break;
-    case 'infra': renderInfra(); break;
+function render(){
+  switch(currentView){
+    case 'projects':renderProjects();break;
+    case 'today':renderToday();break;
+    case 'kanban':renderKanban();break;
+    case 'list':renderList();break;
+    case 'decisions':renderDecisions();break;
+    case 'sessions':renderSessions();break;
+    case 'infra':renderInfra();break;
   }
   updateCounts();
 }
 
-function filterProject(proj, el){
-  currentFilter = proj;
-  document.querySelectorAll('.proj-pill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  renderView(currentView);
+function setFilter(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.proj-pill').forEach(function(p){p.classList.remove('active');});
+  if(el) el.classList.add('active');
+  render();
 }
 
-// ══ PROJECT HELPERS ══
-var PROJECT_COLORS = {gbb:'#C2738A',wtc:'#6B8CB8',aligned:'#4A7C6F',mustard:'#7A5C7A',portal:'#C4895A',personal:'#A89880'};
-var PROJECT_NAMES = {gbb:'GBB',wtc:'WTC',aligned:'Aligned Life',mustard:'Mustard Seed',portal:'Portal',personal:'Personal'};
-var STATUS_LABELS = {backlog:'Backlog',todo:'To Do',inprogress:'In Progress',blocked:'Blocked',done:'Done'};
-var STATUS_COLORS = {backlog:'rgba(255,255,255,.15)',todo:'rgba(107,140,184,.3)',inprogress:'rgba(196,137,90,.3)',blocked:'rgba(241,148,138,.3)',done:'rgba(46,125,82,.3)'};
-
-function getFilteredTasks(){
-  var tasks = getTasks();
-  if(currentFilter==='all') return tasks;
-  return tasks.filter(t=>t.project===currentFilter);
+function getFiltered(){
+  var t=getTasks();
+  return currentFilter==='all'?t:t.filter(function(x){return x.project===currentFilter;});
 }
 
-// ══ RENDER PROJECTS ══
+// DUE DATE HELPER
+function dueInfo(due){
+  if(!due) return null;
+  var today=new Date();today.setHours(0,0,0,0);
+  var d=new Date(due);
+  var diff=d-today;
+  var text=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  if(diff<0) return {text:text,cls:'overdue'};
+  if(diff<3*24*60*60*1000) return {text:text,cls:'soon'};
+  return {text:text,cls:''};
+}
+
+// RENDER PROJECTS
 function renderProjects(){
-  var tasks = getTasks();
-  var grid = document.getElementById('projects-grid');
-  grid.innerHTML = '';
+  var tasks=getAllTasks();
+  var grid=document.getElementById('projects-grid');
+  grid.innerHTML='';
   Object.keys(PROJECTS).forEach(function(key){
-    var p = PROJECTS[key];
-    var projTasks = tasks.filter(t=>t.project===key);
-    var done = projTasks.filter(t=>t.done||t.status==='done').length;
-    var total = projTasks.length;
-    var pct = total>0 ? Math.round((done/total)*100) : 0;
-    var inprog = projTasks.filter(t=>t.status==='inprogress').length;
-    var blocked = projTasks.filter(t=>t.status==='blocked').length;
-    var card = document.createElement('div');
-    card.className = 'project-card';
-    card.style.cssText = '--proj-color:'+p.color;
-    card.querySelector ? null : null;
-    var statusClass = {live:'status-live',building:'status-building',paused:'status-paused',planning:'status-planning'}[p.status]||'status-planning';
-    var linksHtml = p.urls.map(u=>`<a class="project-link" href="${u.url}" target="_blank">${u.label}</a>`).join('');
-    card.innerHTML = `
-      <div style="height:3px;background:${p.color};position:absolute;top:0;left:0;right:0;border-radius:14px 14px 0 0"></div>
-      <div class="project-card-top">
-        <div class="project-name">${p.name}</div>
-        <span class="project-status-badge ${statusClass}">${p.status}</span>
-      </div>
-      <div class="project-desc">${p.desc}</div>
-      <div class="project-stats">
-        <div class="proj-stat"><div class="proj-stat-val">${total}</div><div class="proj-stat-label">Tasks</div></div>
-        <div class="proj-stat"><div class="proj-stat-val" style="color:#C4895A">${inprog}</div><div class="proj-stat-label">Active</div></div>
-        <div class="proj-stat"><div class="proj-stat-val" style="color:#F1948A">${blocked}</div><div class="proj-stat-label">Blocked</div></div>
-      </div>
-      <div class="project-progress">
-        <div class="progress-label"><span>${pct}% complete</span><span>${done}/${total} tasks</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${p.color}"></div></div>
-      </div>
-      <div class="project-meta">${linksHtml}${p.repo?`<a class="project-link" href="https://github.com/rebeccaanne-xo/${p.repo}" target="_blank">GitHub</a>`:''}</div>
-    `;
+    var p=PROJECTS[key];
+    var pt=tasks.filter(function(t){return t.project===key;});
+    var done=pt.filter(function(t){return t.status==='done';}).length;
+    var total=pt.length;
+    var pct=total>0?Math.round(done/total*100):0;
+    var inprog=pt.filter(function(t){return t.status==='inprogress';}).length;
+    var blocked=pt.filter(function(t){return t.status==='blocked';}).length;
+    var sc={live:'s-live',building:'s-building',paused:'s-paused',planning:'s-planning'}[p.status]||'s-planning';
+    var linksHtml=(p.urls||[]).map(function(u){return '<a class="proj-link" href="'+u.url+'" target="_blank" onclick="event.stopPropagation()">'+esc(u.label)+'</a>';}).join('');
+    if(p.repo) linksHtml+='<a class="proj-link" href="https://github.com/rebeccaanne-xo/'+p.repo+'" target="_blank" onclick="event.stopPropagation()">GitHub</a>';
+    var card=document.createElement('div');
+    card.className='proj-card';
+    card.onclick=function(){setFilter(key,null);switchView('kanban',null);};
+    card.innerHTML=
+      '<div class="proj-card-bar" style="background:'+p.color+'"></div>'+
+      '<div class="proj-card-top"><div class="proj-name">'+esc(p.name)+'</div><span class="status-badge '+sc+'">'+p.status+'</span></div>'+
+      '<div class="proj-desc">'+esc(p.desc)+'</div>'+
+      (p.offer?'<div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:.6rem;padding:.38rem .6rem;background:rgba(255,255,255,.04);border-radius:6px;border-left:2px solid '+p.color+'">'+esc(p.offer)+'</div>':'')+
+      (p.goal?'<div style="font-size:10px;color:rgba(255,255,255,.28);margin-bottom:.6rem">🎯 '+esc(p.goal)+'</div>':'')+
+      '<div class="proj-stats">'+
+        '<div class="proj-stat"><div class="proj-stat-val">'+total+'</div><div class="proj-stat-label">Tasks</div></div>'+
+        '<div class="proj-stat"><div class="proj-stat-val" style="color:var(--amber)">'+inprog+'</div><div class="proj-stat-label">Active</div></div>'+
+        '<div class="proj-stat"><div class="proj-stat-val" style="color:#F1948A">'+blocked+'</div><div class="proj-stat-label">Blocked</div></div>'+
+      '</div>'+
+      '<div class="proj-progress-wrap">'+
+        '<div class="proj-progress-label"><span>'+pct+'% complete</span><span>'+done+'/'+total+'</span></div>'+
+        '<div class="proj-progress-bar"><div class="proj-progress-fill" style="width:'+pct+'%;background:'+p.color+'"></div></div>'+
+      '</div>'+
+      '<div class="proj-links">'+linksHtml+'</div>';
     grid.appendChild(card);
   });
 }
 
-// ══ RENDER KANBAN ══
+// RENDER KANBAN
 function renderKanban(){
-  var tasks = getFilteredTasks();
-  var cols = ['backlog','todo','inprogress','blocked','done'];
-  cols.forEach(function(status){
-    var col = document.getElementById('col-'+status);
-    col.innerHTML = '';
-    var colTasks = tasks.filter(t=>t.status===status);
-    document.getElementById('kc-'+status).textContent = colTasks.length;
-    colTasks.forEach(function(task){
-      col.appendChild(makeTaskCard(task));
-    });
+  var tasks=getFiltered();
+  ['backlog','todo','inprogress','blocked','done'].forEach(function(s){
+    var col=document.getElementById('col-'+s);
+    col.innerHTML='';
+    var ct=tasks.filter(function(t){return t.status===s;});
+    document.getElementById('kc-'+s).textContent=ct.length;
+    ct.forEach(function(t){col.appendChild(makeCard(t));});
   });
 }
 
-function makeTaskCard(task){
-  var div = document.createElement('div');
-  div.className = 'task-card';
-  div.dataset.id = task.id;
-  div.draggable = true;
-  div.addEventListener('dragstart',function(e){
-    draggedTaskId = task.id;
-    div.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-  });
+function makeCard(task){
+  var div=document.createElement('div');
+  div.className='task-card';
+  div.dataset.id=task.id;
+  div.draggable=true;
+  div.style.borderLeftColor=PC[task.project]||'transparent';
+  var due=dueInfo(task.due);
+  var cl=task.checklist||[];
+  var clDone=cl.filter(function(c){return c.done;}).length;
+  var comments=(task.comments||[]).length;
+  var footer='';
+  if(cl.length) footer+='<span class="task-footer-item">✅ '+clDone+'/'+cl.length+'</span>';
+  if(comments) footer+='<span class="task-footer-item">💬 '+comments+'</span>';
+  if(task.time) footer+='<span class="task-footer-item">⏱ '+task.time+'h</span>';
+  if(task.blocker) footer+='<span class="task-footer-item" style="color:#F1948A">🔴 blocked</span>';
+  div.innerHTML=
+    '<div class="task-prio-dot" style="background:'+(PR[task.priority]||'#888')+'"></div>'+
+    '<div class="task-card-title">'+esc(task.title)+'</div>'+
+    '<div class="task-card-meta">'+
+      '<span class="task-proj-tag" style="background:'+(PC[task.project]||'#fff')+'20;color:'+(PC[task.project]||'#fff')+'">'+PN[task.project]+'</span>'+
+      (due?'<span class="task-due-tag '+due.cls+'">📅 '+due.text+'</span>':'')+
+    '</div>'+
+    (footer?'<div class="task-card-footer">'+footer+'</div>':'');
+  div.addEventListener('click',function(){openCard(task.id);});
+  div.addEventListener('dragstart',function(e){draggedId=task.id;div.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
   div.addEventListener('dragend',function(){div.classList.remove('dragging');});
-  var color = PROJECT_COLORS[task.project]||'#fff';
-  var dueText = '';
-  var dueClass = '';
-  if(task.due){
-    var dueDate = new Date(task.due);
-    var today = new Date(); today.setHours(0,0,0,0);
-    var overdue = dueDate < today;
-    var soon = !overdue && (dueDate-today) < 3*24*60*60*1000;
-    dueClass = overdue?'overdue':soon?'soon':'';
-    dueText = dueDate.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  }
-  div.innerHTML = `
-    <div class="task-card-top">
-      <div class="task-title">${esc(task.title)}</div>
-      <div class="task-priority-dot priority-${task.priority}"></div>
-    </div>
-    <div class="task-meta">
-      <span class="task-project-tag" style="background:${color}20;color:${color}">${PROJECT_NAMES[task.project]||task.project}</span>
-      ${dueText?`<span class="task-due ${dueClass}">📅 ${dueText}</span>`:''}
-      ${task.time?`<span class="task-time">⏱ ${task.time}h</span>`:''}
-    </div>
-    ${task.notes?`<div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:.4rem;line-height:1.4">${esc(task.notes.substring(0,60))}${task.notes.length>60?'...':''}</div>`:''}
-    <div class="task-actions">
-      <button class="task-act-btn" onclick="editTaskStatus(${task.id},event)">✏️</button>
-      <button class="task-act-btn del" onclick="deleteTask(${task.id},event)">✕</button>
-    </div>
-  `;
   return div;
 }
 
-function dragOver(e){e.preventDefault();}
-function drop(e, newStatus){
+function onDragOver(e){e.preventDefault();}
+function onDrop(e,status){
   e.preventDefault();
-  if(!draggedTaskId) return;
-  var tasks = getTasks();
-  var task = tasks.find(t=>t.id==draggedTaskId);
+  if(!draggedId) return;
+  var tasks=getAllTasks();
+  var task=tasks.find(function(t){return t.id==draggedId;});
   if(task){
-    task.status = newStatus;
-    if(newStatus==='done') task.done = true;
+    task.status=status;
+    if(status==='done') task.done=true;
+    task.updated=Date.now();
     saveTasks(tasks);
     renderKanban();
     updateCounts();
-    showToast('Moved to '+STATUS_LABELS[newStatus]+' ✓');
+    showToast('Moved → '+SL[status]+' ✓');
   }
-  draggedTaskId = null;
+  draggedId=null;
 }
 
-// ══ RENDER LIST ══
-function renderList(){
-  var tasks = getFilteredTasks();
-  var search = document.getElementById('list-search').value.toLowerCase();
-  if(search) tasks = tasks.filter(t=>t.title.toLowerCase().includes(search)||t.notes.toLowerCase().includes(search));
-
-  // Sort
-  tasks = [...tasks].sort(function(a,b){
-    if(currentSort==='priority'){var po={high:0,med:1,low:2};return (po[a.priority]||1)-(po[b.priority]||1);}
-    if(currentSort==='due'){return (a.due||'9999')>(b.due||'9999')?1:-1;}
-    if(currentSort==='status'){var so={inprogress:0,blocked:1,todo:2,backlog:3,done:4};return (so[a.status]||3)-(so[b.status]||3);}
-    return (a.project||'').localeCompare(b.project||'');
-  });
-
-  var tbody = document.getElementById('list-body');
-  tbody.innerHTML = '';
-  var today = new Date(); today.setHours(0,0,0,0);
-  tasks.forEach(function(task){
-    var tr = document.createElement('tr');
-    tr.className = 'list-row';
-    var color = PROJECT_COLORS[task.project]||'#fff';
-    var dueText = '';var dueClass='';
-    if(task.due){
-      var dd = new Date(task.due);
-      var overdue = dd<today;
-      var soon = !overdue&&(dd-today)<3*24*60*60*1000;
-      dueClass=overdue?'overdue':soon?'soon':'';
-      dueText=dd.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    }
-    var prioColors={high:'#F1948A',med:'var(--amber)',low:'var(--sage)'};
-    tr.innerHTML = `
-      <td style="max-width:300px"><div style="font-weight:500">${esc(task.title)}</div>${task.notes?`<div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:1px">${esc(task.notes.substring(0,50))}...</div>`:''}</td>
-      <td><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:${color}20;color:${color}">${PROJECT_NAMES[task.project]||task.project}</span></td>
-      <td><span class="list-status" style="background:${STATUS_COLORS[task.status]};color:#fff">${STATUS_LABELS[task.status]||task.status}</span></td>
-      <td><span style="font-size:11px;font-weight:700;color:${prioColors[task.priority]||'#fff'}">${task.priority}</span></td>
-      <td><span class="task-due ${dueClass}" style="font-size:11px">${dueText||'—'}</span></td>
-      <td style="font-size:11px;color:rgba(255,255,255,.4)">${task.time?task.time+'h':'—'}</td>
-      <td><div class="list-actions"><button class="task-act-btn del" onclick="deleteTask(${task.id},event)">✕</button></div></td>
-    `;
-    tbody.appendChild(tr);
-  });
+// CARD DETAIL
+function openCard(id){
+  var tasks=getAllTasks();
+  var task=tasks.find(function(t){return t.id==id;});
+  if(!task) return;
+  activeCardId=id;
+  var color=PC[task.project]||'#C2738A';
+  document.getElementById('cm-color-bar').style.background=color;
+  document.getElementById('cm-title').value=task.title||'';
+  document.getElementById('cm-proj-label').textContent=(PROJECTS[task.project]||{name:task.project}).name+' · '+SL[task.status||'backlog'];
+  document.getElementById('cm-desc').value=task.description||'';
+  document.getElementById('cm-status').value=task.status||'backlog';
+  document.getElementById('cm-priority').value=task.priority||'med';
+  document.getElementById('cm-project').value=task.project||'gbb';
+  document.getElementById('cm-due').value=task.due||'';
+  document.getElementById('cm-time').value=task.time||'';
+  document.getElementById('cm-assignee').value=task.assignee||'rebecca';
+  document.getElementById('cm-blocker').value=task.blocker||'';
+  renderChecklist(task);
+  renderComments(task);
+  document.getElementById('card-modal').classList.add('open');
 }
 
-function sortList(by, btn){
-  currentSort = by;
-  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderList();
-}
-
-// ══ RENDER TODAY ══
-function renderToday(){
-  var tasks = getTasks();
-  var today = new Date(); today.setHours(0,0,0,0);
-  var urgent = tasks.filter(t=>!t.done&&t.due&&new Date(t.due)<=today);
-  var inprog = tasks.filter(t=>t.status==='inprogress'&&!t.done);
-  var high = tasks.filter(t=>t.priority==='high'&&!t.done&&t.status!=='done').slice(0,5);
-  var done = tasks.filter(t=>t.done||t.status==='done').slice(0,5);
-
-  renderTodaySection('today-urgent', urgent, 'Nothing overdue 🎉');
-  renderTodaySection('today-inprogress', inprog, 'Nothing in progress');
-  renderTodaySection('today-high', high, 'No high priority tasks');
-  renderTodaySection('today-done', done, 'Nothing completed yet');
-}
-
-function renderTodaySection(elId, tasks, emptyMsg){
-  var el = document.getElementById(elId);
+function saveField(field){
+  var tasks=getAllTasks();
+  var task=tasks.find(function(t){return t.id==activeCardId;});
+  if(!task) return;
+  var elIds={title:'cm-title',description:'cm-desc',status:'cm-status',priority:'cm-priority',project:'cm-project',due:'cm-due',time:'cm-time',assignee:'cm-assignee',blocker:'cm-blocker'};
+  var el=document.getElementById(elIds[field]);
   if(!el) return;
-  el.innerHTML = '';
-  if(!tasks.length){
-    el.innerHTML = `<div class="today-card" style="font-size:12px;color:rgba(255,255,255,.25);font-style:italic">${emptyMsg}</div>`;
-    return;
-  }
-  tasks.forEach(function(task){
-    var div = document.createElement('div');
-    div.className = 'today-card';
-    var color = PROJECT_COLORS[task.project]||'#fff';
-    div.style.borderLeft = '3px solid '+color;
-    div.innerHTML = `
-      <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:.25rem">${esc(task.title)}</div>
-      <div style="display:flex;gap:.4rem;align-items:center">
-        <span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;background:${color}20;color:${color}">${PROJECT_NAMES[task.project]||task.project}</span>
-        <span style="font-size:10px;color:rgba(255,255,255,.3)">${STATUS_LABELS[task.status]||task.status}</span>
-        ${task.time?`<span style="font-size:10px;color:rgba(255,255,255,.25)">⏱ ${task.time}h</span>`:''}
-      </div>
-    `;
-    el.appendChild(div);
-  });
+  task[field]=el.value;
+  if(field==='time') task[field]=parseFloat(el.value)||0;
+  task.updated=Date.now();
+  saveTasks(tasks);
+  document.getElementById('cm-proj-label').textContent=(PROJECTS[task.project]||{name:task.project}).name+' · '+SL[task.status||'backlog'];
+  if(field==='status'||field==='project') render();
 }
 
-// ══ RENDER TIMELINE ══
-function renderTimeline(){
-  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('timeline-month').textContent = months[timelineMonth.getMonth()]+' '+timelineMonth.getFullYear();
-  var grid = document.getElementById('timeline-grid');
-  grid.innerHTML = '';
-  var tasks = getTasks();
-  Object.keys(PROJECTS).forEach(function(key){
-    var p = PROJECTS[key];
-    var projTasks = tasks.filter(function(t){
-      if(t.project!==key||!t.due) return false;
-      var d = new Date(t.due);
-      return d.getMonth()===timelineMonth.getMonth()&&d.getFullYear()===timelineMonth.getFullYear();
-    });
-    if(!projTasks.length) return;
-    var row = document.createElement('div');
-    row.className = 'timeline-project-row';
-    var barsHtml = projTasks.map(function(t){
-      var isDone = t.done||t.status==='done';
-      return `<div class="milestone-bar ${isDone?'done':''}">
-        <div class="milestone-dot" style="background:${p.color}"></div>
-        <div class="milestone-label">${esc(t.title)}</div>
-        <div class="milestone-date">${new Date(t.due).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
-      </div>`;
-    }).join('');
-    row.innerHTML = `
-      <div class="timeline-proj-name">${p.name}<small style="color:${p.color}">${p.status}</small></div>
-      <div class="timeline-bars">${barsHtml}</div>
-    `;
-    grid.appendChild(row);
-  });
-  if(!grid.children.length){
-    grid.innerHTML = '<div style="text-align:center;padding:3rem;color:rgba(255,255,255,.2);font-style:italic">No tasks with due dates this month</div>';
-  }
-}
-
-function changeMonth(dir){
-  if(dir===0){timelineMonth=new Date();}
-  else{timelineMonth=new Date(timelineMonth.getFullYear(),timelineMonth.getMonth()+dir,1);}
-  renderTimeline();
-}
-
-// ══ RENDER DECISIONS ══
-function renderDecisions(){
-  var decisions = getDecisions();
-  var list = document.getElementById('decisions-list');
-  list.innerHTML = '';
-  decisions.slice().reverse().forEach(function(d){
-    var color = PROJECT_COLORS[d.project]||'#fff';
-    var div = document.createElement('div');
-    div.className = 'decision-item';
-    div.innerHTML = `
-      <span class="decision-proj" style="background:${color}20;color:${color}">${PROJECT_NAMES[d.project]||d.project}</span>
-      <div class="decision-top">
-        <div class="decision-title">${esc(d.title)}</div>
-        <div class="decision-date">${d.date}</div>
-      </div>
-      <div class="decision-why">${esc(d.why)}</div>
-      ${d.alts?`<div class="decision-alts">Alternatives considered: ${esc(d.alts)}</div>`:''}
-    `;
+function renderChecklist(task){
+  var items=task.checklist||[];
+  var done=items.filter(function(c){return c.done;}).length;
+  var pct=items.length?Math.round(done/items.length*100):0;
+  document.getElementById('cm-cl-pct').textContent=pct+'%';
+  document.getElementById('cm-cl-bar').style.width=pct+'%';
+  var list=document.getElementById('cm-checklist');
+  list.innerHTML='';
+  items.forEach(function(item,idx){
+    var div=document.createElement('div');
+    div.className='checklist-item'+(item.done?' cl-done':'');
+    var cb=document.createElement('input');cb.type='checkbox';cb.checked=item.done;
+    cb.onchange=function(){toggleCl(idx,this.checked);};
+    var txt=document.createElement('input');txt.className='cl-text';txt.value=item.text;
+    txt.onblur=function(){editCl(idx,this.value);};
+    var del=document.createElement('button');del.className='cl-del';del.textContent='✕';
+    del.onclick=function(){delCl(idx);};
+    div.appendChild(cb);div.appendChild(txt);div.appendChild(del);
     list.appendChild(div);
   });
 }
 
-// ══ RENDER INFRA ══
+function addClItem(){
+  var input=document.getElementById('cm-cl-input');
+  var text=input.value.trim();if(!text)return;
+  var tasks=getAllTasks();
+  var task=tasks.find(function(t){return t.id==activeCardId;});
+  if(!task)return;if(!task.checklist)task.checklist=[];
+  task.checklist.push({text:text,done:false});
+  saveTasks(tasks);renderChecklist(task);input.value='';
+}
+
+function toggleCl(idx,checked){
+  var tasks=getAllTasks();
+  var task=tasks.find(function(t){return t.id==activeCardId;});
+  if(task&&task.checklist&&task.checklist[idx]!==undefined){
+    task.checklist[idx].done=checked;saveTasks(tasks);renderChecklist(task);
+  }
+}
+
+function editCl(idx,text){
+  var tasks=getAllTasks();
+  var task=tasks.find(function(t){return t.id==activeCardId;});
+  if(task&&task.checklist&&task.checklist[idx]!==undefined){
+    task.checklist[idx].text=text;saveTasks(tasks);
+  }
+}
+
+function delCl(idx){
+  var tasks=getAllTasks();
+  var task=tasks.find(function(t){return t.id==activeCardId;});
+  if(task&&task.checklist){task.checklist.splice(idx,1);saveTasks(tasks);renderChecklist(task);}
+}
+
+function renderComments(task){
+  var comments=task.comments||[];
+  var list=document.getElementById('cm-comments');list.innerHTML='';
+  comments.forEach(function(c){
+    var div=document.createElement('div');div.className='comment-item';
+    div.innerHTML='<div class="comment-meta"><span>Rebecca</span><span>'+esc(c.date)+'</span></div><div class="comment-text">'+esc(c.text)+'</div>';
+    list.appendChild(div);
+  });
+}
+
+function addComment(){
+  var input=document.getElementById('cm-comment');
+  var text=input.value.trim();if(!text)return;
+  var tasks=getAllTasks();
+  var task=tasks.find(function(t){return t.id==activeCardId;});
+  if(!task)return;if(!task.comments)task.comments=[];
+  task.comments.push({text:text,date:new Date().toLocaleDateString()});
+  saveTasks(tasks);renderComments(task);input.value='';showToast('Comment added ✓');
+}
+
+function archiveCard(){
+  if(!confirm('Archive this task?'))return;
+  var tasks=getAllTasks();
+  var task=tasks.find(function(t){return t.id==activeCardId;});
+  if(task){task.archived=true;saveTasks(tasks);}
+  closeCardModal();render();showToast('Archived');
+}
+
+function deleteCard(){
+  if(!confirm('Delete permanently?'))return;
+  saveTasks(getAllTasks().filter(function(t){return t.id!=activeCardId;}));
+  closeCardModal();render();showToast('Deleted');
+}
+
+function closeCardModal(){
+  document.getElementById('card-modal').classList.remove('open');
+  activeCardId=null;render();
+}
+
+// ADD TASK
+function openAddTask(){document.getElementById('add-task-modal').classList.add('open');}
+function saveNewTask(){
+  var title=document.getElementById('at-title').value.trim();
+  if(!title){showToast('Enter a title');return;}
+  var task={
+    id:'t'+Date.now(),title,
+    project:document.getElementById('at-project').value,
+    status:document.getElementById('at-status').value,
+    priority:document.getElementById('at-priority').value,
+    due:document.getElementById('at-due').value,
+    time:parseFloat(document.getElementById('at-time').value)||0,
+    assignee:document.getElementById('at-assignee').value,
+    description:document.getElementById('at-desc').value.trim(),
+    checklist:[],comments:[],blocker:'',archived:false,created:Date.now()
+  };
+  var tasks=getAllTasks();tasks.push(task);saveTasks(tasks);
+  closeModal('add-task-modal');
+  ['at-title','at-desc','at-due','at-time'].forEach(function(id){document.getElementById(id).value='';});
+  render();showToast('Task added ✓');
+}
+
+// LIST
+function renderList(){
+  var tasks=getFiltered();
+  var search=document.getElementById('list-search').value.toLowerCase();
+  if(search) tasks=tasks.filter(function(t){return (t.title||'').toLowerCase().includes(search)||(t.description||'').toLowerCase().includes(search);});
+  tasks=tasks.slice().sort(function(a,b){
+    if(currentSort==='priority'){var po={high:0,med:1,low:2};return (po[a.priority]||1)-(po[b.priority]||1);}
+    if(currentSort==='due'){return ((a.due||'9999')>(b.due||'9999'))?1:-1;}
+    if(currentSort==='status'){var so={inprogress:0,blocked:1,todo:2,backlog:3,done:4};return (so[a.status]||3)-(so[b.status]||3);}
+    if(currentSort==='updated'){return (b.updated||b.created||0)-(a.updated||a.created||0);}
+    return (a.project||'').localeCompare(b.project||'');
+  });
+  var tbody=document.getElementById('list-body');tbody.innerHTML='';
+  tasks.forEach(function(task){
+    var tr=document.createElement('tr');tr.className='list-row';
+    tr.onclick=function(){openCard(task.id);};
+    var color=PC[task.project]||'#fff';
+    var due=dueInfo(task.due);
+    tr.innerHTML=
+      '<td style="max-width:280px"><div style="font-weight:500">'+esc(task.title)+'</div>'+
+      (task.description?'<div style="font-size:10px;color:rgba(255,255,255,.26);margin-top:1px">'+esc(task.description.substring(0,50))+'...</div>':'')+
+      (task.blocker?'<div style="font-size:10px;color:#F1948A;margin-top:1px">🔴 '+esc(task.blocker)+'</div>':'')+'</td>'+
+      '<td><span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;background:'+color+'20;color:'+color+'">'+PN[task.project]+'</span></td>'+
+      '<td><span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;background:'+SC[task.status]+';color:#fff">'+SL[task.status]+'</span></td>'+
+      '<td><span style="font-size:11px;font-weight:700;color:'+(PR[task.priority]||'#fff')+'">'+task.priority+'</span></td>'+
+      '<td>'+(due?'<span class="task-due-tag '+due.cls+'" style="font-size:11px">'+due.text+'</span>':'<span style="color:rgba(255,255,255,.2)">—</span>')+'</td>'+
+      '<td style="font-size:11px;color:rgba(255,255,255,.32)">'+(task.time?task.time+'h':'—')+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+
+function setSort(by,btn){
+  currentSort=by;
+  document.querySelectorAll('.sort-pill').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  renderList();
+}
+
+// TODAY
+function renderToday(){
+  var tasks=getTasks();
+  var today=new Date();today.setHours(0,0,0,0);
+  var urgent=tasks.filter(function(t){return t.status!=='done'&&t.due&&new Date(t.due)<=today;});
+  var inprog=tasks.filter(function(t){return t.status==='inprogress';});
+  var high=tasks.filter(function(t){return t.priority==='high'&&t.status!=='done';}).slice(0,6);
+  var done=tasks.filter(function(t){return t.status==='done';}).slice(0,5);
+  renderTodaySec('today-urgent',urgent,'Nothing overdue 🎉');
+  renderTodaySec('today-inprog',inprog,'Nothing in progress');
+  renderTodaySec('today-high',high,'No high priority open tasks');
+  renderTodaySec('today-done-list',done,'Nothing completed yet');
+}
+
+function renderTodaySec(id,tasks,empty){
+  var el=document.getElementById(id);if(!el)return;el.innerHTML='';
+  if(!tasks.length){el.innerHTML='<div style="font-size:11px;color:rgba(255,255,255,.2);font-style:italic;padding:.35rem 0">'+empty+'</div>';return;}
+  tasks.forEach(function(task){
+    var div=document.createElement('div');div.className='today-item';
+    div.onclick=function(){openCard(task.id);};
+    var color=PC[task.project]||'#fff';
+    div.innerHTML='<div class="today-item-bar" style="background:'+color+'"></div><div><div class="today-item-title">'+esc(task.title)+'</div><div class="today-item-meta"><span style="color:'+color+'">'+PN[task.project]+'</span><span>'+SL[task.status]+'</span>'+(task.time?'<span>⏱'+task.time+'h</span>':'')+'</div></div>';
+    el.appendChild(div);
+  });
+}
+
+// DECISIONS
+function renderDecisions(){
+  var list=document.getElementById('decisions-list');list.innerHTML='';
+  getDecisions().slice().reverse().forEach(function(d){
+    var color=PC[d.project]||'#fff';
+    var div=document.createElement('div');div.className='decision-card';
+    div.innerHTML='<span class="dec-proj-tag" style="background:'+color+'20;color:'+color+'">'+PN[d.project]+'</span><div class="dec-title">'+esc(d.title)+'</div><div class="dec-why">'+esc(d.why)+'</div>'+(d.alts?'<div class="dec-alts">Alternatives: '+esc(d.alts)+'</div>':'')+'<div class="dec-date">'+esc(d.date)+'</div>';
+    list.appendChild(div);
+  });
+}
+
+function openAddDecision(){document.getElementById('add-decision-modal').classList.add('open');}
+function saveDecision(){
+  var title=document.getElementById('ad-title').value.trim();if(!title)return;
+  var decisions=getDecisions();
+  decisions.push({id:'d'+Date.now(),project:document.getElementById('ad-project').value,title,why:document.getElementById('ad-why').value.trim(),alts:document.getElementById('ad-alts').value.trim(),date:new Date().toISOString().split('T')[0]});
+  sv('decisions',decisions);closeModal('add-decision-modal');
+  ['ad-title','ad-why','ad-alts'].forEach(function(id){document.getElementById(id).value='';});
+  renderDecisions();showToast('Decision logged ✓');
+}
+
+// SESSIONS
+function renderSessions(){
+  var list=document.getElementById('sessions-list');list.innerHTML='';
+  getSessions().slice().reverse().forEach(function(s){
+    var div=document.createElement('div');div.className='session-card';
+    div.innerHTML='<div class="ses-date">'+esc(s.date)+'</div><div class="ses-title">'+esc(s.title)+'</div><div class="ses-body">'+esc(s.body)+'</div>';
+    list.appendChild(div);
+  });
+}
+
+function openAddSession(){document.getElementById('add-session-modal').classList.add('open');}
+function saveSession(){
+  var title=document.getElementById('as-title').value.trim();if(!title)return;
+  var sessions=getSessions();
+  sessions.push({id:'s'+Date.now(),date:new Date().toLocaleDateString(),title,body:document.getElementById('as-body').value.trim()});
+  sv('sessions',sessions);closeModal('add-session-modal');
+  ['as-title','as-body'].forEach(function(id){document.getElementById(id).value='';});
+  renderSessions();showToast('Session logged ✓');
+}
+
+// INFRA
 function renderInfra(){
-  var grid = document.getElementById('infra-grid');
-  grid.innerHTML = '';
+  var grid=document.getElementById('infra-grid');grid.innerHTML='';
   INFRA.forEach(function(item){
-    var div = document.createElement('div');
-    div.className = 'infra-card';
-    var statusClass = {active:'infra-active',parked:'infra-parked',planning:'infra-free',free:'infra-free'}[item.status]||'infra-free';
-    div.innerHTML = `
-      <div class="infra-name">${esc(item.name)}</div>
-      <a class="infra-url" href="${item.url}" target="_blank">${item.url.length>45?item.url.substring(0,45)+'...':item.url}</a>
-      <div class="infra-meta">${esc(item.service)} · ${esc(item.cost)}</div>
-      <div class="infra-meta" style="margin-top:2px">${esc(item.notes)}</div>
-      <span class="infra-status ${statusClass}">${item.status}</span>
-    `;
+    var div=document.createElement('div');div.className='infra-card';
+    var sc={active:'i-active',parked:'i-parked',planning:'i-planning'}[item.status]||'i-planning';
+    div.innerHTML='<div class="infra-name">'+esc(item.name)+'</div><a class="infra-url" href="'+item.url+'" target="_blank">'+esc(item.url.length>44?item.url.substring(0,44)+'...':item.url)+'</a><div class="infra-detail">'+esc(item.service)+' · '+esc(item.cost)+'</div><div class="infra-detail" style="margin-top:2px">'+esc(item.notes)+'</div><span class="infra-pill '+sc+'">'+item.status+'</span>';
     grid.appendChild(div);
   });
 }
 
-// ══ ADD TASK ══
-function openAddTask(){
-  document.getElementById('task-modal').classList.add('open');
-}
-
-function saveTask(){
-  var title = document.getElementById('task-title-in').value.trim();
-  if(!title){showToast('Enter a task title');return;}
-  var tasks = getTasks();
-  var task = {
-    id: Date.now(),
-    title,
-    project: document.getElementById('task-project-in').value,
-    status: document.getElementById('task-status-in').value,
-    priority: document.getElementById('task-priority-in').value,
-    due: document.getElementById('task-due-in').value,
-    time: parseFloat(document.getElementById('task-time-in').value)||0,
-    assignee: document.getElementById('task-assignee-in').value,
-    notes: document.getElementById('task-notes-in').value.trim(),
-    done: false
-  };
-  tasks.push(task);
-  saveTasks(tasks);
-  closeModal('task-modal');
-  document.getElementById('task-title-in').value='';
-  document.getElementById('task-notes-in').value='';
-  document.getElementById('task-due-in').value='';
-  renderView(currentView);
-  showToast('Task added ✓');
-}
-
-function deleteTask(id, e){
-  if(e) e.stopPropagation();
-  if(!confirm('Delete this task?')) return;
-  saveTasks(getTasks().filter(t=>t.id!=id));
-  renderView(currentView);
-  showToast('Task deleted');
-}
-
-function editTaskStatus(id, e){
-  if(e) e.stopPropagation();
-  var tasks = getTasks();
-  var task = tasks.find(t=>t.id==id);
-  if(!task) return;
-  var statuses = ['backlog','todo','inprogress','blocked','done'];
-  var idx = statuses.indexOf(task.status);
-  task.status = statuses[(idx+1)%statuses.length];
-  if(task.status==='done') task.done=true;
-  saveTasks(tasks);
-  renderView(currentView);
-  showToast('Status → '+STATUS_LABELS[task.status]);
-}
-
-// ══ ADD DECISION ══
-function openAddDecision(){
-  document.getElementById('decision-modal').classList.add('open');
-}
-
-function saveDecision(){
-  var title = document.getElementById('dec-title-in').value.trim();
-  if(!title) return;
-  var decisions = getDecisions();
-  decisions.push({
-    id: Date.now(),
-    project: document.getElementById('dec-project-in').value,
-    title,
-    why: document.getElementById('dec-why-in').value.trim(),
-    alts: document.getElementById('dec-alts-in').value.trim(),
-    date: new Date().toISOString().split('T')[0]
-  });
-  saveDecisions(decisions);
-  closeModal('decision-modal');
-  document.getElementById('dec-title-in').value='';
-  document.getElementById('dec-why-in').value='';
-  document.getElementById('dec-alts-in').value='';
-  renderDecisions();
-  showToast('Decision logged ✓');
-}
-
-// ══ COUNTS ══
+// COUNTS
 function updateCounts(){
-  var tasks = getTasks();
-  var today = new Date(); today.setHours(0,0,0,0);
-  document.getElementById('nc-tasks').textContent = tasks.filter(t=>!t.done).length;
-  document.getElementById('nc-today').textContent = tasks.filter(t=>!t.done&&t.due&&new Date(t.due)<=today).length;
-  Object.keys(PROJECT_NAMES).forEach(function(key){
-    var el = document.getElementById('pf-'+key);
-    if(el) el.textContent = tasks.filter(t=>t.project===key&&!t.done).length;
+  var tasks=getTasks();
+  var today=new Date();today.setHours(0,0,0,0);
+  document.getElementById('nc-tasks').textContent=tasks.filter(function(t){return t.status!=='done';}).length;
+  document.getElementById('nc-today').textContent=tasks.filter(function(t){return t.status!=='done'&&t.due&&new Date(t.due)<=today;}).length;
+  var allCount=tasks.filter(function(t){return t.status!=='done';}).length;
+  var allEl=document.getElementById('pf-all');if(allEl)allEl.textContent=allCount;
+  ['gbb','wtc','aligned','mustard','portal'].forEach(function(k){
+    var el=document.getElementById('pf-'+k);
+    if(el)el.textContent=tasks.filter(function(t){return t.project===k&&t.status!=='done';}).length;
   });
-  var allEl = document.getElementById('pf-all');
-  if(allEl) allEl.textContent = tasks.filter(t=>!t.done).length;
 }
 
-// ══ MODAL ══
+// MODAL
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.addEventListener('click',function(e){
-  if(e.target.classList.contains('modal-overlay')) e.target.classList.remove('open');
+  if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open');
+  if(e.target.classList.contains('card-modal-overlay')){e.target.classList.remove('open');activeCardId=null;render();}
 });
 
-// ══ TIME ══
-function updateTime(){
-  var now = new Date();
-  document.getElementById('time-display').textContent = now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-}
+// TIME
+setInterval(function(){var el=document.getElementById('time-badge');if(el)el.textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});},1000);
+document.getElementById('time-badge').textContent=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 
-// ══ TOAST ══
-function showToast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
-}
+// TOAST
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
 
-// ══ INIT ══
-updateTime();
-setInterval(updateTime,1000);
-renderView('projects');
-updateCounts();
+// INIT
+render();
 </script>
 </body>
 </html>
