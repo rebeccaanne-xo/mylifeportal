@@ -42,8 +42,10 @@ select,select option{background:#1a2d4a;color:#fff}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.1rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15);flex-shrink:0;gap:.75rem;flex-wrap:wrap}
 .topbar-left{display:flex;align-items:center;gap:.6rem}
 .page-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#fff}
-.view-tabs{display:flex;gap:2px;background:rgba(255,255,255,.05);border-radius:7px;padding:3px}
-.view-tab{font-size:11px;font-weight:500;padding:.28rem .7rem;border-radius:4px;cursor:pointer;color:rgba(255,255,255,.4);transition:all .15s;border:none;background:none;font-family:'DM Sans',sans-serif}
+.view-tabs{display:flex;gap:2px;background:rgba(255,255,255,.05);border-radius:7px;padding:3px;overflow-x:auto;flex-shrink:1;flex-wrap:nowrap}.view-tabs::-webkit-scrollbar{display:none}
+.view-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:.3rem .55rem;border-radius:5px;cursor:pointer;color:rgba(255,255,255,.4);transition:all .15s;border:none;background:none;font-family:'DM Sans',sans-serif}
+.vt-icon{font-size:14px;line-height:1}
+.vt-label{font-size:9px;font-weight:600;letter-spacing:.03em;line-height:1}
 .view-tab:hover{color:rgba(255,255,255,.8)}
 .view-tab.active{background:rgba(255,255,255,.12);color:#fff}
 .topbar-right{display:flex;align-items:center;gap:.4rem}
@@ -119,7 +121,7 @@ select,select option{background:#1a2d4a;color:#fff}
 .card-modal-title{font-size:17px;font-weight:600;color:#fff;outline:none;background:none;border:none;width:100%;font-family:'DM Sans',sans-serif;line-height:1.4;resize:none;border-bottom:1px solid transparent;transition:border-color .2s}
 .card-modal-title:focus{border-bottom-color:var(--peony)}
 .card-proj-label{font-size:11px;color:rgba(255,255,255,.3);margin-top:.2rem}
-.card-close{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:18px;padding:2px 5px;flex-shrink:0;line-height:1;transition:color .15s}
+.card-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);cursor:pointer;font-size:14px;padding:.35rem .6rem;flex-shrink:0;line-height:1;transition:all .15s;border-radius:6px;font-weight:600}
 .card-close:hover{color:#fff}
 .card-modal-body{display:grid;grid-template-columns:1fr 210px}
 .card-main{padding:1.1rem 1.25rem;border-right:1px solid rgba(255,255,255,.06)}
@@ -247,6 +249,7 @@ select,select option{background:#1a2d4a;color:#fff}
 .toast.show{display:block}
 
 @media(max-width:768px){
+  #mobile-back{display:block!important}
   .sidebar{display:none}
   .card-modal-body{grid-template-columns:1fr}
   .today-cols{grid-template-columns:1fr}
@@ -255,6 +258,7 @@ select,select option{background:#1a2d4a;color:#fff}
 </style>
 </head>
 <body>
+<a href="index.html" id="mobile-back" style="display:none;position:fixed;top:.65rem;left:.65rem;z-index:300;background:var(--peony);color:#fff;text-decoration:none;border-radius:7px;padding:.4rem .8rem;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif">← Portal</a>
 <div id="app">
 
 <!-- SIDEBAR -->
@@ -289,15 +293,17 @@ select,select option{background:#1a2d4a;color:#fff}
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
+      <a href="index.html" style="font-size:12px;color:rgba(255,255,255,.45);text-decoration:none;padding:.35rem .65rem;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-weight:500;transition:all .15s;white-space:nowrap;flex-shrink:0" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,.3)'" onmouseout="this.style.color='rgba(255,255,255,.45)';this.style.borderColor='rgba(255,255,255,.12)'">← Portal</a>
       <div class="page-title" id="view-title">Projects</div>
+      <span id="filter-crumb" style="display:none"></span>
       <div class="view-tabs">
-        <button class="view-tab active" onclick="switchViewTab('projects')">📋</button>
-        <button class="view-tab" onclick="switchViewTab('today')">⚡</button>
-        <button class="view-tab" onclick="switchViewTab('kanban')">🗂</button>
-        <button class="view-tab" onclick="switchViewTab('list')">📝</button>
-        <button class="view-tab" onclick="switchViewTab('decisions')">🧭</button>
-        <button class="view-tab" onclick="switchViewTab('sessions')">📓</button>
-        <button class="view-tab" onclick="switchViewTab('infra')">⚙️</button>
+        <button class="view-tab active" onclick="switchViewTab('projects')"><div class="vt-icon">📋</div><div class="vt-label">Projects</div></button>
+        <button class="view-tab" onclick="switchViewTab('today')"><div class="vt-icon">⚡</div><div class="vt-label">Today</div></button>
+        <button class="view-tab" onclick="switchViewTab('kanban')"><div class="vt-icon">🗂</div><div class="vt-label">Kanban</div></button>
+        <button class="view-tab" onclick="switchViewTab('list')"><div class="vt-icon">📝</div><div class="vt-label">Tasks</div></button>
+        <button class="view-tab" onclick="switchViewTab('decisions')"><div class="vt-icon">🧭</div><div class="vt-label">Decisions</div></button>
+        <button class="view-tab" onclick="switchViewTab('sessions')"><div class="vt-icon">📓</div><div class="vt-label">Sessions</div></button>
+        <button class="view-tab" onclick="switchViewTab('infra')"><div class="vt-icon">⚙️</div><div class="vt-label">Infra</div></button>
       </div>
     </div>
     <div class="topbar-right">
@@ -333,6 +339,10 @@ select,select option{background:#1a2d4a;color:#fff}
 
     <!-- KANBAN VIEW -->
     <div class="view kanban-view" id="view-kanban">
+      <div id="kanban-back-bar" style="display:none;align-items:center;gap:.5rem;margin-bottom:.6rem;flex-shrink:0">
+        <button onclick="clearFilter();switchView('projects',null)" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);border-radius:6px;padding:.35rem .75rem;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .15s">← All Projects</button>
+        <span id="kanban-proj-label" style="font-size:12px;color:rgba(255,255,255,.4)"></span>
+      </div>
       <div class="kanban-wrap" id="kanban-wrap">
         <div class="k-col"><div class="k-col-header"><span class="k-col-title">Backlog</span><span class="k-col-count" id="kc-backlog">0</span></div><div class="k-cards" id="col-backlog" ondragover="onDragOver(event)" ondrop="onDrop(event,'backlog')"></div></div>
         <div class="k-col"><div class="k-col-header"><span class="k-col-title">To Do</span><span class="k-col-count" id="kc-todo">0</span></div><div class="k-cards" id="col-todo" ondragover="onDragOver(event)" ondrop="onDrop(event,'todo')"></div></div>
@@ -709,6 +719,36 @@ function setFilter(f,el){
   currentFilter=f;
   document.querySelectorAll('.proj-pill').forEach(function(p){p.classList.remove('active');});
   if(el) el.classList.add('active');
+  // Update breadcrumb
+  updateBreadcrumb();
+  render();
+}
+
+function updateBreadcrumb(){
+  var crumb = document.getElementById('filter-crumb');
+  if(!crumb) return;
+  if(currentFilter==='all'){
+    crumb.style.display='none';
+  } else {
+    var proj = PROJECTS[currentFilter];
+    var color = proj ? proj.color : '#fff';
+    var name = proj ? proj.name : currentFilter;
+    crumb.style.display='inline-flex';
+    crumb.style.cssText='display:inline-flex;align-items:center;gap:.25rem;font-size:12px;padding:.2rem .6rem .2rem .35rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:999px';
+    crumb.innerHTML =
+      '<span style="color:rgba(255,255,255,.3);font-size:10px">›</span>'+
+      '<span style="color:'+color+';font-weight:600">'+name+'</span>'+
+      '<button id="crumb-clear-btn" onclick="clearFilter()" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:13px;padding:0 0 0 .15rem;line-height:1">✕</button>';
+  }
+}
+
+function clearFilter(){
+  currentFilter='all';
+  document.querySelectorAll('.proj-pill').forEach(function(p){
+    p.classList.toggle('active', p.querySelector('.proj-dot') && p.querySelector('.proj-dot').style.background.includes('255,255,255'));
+  });
+  document.querySelector('.proj-pill').classList.add('active');
+  updateBreadcrumb();
   render();
 }
 
@@ -770,6 +810,18 @@ function renderProjects(){
 
 // RENDER KANBAN
 function renderKanban(){
+  // Show back bar when filtered to a specific project
+  var backBar = document.getElementById('kanban-back-bar');
+  var projLabel = document.getElementById('kanban-proj-label');
+  if(backBar){
+    if(currentFilter !== 'all'){
+      backBar.style.display='flex';
+      var proj = PROJECTS[currentFilter];
+      if(projLabel && proj) projLabel.textContent = proj.name + ' · ' + getFiltered().filter(function(t){return t.status!=='done';}).length + ' open tasks';
+    } else {
+      backBar.style.display='none';
+    }
+  }
   var tasks=getFiltered();
   ['backlog','todo','inprogress','blocked','done'].forEach(function(s){
     var col=document.getElementById('col-'+s);
@@ -1126,6 +1178,15 @@ function showToast(msg){var t=document.getElementById('toast');t.textContent=msg
 
 // INIT
 render();
+// ESC closes card modal
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape'){
+    var cardModal = document.getElementById('card-modal');
+    if(cardModal && cardModal.classList.contains('open')){
+      closeCardModal();
+    }
+  }
+});
 </script>
 </body>
 </html>
