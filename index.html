@@ -1313,16 +1313,11 @@ select,select option{background:#1a2d4a;color:#fff;}
           </div>
         </div>
       </div>
-      <div class="s-label">GBB build queue</div>
-      <div class="items" id="biz-tasks-list">
-        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Complete Kelly's welcome landing page</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Formalize offer structure</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Build public GBB website</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Register getbookednbranded.com domain</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Connect Google Places API key to prospecting tool</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-        <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Set up Cloudflare Zero Trust for myportal.pages.dev</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+      <div class="s-label">GBB tasks
+        <a class="s-action" href="projects.html" style="text-decoration:none">Manage in Projects →</a>
       </div>
-      <div class="add-row"><input class="add-input" id="biz-task-in" placeholder="Add to build queue..." onkeydown="if(event.key==='Enter')addCheck('biz-task-in','biz-tasks-list','biz_tasks')"/><button class="add-btn" onclick="addCheck('biz-task-in','biz-tasks-list','biz_tasks')">Add</button></div>
+      <div id="biz-tasks-list" class="items"></div>
+      <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board · add there to appear here</div>
       <div class="s-label">Quick links</div>
       <div class="link-grid">
         <a class="qlink" href="https://getbookednbranded.pages.dev" target="_blank"><span class="qlink-emoji">🌐</span>GBB Live Site</a>
@@ -1346,26 +1341,27 @@ select,select option{background:#1a2d4a;color:#fff;}
         <button class="tab-inner" onclick="innerTab(this,'m-mustard')">Mustard Seed</button>
       </div>
       <div class="tab-content-inner active" id="m-aligned">
-        <div class="s-label">Build queue</div>
+        <div class="s-label">Aligned Life tasks
+          <a class="s-action" href="projects.html" style="text-decoration:none">Manage in Projects →</a>
+        </div>
         <div class="items" id="al-list"></div>
-        <div class="add-row"><input class="add-input" id="al-task-in" placeholder="Add to build queue..." onkeydown="if(event.key==='Enter')addCheck('al-task-in','al-list','al_tasks')"/><button class="add-btn" onclick="addCheck('al-task-in','al-list','al_tasks')">Add</button></div>
+        <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board</div>
         <div class="dump-box" style="margin-top:.4rem"><textarea class="dump-textarea" id="al-notes" placeholder="Aligned Life notes..." onblur="saveText('al-notes','al_notes')" style="min-height:80px"></textarea></div>
       </div>
       <div class="tab-content-inner" id="m-wtc">
-        <div class="s-label">Build queue</div>
+        <div class="s-label">WTC tasks
+          <a class="s-action" href="projects.html" style="text-decoration:none">Manage in Projects →</a>
+        </div>
         <div class="items" id="wtc-list"></div>
-        <div class="add-row"><input class="add-input" id="wtc-task-in" placeholder="Add task..." onkeydown="if(event.key==='Enter')addCheck('wtc-task-in','wtc-list','wtc_tasks')"/><button class="add-btn" onclick="addCheck('wtc-task-in','wtc-list','wtc_tasks')">Add</button></div>
+        <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board</div>
         <div class="dump-box" style="margin-top:.4rem"><textarea class="dump-textarea" id="wtc-notes" placeholder="We The Church notes..." onblur="saveText('wtc-notes','wtc_notes')" style="min-height:80px"></textarea></div>
       </div>
       <div class="tab-content-inner" id="m-mustard">
-        <div class="s-label">Status</div>
-        <div class="items" id="ms-list">
-          <div class="check-item done"><input type="checkbox" checked onchange="toggleCheck(this)"/><label>Articles of Incorporation filed — Washington SOS ✓</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>501c3 filing</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Donation acceptance setup</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
-          <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"/><label>Mission statement + founding documents</label><div class="check-actions"><button class="item-btn del" onclick="removeCheck(this)">✕</button></div></div>
+        <div class="s-label">Mustard Seed tasks
+          <a class="s-action" href="projects.html" style="text-decoration:none">Manage in Projects →</a>
         </div>
-        <div class="add-row"><input class="add-input" id="ms-task-in" placeholder="Add task..." onkeydown="if(event.key==='Enter')addCheck('ms-task-in','ms-list','ms_tasks')"/><button class="add-btn" onclick="addCheck('ms-task-in','ms-list','ms_tasks')">Add</button></div>
+        <div class="items" id="ms-list"></div>
+        <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board</div>
         <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.875rem;margin-top:.4rem;font-size:12px;color:rgba(255,255,255,.4);font-style:italic">Supporting Olivia alongside Cindy · handle with care · her ministry · her vision · her anchor</div>
         <div class="dump-box" style="margin-top:.5rem"><textarea class="dump-textarea" id="ms-notes" placeholder="Mustard Seed notes..." onblur="saveText('ms-notes','ms_notes')" style="min-height:80px"></textarea></div>
       </div>
@@ -3870,16 +3866,17 @@ function loadSaved(){
   });
 
   var checkLists=[
-    ['hl-task-list','hl_tasks'],['errand-list','hl_errands'],
+    ['errand-list','hl_errands'],
     ['seth-dis-list','seth_discuss'],['bruno-list','bruno_notes'],
     ['lav-list','lav_notes'],['shadow-list','shadow_notes'],
-    ['fu-list','followup_list'],['biz-tasks-list','biz_tasks'],
-    ['al-list','al_tasks'],['wtc-list','wtc_tasks'],['ms-list','ms_tasks'],
   ];
-  checkLists.forEach(([listId,key])=>{
+  checkLists.forEach(function(pair){
+    var listId=pair[0],key=pair[1];
     var items=ld(key,[]);var list=document.getElementById(listId);
-    if(list){list.innerHTML='';items.forEach(item=>list.appendChild(makeCheck(item,key)));}
+    if(list){list.innerHTML='';items.forEach(function(item){list.appendChild(makeCheck(item,key));});}
   });
+  // Project tasks rendered separately from D1
+  renderProjectTasks();
 
   renderPeople();
   renderFaithPraying();
@@ -3891,6 +3888,7 @@ function loadSaved(){
   renderFinLinks();
   renderHomeBills();
   renderNeedTo();
+  renderProjectTasks();
   renderHomeDailyLog();
   renderSchedule();
   updateSidebarPoints();
@@ -4378,6 +4376,44 @@ function currencyBlur(input) {
   if (!isNaN(num)) input.value = '$' + num.toFixed(2);
 }
 
+
+
+// Render project tasks in portal tabs from D1 task cache
+function renderProjectTasks(){
+  var sections = [
+    {listId:'biz-tasks-list', key:'biz_tasks', project:'gbb'},
+    {listId:'al-list', key:'al_tasks', project:'aligned'},
+    {listId:'wtc-list', key:'wtc_tasks', project:'wtc'},
+    {listId:'ms-list', key:'ms_tasks', project:'mustard'},
+    {listId:'hl-task-list', key:'hl_tasks', project:'homelife'},
+    {listId:'fu-list', key:'followup_list', project:'personal'},
+  ];
+  sections.forEach(function(s){
+    var list = document.getElementById(s.listId);
+    if(!list) return;
+    list.innerHTML = '';
+    var tasks = ld(s.key, []);
+    if(!tasks.length){
+      list.innerHTML = '<div style="font-size:11px;color:rgba(255,255,255,.2);font-style:italic;padding:.3rem 0">No tasks yet — add in Project Board</div>';
+      return;
+    }
+    // Show undone tasks first, then done
+    var sorted = tasks.slice().sort(function(a,b){
+      if(a.done && !b.done) return 1;
+      if(!a.done && b.done) return -1;
+      return 0;
+    });
+    sorted.slice(0,10).forEach(function(task){
+      list.appendChild(makeCheck(task, s.key));
+    });
+    if(sorted.length > 10){
+      var more = document.createElement('div');
+      more.style.cssText = 'font-size:11px;color:rgba(255,255,255,.25);padding:.3rem 0;font-style:italic';
+      more.textContent = '+ ' + (sorted.length-10) + ' more in Project Board';
+      list.appendChild(more);
+    }
+  });
+}
 
 // NEED TO
 var selectedNTType = {type:'call', icon:'📞'};

@@ -765,42 +765,51 @@ async function loadTasksFromD1(){
     var resp = await fetch(D1_URL + '?table=tasks&t=' + Date.now());
     var data = await resp.json();
     if(data.success && data.data && data.data.length > 0){
-      // Map D1 tasks to projects format
       var mapped = data.data.map(function(t){
-        // Find existing task to preserve checklist/comments
+        // Look in cache first, then DEFAULT_TASKS for checklist/comments/description
         var existing = getAllTasks().find(function(x){return String(x.id)===String(t.id);});
+        var defaultTask = DEFAULT_TASKS.find(function(x){return String(x.id)===String(t.id);});
+        var source = existing || defaultTask || {};
         return {
           id: t.id,
-          title: t.text || t.title || '',
+          title: t.text || t.title || source.title || '',
           project: mapSectionToProject(t.section || t.project || 'personal'),
-          status: t.status || 'backlog',
-          priority: t.priority || 'med',
-          priority_flag: t.priority_flag || '',
-          block: t.block || '',
-          due: t.due_date || t.due || '',
-          time: parseFloat(t.time_estimate || t.time) || 0,
-          assignee: t.assignee || 'rebecca',
-          description: t.description || t.notes || '',
-          checklist: existing ? existing.checklist||[] : [],
-          comments: existing ? existing.comments||[] : [],
-          blocker: t.blocker || '',
+          status: t.status || source.status || 'backlog',
+          priority: t.priority || source.priority || 'med',
+          priority_flag: t.priority_flag || source.priority_flag || '',
+          block: t.block || source.block || '',
+          due: t.due_date || t.due || source.due || '',
+          time: parseFloat(t.time_estimate || t.time) || source.time || 0,
+          assignee: t.assignee || source.assignee || 'rebecca',
+          description: t.description || t.notes || source.description || '',
+          // Preserve rich data from local sources
+          checklist: source.checklist || [],
+          comments: source.comments || [],
+          blocker: t.blocker || source.blocker || '',
           archived: t.archived === 1 || t.archived === true || false,
           done: t.done === 1 || t.done === true || false,
-          created: t.created_at ? new Date(t.created_at).getTime() : Date.now()
+          created: t.created_at ? new Date(t.created_at).getTime() : (source.created || Date.now())
         };
       });
-      saveTasks(mapped);
+
+      // Also include any LOCAL tasks not yet in D1 (e.g. newly added before sync)
+      var d1Ids = mapped.map(function(t){return String(t.id);});
+      var localOnly = getAllTasks().filter(function(t){
+        return !d1Ids.includes(String(t.id));
+      });
+      var combined = mapped.concat(localOnly);
+
+      saveTasks(combined);
       _tasksLoaded = true;
       render();
-      console.log('Loaded ' + mapped.length + ' tasks from D1');
+      console.log('Loaded ' + mapped.length + ' tasks from D1, ' + localOnly.length + ' local only');
     } else {
-      // D1 is empty — seed it with default tasks
+      // D1 is empty — seed defaults
       console.log('D1 has no tasks — seeding defaults');
       await seedDefaultTasksToD1();
     }
   } catch(e) {
     console.log('D1 task load failed:', e.message);
-    // Use defaults from cache or DEFAULT_TASKS
   }
 }
 
@@ -1424,8 +1433,12 @@ function closeNavPanel(){
 // rail icon sync is handled inside switchView directly
 
 // INIT
+// Show DEFAULT_TASKS immediately so UI isn't empty
+if(!localStorage.getItem('pb_tasks')){
+  saveTasks(DEFAULT_TASKS);
+}
 render();
-// Load fresh tasks from D1
+// Then load fresh from D1
 loadTasksFromD1();
 // Auto-refresh every 60 seconds
 setInterval(function(){loadTasksFromD1();}, 60000);
