@@ -18,24 +18,46 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 select,select option{background:#1a2d4a;color:#fff}
 
 /* SIDEBAR */
-.sidebar{width:210px;flex-shrink:0;background:#0d1b2e;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
-.sidebar-top{padding:1.1rem 1rem .75rem;border-bottom:1px solid var(--border)}
-.sidebar-logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:#fff}
-.sidebar-sub{font-size:9px;color:rgba(255,255,255,.3);margin-top:.15rem}
-.nav-group{padding:.5rem .7rem .1rem}
-.nav-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:0 .3rem;margin-bottom:.25rem}
+/* ICON RAIL */
+.icon-rail{width:48px;flex-shrink:0;background:#0a1628;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:.5rem 0;position:relative;z-index:50}
+.rail-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .15s;margin-bottom:2px;border:none;background:none;color:rgba(255,255,255,.4);position:relative;flex-direction:column;gap:2px}
+.rail-icon:hover{background:rgba(255,255,255,.08);color:#fff}
+.rail-icon.active{background:rgba(255,255,255,.1);color:#fff}
+.rail-icon-label{font-size:7px;font-family:'DM Sans',sans-serif;font-weight:600;color:inherit;text-align:center;line-height:1;letter-spacing:.02em}
+.rail-icon .rail-tip{position:absolute;left:calc(100% + 8px);background:#0d1b2e;border:1px solid rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:500;font-family:'DM Sans',sans-serif;padding:.28rem .6rem;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:200}
+.rail-icon:hover .rail-tip{opacity:1}
+.rail-sep{width:26px;height:1px;background:rgba(255,255,255,.08);margin:.25rem 0}
+.rail-bottom{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:3px;padding-bottom:.4rem}
+.rail-menu-btn{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all .15s;border:none;background:none;color:rgba(255,255,255,.5);position:relative}
+.rail-menu-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.rail-menu-btn .rail-tip{position:absolute;left:calc(100% + 8px);background:#0d1b2e;border:1px solid rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:500;font-family:'DM Sans',sans-serif;padding:.28rem .6rem;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:200}
+.rail-menu-btn:hover .rail-tip{opacity:1}
+
+/* NAV PANEL */
+.nav-panel{position:absolute;left:48px;top:0;bottom:0;width:210px;background:#0d1b2e;border-right:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;z-index:40;transform:translateX(-110%);transition:transform .22s cubic-bezier(.4,0,.2,1);box-shadow:4px 0 20px rgba(0,0,0,.4)}
+.nav-panel.open{transform:translateX(0)}
+.nav-panel-header{padding:.875rem 1rem .6rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
+.nav-panel-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:#fff}
+.nav-panel-close{background:none;border:none;color:rgba(255,255,255,.35);cursor:pointer;font-size:16px;padding:2px 5px;line-height:1;transition:color .15s}
+.nav-panel-close:hover{color:#fff}
+.nav-panel-body{flex:1;overflow-y:auto;padding:.3rem .55rem}
+.nav-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.2);padding:.45rem .3rem .2rem;display:block}
 .nav-btn{display:flex;align-items:center;gap:7px;width:100%;padding:.42rem .55rem;border-radius:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;margin-bottom:1px;background:none;border:none;font-family:'DM Sans',sans-serif;text-align:left}
 .nav-btn:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
 .nav-btn.active{color:#fff;font-weight:600;background:rgba(196,137,90,.15)}
 .nav-emoji{font-size:13px;width:17px;text-align:center;flex-shrink:0}
 .nav-count{margin-left:auto;font-size:9px;font-weight:700;padding:1px 5px;border-radius:999px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
-.proj-pill{display:flex;align-items:center;gap:6px;padding:.38rem .55rem;border-radius:6px;font-size:11px;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;margin-bottom:2px}
+.proj-pill{display:flex;align-items:center;gap:6px;padding:.35rem .55rem;border-radius:6px;font-size:11px;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;margin-bottom:2px}
 .proj-pill:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.8)}
 .proj-pill.active{color:#fff;background:rgba(255,255,255,.07)}
 .proj-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.sidebar-footer{margin-top:auto;padding:.75rem 1rem;border-top:1px solid var(--border)}
-.back-link{font-size:11px;color:rgba(255,255,255,.3);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .15s}
-.back-link:hover{color:rgba(255,255,255,.7)}
+.nav-panel-footer{padding:.65rem 1rem;border-top:1px solid rgba(255,255,255,.06)}
+.back-link{font-size:11px;color:rgba(255,255,255,.4);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .15s;padding:.35rem .1rem}
+.back-link:hover{color:#fff}
+.nav-overlay{display:none;position:absolute;top:0;left:258px;right:0;bottom:0;background:rgba(0,0,0,.25);z-index:39;cursor:pointer}
+.nav-overlay.open{display:block}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;transition:margin-left .22s cubic-bezier(.4,0,.2,1)}
+.main.panel-open{margin-left:210px}
 
 /* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
@@ -261,24 +283,38 @@ select,select option{background:#1a2d4a;color:#fff}
 <a href="index.html" id="mobile-back" style="display:none;position:fixed;top:.65rem;left:.65rem;z-index:300;background:var(--peony);color:#fff;text-decoration:none;border-radius:7px;padding:.4rem .8rem;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif">← Portal</a>
 <div id="app">
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <div class="sidebar-top">
-    <div class="sidebar-logo">Build Board</div>
-    <div class="sidebar-sub">Rebecca Holka</div>
+<!-- ICON RAIL -->
+<div class="icon-rail">
+  <button class="rail-icon active" onclick="switchView('projects',null);closeNavPanel()" style="flex-direction:column">📋<span class="rail-icon-label">Projects</span><span class="rail-tip">Projects</span></button>
+  <button class="rail-icon" onclick="switchView('today',null);closeNavPanel()" style="flex-direction:column">⚡<span class="rail-icon-label">Today</span><span class="rail-tip">Today</span></button>
+  <button class="rail-icon" onclick="switchView('kanban',null);closeNavPanel()" style="flex-direction:column">🗂<span class="rail-icon-label">Kanban</span><span class="rail-tip">Kanban Board</span></button>
+  <button class="rail-icon" onclick="switchView('list',null);closeNavPanel()" style="flex-direction:column">📝<span class="rail-icon-label">Tasks</span><span class="rail-tip">All Tasks</span></button>
+  <div class="rail-sep"></div>
+  <button class="rail-icon" onclick="switchView('decisions',null);closeNavPanel()" style="flex-direction:column">🧭<span class="rail-icon-label">Decisions</span><span class="rail-tip">Decisions Log</span></button>
+  <button class="rail-icon" onclick="switchView('sessions',null);closeNavPanel()" style="flex-direction:column">📓<span class="rail-icon-label">Sessions</span><span class="rail-tip">Session Log</span></button>
+  <button class="rail-icon" onclick="switchView('infra',null);closeNavPanel()" style="flex-direction:column">⚙️<span class="rail-icon-label">Infra</span><span class="rail-tip">Infrastructure</span></button>
+  <div class="rail-bottom">
+    <a href="index.html" class="rail-menu-btn" title="Back to Portal" style="text-decoration:none;font-size:14px;color:rgba(255,255,255,.4)">←<span class="rail-tip">← Back to Portal</span></a>
+    <button class="rail-menu-btn" onclick="toggleNavPanel()">☰<span class="rail-tip">Menu</span></button>
   </div>
-  <div class="nav-group">
-    <div class="nav-label">Views</div>
-    <button class="nav-btn active" onclick="switchView('projects',this)"><span class="nav-emoji">📋</span>Projects<span class="nav-count">5</span></button>
-    <button class="nav-btn" onclick="switchView('today',this)"><span class="nav-emoji">⚡</span>Today<span class="nav-count" id="nc-today">0</span></button>
-    <button class="nav-btn" onclick="switchView('kanban',this)"><span class="nav-emoji">🗂</span>Kanban</button>
-    <button class="nav-btn" onclick="switchView('list',this)"><span class="nav-emoji">📝</span>All Tasks<span class="nav-count" id="nc-tasks">0</span></button>
-    <button class="nav-btn" onclick="switchView('decisions',this)"><span class="nav-emoji">🧭</span>Decisions</button>
-    <button class="nav-btn" onclick="switchView('sessions',this)"><span class="nav-emoji">📓</span>Session Log</button>
-    <button class="nav-btn" onclick="switchView('infra',this)"><span class="nav-emoji">⚙️</span>Infrastructure</button>
+</div>
+
+<!-- NAV PANEL -->
+<div class="nav-panel" id="nav-panel">
+  <div class="nav-panel-header">
+    <div class="nav-panel-title">Build Board</div>
+    <button class="nav-panel-close" onclick="closeNavPanel()">✕</button>
   </div>
-  <div class="nav-group">
-    <div class="nav-label">Filter</div>
+  <div class="nav-panel-body">
+    <span class="nav-label">Views</span>
+    <button class="nav-btn active" onclick="switchView('projects',this);closeNavPanel()"><span class="nav-emoji">📋</span>Projects<span class="nav-count">5</span></button>
+    <button class="nav-btn" onclick="switchView('today',this);closeNavPanel()"><span class="nav-emoji">⚡</span>Today<span class="nav-count" id="nc-today">0</span></button>
+    <button class="nav-btn" onclick="switchView('kanban',this);closeNavPanel()"><span class="nav-emoji">🗂</span>Kanban</button>
+    <button class="nav-btn" onclick="switchView('list',this);closeNavPanel()"><span class="nav-emoji">📝</span>All Tasks<span class="nav-count" id="nc-tasks">0</span></button>
+    <button class="nav-btn" onclick="switchView('decisions',this);closeNavPanel()"><span class="nav-emoji">🧭</span>Decisions</button>
+    <button class="nav-btn" onclick="switchView('sessions',this);closeNavPanel()"><span class="nav-emoji">📓</span>Session Log</button>
+    <button class="nav-btn" onclick="switchView('infra',this);closeNavPanel()"><span class="nav-emoji">⚙️</span>Infrastructure</button>
+    <span class="nav-label">Filter by project</span>
     <div class="proj-pill active" onclick="setFilter('all',this)"><div class="proj-dot" style="background:rgba(255,255,255,.3)"></div>All<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-all">0</span></div>
     <div class="proj-pill" onclick="setFilter('gbb',this)"><div class="proj-dot" style="background:var(--gbb)"></div>GBB<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-gbb">0</span></div>
     <div class="proj-pill" onclick="setFilter('wtc',this)"><div class="proj-dot" style="background:var(--wtc)"></div>WTC<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-wtc">0</span></div>
@@ -286,11 +322,14 @@ select,select option{background:#1a2d4a;color:#fff}
     <div class="proj-pill" onclick="setFilter('mustard',this)"><div class="proj-dot" style="background:var(--mustard)"></div>Mustard Seed<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-mustard">0</span></div>
     <div class="proj-pill" onclick="setFilter('portal',this)"><div class="proj-dot" style="background:var(--portal)"></div>Portal<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-portal">0</span></div>
   </div>
-  <div class="sidebar-footer"><a href="index.html" class="back-link">← Portal</a></div>
+  <div class="nav-panel-footer">
+    <a href="index.html" class="back-link">← Back to Portal</a>
+  </div>
 </div>
+<div class="nav-overlay" id="nav-overlay" onclick="closeNavPanel()"></div>
 
 <!-- MAIN -->
-<div class="main">
+<div class="main" id="main-area">
   <div class="topbar">
     <div class="topbar-left">
       <a href="index.html" style="font-size:12px;color:rgba(255,255,255,.45);text-decoration:none;padding:.35rem .65rem;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-weight:500;transition:all .15s;white-space:nowrap;flex-shrink:0" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,.3)'" onmouseout="this.style.color='rgba(255,255,255,.45)';this.style.borderColor='rgba(255,255,255,.12)'">← Portal</a>
@@ -452,6 +491,22 @@ select,select option{background:#1a2d4a;color:#fff}
           <select class="cf-select" id="cm-assignee" onchange="saveField('assignee')">
             <option value="rebecca">Rebecca</option><option value="seth">Seth</option><option value="team">Team</option>
           </select></div>
+        <div class="cf"><div class="cf-label">Priority flag</div>
+          <select class="cf-select" id="cm-priority-flag" onchange="saveField('priority_flag')">
+            <option value="">None</option>
+            <option value="1">P1 — Top priority</option>
+            <option value="2">P2 — Important</option>
+            <option value="3">P3 — Next up</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Schedule block</div>
+          <select class="cf-select" id="cm-block" onchange="saveField('block')">
+            <option value="">No block</option>
+            <option value="b1">🌅 Morning</option>
+            <option value="b2">💼 Work</option>
+            <option value="b3">🌤 Afternoon</option>
+            <option value="b4">🌆 Evening</option>
+            <option value="b5">🌙 Night</option>
+          </select></div>
         <div class="cf"><div class="cf-label">Blocker</div><input class="cf-input" id="cm-blocker" placeholder="Why blocked?" onblur="saveField('blocker')"/></div>
         <button class="card-archive-btn" onclick="archiveCard()">Archive</button>
         <button class="card-del-btn" onclick="deleteCard()">Delete task</button>
@@ -490,6 +545,24 @@ select,select option{background:#1a2d4a;color:#fff}
       <div><div class="modal-label">Assigned to</div>
         <select class="modal-select" id="at-assignee">
           <option value="rebecca">Rebecca</option><option value="seth">Seth</option><option value="team">Team</option>
+        </select></div>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-label">Priority flag</div>
+        <select class="modal-select" id="at-priority-flag">
+          <option value="">None</option>
+          <option value="1">P1 — Top priority</option>
+          <option value="2">P2 — Important</option>
+          <option value="3">P3 — Next up</option>
+        </select></div>
+      <div><div class="modal-label">Schedule block</div>
+        <select class="modal-select" id="at-block">
+          <option value="">No block</option>
+          <option value="b1">🌅 Morning</option>
+          <option value="b2">💼 Work</option>
+          <option value="b3">🌤 Afternoon</option>
+          <option value="b4">🌆 Evening</option>
+          <option value="b5">🌙 Night</option>
         </select></div>
     </div>
     <div class="modal-label">Description</div>
@@ -847,6 +920,7 @@ function makeCard(task){
   if(comments) footer+='<span class="task-footer-item">💬 '+comments+'</span>';
   if(task.time) footer+='<span class="task-footer-item">⏱ '+task.time+'h</span>';
   if(task.blocker) footer+='<span class="task-footer-item" style="color:#F1948A">🔴 blocked</span>';
+  var pfBadge = task.priority_flag ? '<span class="task-proj-tag" style="background:rgba(255,255,255,.1);color:#fff;margin-left:auto">P'+task.priority_flag+'</span>' : '';
   div.innerHTML=
     '<div class="task-prio-dot" style="background:'+(PR[task.priority]||'#888')+'"></div>'+
     '<div class="task-card-title">'+esc(task.title)+'</div>'+
@@ -897,6 +971,10 @@ function openCard(id){
   document.getElementById('cm-time').value=task.time||'';
   document.getElementById('cm-assignee').value=task.assignee||'rebecca';
   document.getElementById('cm-blocker').value=task.blocker||'';
+  var pfEl2=document.getElementById('cm-priority-flag');
+  if(pfEl2) pfEl2.value=task.priority_flag||'';
+  var blEl2=document.getElementById('cm-block');
+  if(blEl2) blEl2.value=task.block||'';
   renderChecklist(task);
   renderComments(task);
   document.getElementById('card-modal').classList.add('open');
@@ -906,7 +984,7 @@ function saveField(field){
   var tasks=getAllTasks();
   var task=tasks.find(function(t){return t.id==activeCardId;});
   if(!task) return;
-  var elIds={title:'cm-title',description:'cm-desc',status:'cm-status',priority:'cm-priority',project:'cm-project',due:'cm-due',time:'cm-time',assignee:'cm-assignee',blocker:'cm-blocker'};
+  var elIds={title:'cm-title',description:'cm-desc',status:'cm-status',priority:'cm-priority',project:'cm-project',due:'cm-due',time:'cm-time',assignee:'cm-assignee',blocker:'cm-blocker',priority_flag:'cm-priority-flag',block:'cm-block'};
   var el=document.getElementById(elIds[field]);
   if(!el) return;
   task[field]=el.value;
@@ -1015,11 +1093,15 @@ function openAddTask(){document.getElementById('add-task-modal').classList.add('
 function saveNewTask(){
   var title=document.getElementById('at-title').value.trim();
   if(!title){showToast('Enter a title');return;}
+  var pfEl = document.getElementById('at-priority-flag');
+  var blEl = document.getElementById('at-block');
   var task={
     id:'t'+Date.now(),title,
     project:document.getElementById('at-project').value,
     status:document.getElementById('at-status').value,
     priority:document.getElementById('at-priority').value,
+    priority_flag: pfEl ? pfEl.value : '',
+    block: blEl ? blEl.value : '',
     due:document.getElementById('at-due').value,
     time:parseFloat(document.getElementById('at-time').value)||0,
     assignee:document.getElementById('at-assignee').value,
@@ -1175,6 +1257,39 @@ document.getElementById('time-badge').textContent=new Date().toLocaleTimeString(
 
 // TOAST
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+
+// NAV PANEL
+function toggleNavPanel(){
+  var panel=document.getElementById('nav-panel');
+  var overlay=document.getElementById('nav-overlay');
+  var main=document.getElementById('main-area');
+  if(panel.classList.contains('open')){
+    closeNavPanel();
+  } else {
+    panel.classList.add('open');
+    overlay.classList.add('open');
+    if(window.innerWidth>768 && main) main.classList.add('panel-open');
+  }
+}
+function closeNavPanel(){
+  var panel=document.getElementById('nav-panel');
+  var overlay=document.getElementById('nav-overlay');
+  var main=document.getElementById('main-area');
+  if(panel) panel.classList.remove('open');
+  if(overlay) overlay.classList.remove('open');
+  if(main) main.classList.remove('panel-open');
+}
+
+// Update switchView to sync rail icons
+var _origSwitchView = switchView;
+function switchView(id,btn){
+  _origSwitchView(id,btn);
+  document.querySelectorAll('.rail-icon').forEach(function(r){r.classList.remove('active');});
+  var viewIconMap={projects:0,today:1,kanban:2,list:3,decisions:4,sessions:5,infra:6};
+  var icons=document.querySelectorAll('.icon-rail .rail-icon');
+  var idx=viewIconMap[id];
+  if(idx!==undefined && icons[idx]) icons[idx].classList.add('active');
+}
 
 // INIT
 render();
