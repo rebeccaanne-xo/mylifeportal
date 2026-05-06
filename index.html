@@ -1917,7 +1917,36 @@ if(!ld('schedule_recurring', null)){
   sv('schedule_recurring', DEFAULT_RECURRING);
 }
 
-function getBlocks(){ return ld('schedule_blocks', DEFAULT_BLOCKS); }
+// Validate and reset schedule_blocks if corrupted
+(function(){
+  var blocks = ld('schedule_blocks', null);
+  if(blocks && (!Array.isArray(blocks) || !blocks.length || !blocks[0].id || !blocks[0].name)){
+    console.log('Schedule blocks corrupted — resetting to defaults');
+    sv('schedule_blocks', DEFAULT_BLOCKS);
+  }
+})();
+
+function getRecurringItems(){ return ld('schedule_recurring', DEFAULT_RECURRING || []); }
+function saveRecurringItems(r){ sv('schedule_recurring', r); }
+
+function getBlocks(){
+  var blocks = ld('schedule_blocks', null);
+  // Validate — must be array with at least one block with required fields
+  if(!blocks || !Array.isArray(blocks) || !blocks.length || !blocks[0].id){
+    return DEFAULT_BLOCKS;
+  }
+  // Ensure all blocks have required fields
+  return blocks.map(function(b){
+    return {
+      id: b.id || 'b'+Date.now(),
+      name: b.name || 'Block',
+      start: b.start || b.start_time || '9:00 AM',
+      end: b.end || b.end_time || '10:00 AM',
+      color: b.color || '#6B8CB8',
+      collapsed: b.collapsed === true || b.collapsed === 1 || false
+    };
+  });
+}
 function saveBlocks(b){
   sv('schedule_blocks', b);
   // Sync each block to D1
@@ -1932,7 +1961,11 @@ function saveBlocks(b){
     });
   });
 }
-function getScheduleItems(day){ return ld('schedule_items_'+day, []); }
+function getScheduleItems(day){
+  var items = ld('schedule_items_'+day, []);
+  if(!Array.isArray(items)) return [];
+  return items;
+}
 function saveScheduleItems(day, items){
   sv('schedule_items_'+day, items);
   // Sync to D1 — only sync today's items
@@ -1956,8 +1989,6 @@ function saveScheduleItems(day, items){
 function renderSchedule(){
   var wrap = document.getElementById('schedule-wrap');
   if(!wrap) return;
-  // Populate recurring items for today if not already done
-  populateRecurringItems();
   wrap.innerHTML = '';
   var blocks = getBlocks();
   var items = getScheduleItems(TODAY);
@@ -1976,7 +2007,6 @@ function renderSchedule(){
     // ── Header ──
     var header = document.createElement('div');
     header.className = 'schedule-header';
-    header.onclick = function(){toggleBlockCollapse(block.id);};
 
     var colorBar = document.createElement('div');
     colorBar.className = 'schedule-block-color';
@@ -2023,9 +2053,11 @@ function renderSchedule(){
     delBtn.onclick = function(e){e.stopPropagation();deleteScheduleBlock(block.id);};
     actions.appendChild(delBtn);
 
-    var chevron = document.createElement('span');
-    chevron.style.cssText = 'color:rgba(255,255,255,.2);font-size:11px;margin-left:.1rem';
+    var chevron = document.createElement('button');
+    chevron.style.cssText = 'background:none;border:none;color:rgba(255,255,255,.35);font-size:14px;padding:2px 6px;cursor:pointer;flex-shrink:0;line-height:1;transition:color .15s;font-family:inherit';
     chevron.textContent = block.collapsed ? '▸' : '▾';
+    chevron.title = block.collapsed ? 'Expand' : 'Collapse';
+    chevron.onclick = function(e){e.stopPropagation();toggleBlockCollapse(block.id);};
 
     if(totalCount){
       var countBadge = document.createElement('span');
@@ -3890,6 +3922,7 @@ function loadSaved(){
   renderNeedTo();
   renderProjectTasks();
   renderHomeDailyLog();
+  populateRecurringItems();
   renderSchedule();
   updateSidebarPoints();
   loadGlance();
