@@ -295,6 +295,11 @@ select,select option{background:#1a2d4a;color:#fff;}
 .priority-empty-slot:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.45)}
 
 
+
+.schedule-item-recur{font-size:9px;color:rgba(107,140,184,.7);flex-shrink:0;padding:1px 4px;border-radius:4px;background:rgba(107,140,184,.1)}
+.schedule-recur-toggle{display:flex;align-items:center;gap:.3rem;font-size:10px;color:rgba(255,255,255,.35);cursor:pointer;flex-shrink:0;user-select:none}
+.schedule-recur-toggle input{accent-color:var(--faith);width:12px;height:12px}
+
 /* BILLS */
 .bills-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:.875rem}
 .bill-sum-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:.65rem .75rem;text-align:center}
@@ -735,6 +740,14 @@ select,select option{background:#1a2d4a;color:#fff;}
           <div style="display:flex;gap:.4rem">
             <button class="s-action" onclick="addScheduleBlock()">+ Block</button>
             <button class="s-action" onclick="clearDoneScheduleItems()">Clear done</button>
+            <button class="s-action" onclick="toggleManageRecurring()">↻ Daily</button>
+          </div>
+        </div>
+        <!-- MANAGE RECURRING -->
+        <div id="manage-recurring" style="display:none;background:rgba(107,140,184,.06);border:1px solid rgba(107,140,184,.15);border-radius:9px;padding:.75rem;margin-bottom:.75rem">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faith);margin-bottom:.5rem">↻ Daily Recurring Items</div>
+          <div id="recurring-list"></div>
+          <div style="font-size:11px;color:rgba(255,255,255,.25);margin-top:.4rem;font-style:italic">These populate automatically every morning. Edit inline or ✕ to remove.</div>
           </div>
         </div>
         <div id="schedule-wrap"></div>
@@ -1410,6 +1423,7 @@ select,select option{background:#1a2d4a;color:#fff;}
 
 // DATABASE CONNECTION — Google Sheets
 var DB_URL="https://script.google.com/macros/s/AKfycbynyi3DsQZDwOHZg_Ue0HBdlMJtQ2BN4JeBPRMAW6vBBETAm_TuJNV48602D8snAQVJ/exec";
+var D1_URL="https://rebecca-portal-api.rebeccaannexo.workers.dev";
 var DB_ONLINE=false;
 var DB_QUEUE=[];
 
@@ -1893,6 +1907,20 @@ var DEFAULT_BLOCKS = [
   {id:'b5', name:'Night', start:'8:00 PM', end:'10:00 PM', color:'#7A5C7A', collapsed:false},
 ];
 
+var DEFAULT_RECURRING = [
+  {id:'sr1', blockId:'b1', text:'Walk dogs', time:'7:00 AM', priority:'', recurring:true},
+  {id:'sr2', blockId:'b1', text:'Bible reading', time:'', priority:'', recurring:true},
+  {id:'sr3', blockId:'b1', text:'Pelvic floor exercises', time:'', priority:'', recurring:true},
+  {id:'sr4', blockId:'b1', text:'Morning prayer', time:'', priority:'', recurring:true},
+  {id:'sr5', blockId:'b5', text:'Brush teeth', time:'', priority:'', recurring:true},
+  {id:'sr6', blockId:'b5', text:'Journal / brain dump', time:'', priority:'', recurring:true},
+];
+
+// Initialize recurring items if empty
+if(!ld('schedule_recurring', null)){
+  sv('schedule_recurring', DEFAULT_RECURRING);
+}
+
 function getBlocks(){ return ld('schedule_blocks', DEFAULT_BLOCKS); }
 function saveBlocks(b){
   sv('schedule_blocks', b);
@@ -1932,6 +1960,8 @@ function saveScheduleItems(day, items){
 function renderSchedule(){
   var wrap = document.getElementById('schedule-wrap');
   if(!wrap) return;
+  // Populate recurring items for today if not already done
+  populateRecurringItems();
   wrap.innerHTML = '';
   var blocks = getBlocks();
   var items = getScheduleItems(TODAY);
@@ -2089,6 +2119,13 @@ function renderSchedule(){
           pb.textContent = 'P'+item.priority;
           row.appendChild(pb);
         }
+        if(item.recurring){
+          var rb = document.createElement('span');
+          rb.className = 'schedule-item-recur';
+          rb.textContent = '↻ daily';
+          rb.title = 'Repeats every day';
+          row.appendChild(rb);
+        }
 
         var del2 = document.createElement('button');
         del2.className = 'schedule-item-del';
@@ -2125,12 +2162,23 @@ function renderSchedule(){
         addPrio.appendChild(opt);
       });
 
+      var recurLabel = document.createElement('label');
+      recurLabel.className = 'schedule-recur-toggle';
+      recurLabel.title = 'Repeat daily';
+      var recurCb = document.createElement('input');
+      recurCb.type = 'checkbox';
+      recurCb.id = 'sadd-recur-'+block.id;
+      var recurSpan = document.createElement('span');
+      recurSpan.textContent = '↻';
+      recurLabel.appendChild(recurCb);
+      recurLabel.appendChild(recurSpan);
+
       var addBtn = document.createElement('button');
       addBtn.className = 'schedule-add-btn';
       addBtn.textContent = '+';
       addBtn.onclick = (function(bid){return function(){addScheduleItem(bid);};})(block.id);
 
-      addRow.appendChild(addTime);addRow.appendChild(addText);addRow.appendChild(addPrio);addRow.appendChild(addBtn);
+      addRow.appendChild(addTime);addRow.appendChild(addText);addRow.appendChild(addPrio);addRow.appendChild(recurLabel);addRow.appendChild(addBtn);
       itemsDiv.appendChild(addRow);
       blockDiv.appendChild(itemsDiv);
     }
@@ -2177,43 +2225,193 @@ function deleteScheduleBlock(blockId){
   renderSchedule();
 }
 
+function toggleManageRecurring(){
+  var panel = document.getElementById('manage-recurring');
+  if(!panel) return;
+  var isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  if(!isOpen) renderRecurringList();
+}
+
+function renderRecurringList(){
+  var list = document.getElementById('recurring-list');
+  if(!list) return;
+  list.innerHTML = '';
+  var items = getRecurringItems();
+  if(!items.length){
+    list.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,.25);font-style:italic">No recurring items — add items with ↻ checked</div>';
+    return;
+  }
+  var BLOCK_NAMES = {b1:'Morning',b2:'Work',b3:'Afternoon',b4:'Evening',b5:'Night'};
+  items.forEach(function(item){
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:.4rem;padding:.3rem .2rem;border-bottom:1px solid rgba(255,255,255,.05)';
+
+    var nameInput = document.createElement('input');
+    nameInput.style.cssText = 'flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:12px;color:#fff;border-bottom:1px solid transparent;transition:border-color .15s;padding:.15rem 0';
+    nameInput.value = item.text;
+    nameInput.onfocus = function(){this.style.borderBottomColor='var(--faith)';};
+    nameInput.onblur = (function(iid){return function(){
+      editRecurringItem(iid,'text',this.value);
+      this.style.borderBottomColor='transparent';
+    };})(item.id);
+
+    var timeInput = document.createElement('input');
+    timeInput.style.cssText = 'width:70px;background:none;border:none;outline:none;font-family:JetBrains Mono,monospace;font-size:11px;color:rgba(255,255,255,.45);border-bottom:1px solid transparent;transition:border-color .15s;text-align:center;padding:.15rem 0';
+    timeInput.value = item.time||'';
+    timeInput.placeholder = 'time';
+    timeInput.onfocus = function(){this.style.borderBottomColor='var(--faith)';};
+    timeInput.onblur = (function(iid){return function(){
+      var t = formatTime(this.value)||this.value;
+      this.value = t;
+      editRecurringItem(iid,'time',t);
+      this.style.borderBottomColor='transparent';
+    };})(item.id);
+
+    var blockSelect = document.createElement('select');
+    blockSelect.style.cssText = 'background:#1a2d4a;border:none;outline:none;font-family:inherit;font-size:10px;color:rgba(255,255,255,.5);border-radius:4px;padding:2px 4px';
+    ['b1','b2','b3','b4','b5'].forEach(function(bid){
+      var opt = document.createElement('option');
+      opt.value = bid;
+      opt.textContent = BLOCK_NAMES[bid];
+      if(item.blockId === bid) opt.selected = true;
+      blockSelect.appendChild(opt);
+    });
+    blockSelect.onchange = (function(iid){return function(){
+      editRecurringItem(iid,'blockId',this.value);
+    };})(item.id);
+
+    var delBtn = document.createElement('button');
+    delBtn.style.cssText = 'background:none;border:none;color:rgba(255,255,255,.25);cursor:pointer;font-size:12px;padding:2px 5px;transition:color .15s;flex-shrink:0';
+    delBtn.textContent = '✕';
+    delBtn.onmouseover = function(){this.style.color='#F1948A';};
+    delBtn.onmouseout = function(){this.style.color='rgba(255,255,255,.25)';};
+    delBtn.onclick = (function(iid,itext){return function(){
+      removeRecurring(itext);
+      renderRecurringList();
+    };})(item.id, item.text);
+
+    row.appendChild(nameInput);
+    row.appendChild(timeInput);
+    row.appendChild(blockSelect);
+    row.appendChild(delBtn);
+    list.appendChild(row);
+  });
+}
+
+function editRecurringItem(id, field, value){
+  var items = getRecurringItems();
+  var item = items.find(function(i){return i.id===id;});
+  if(!item) return;
+  item[field] = value;
+  saveRecurringItems(items);
+  // If editing text, update today's matching item too
+  if(field === 'text'){
+    var todayItems = getScheduleItems(TODAY);
+    var todayItem = todayItems.find(function(i){return i.recurring && i.id === id;});
+    if(todayItem){ todayItem.text = value; saveScheduleItems(TODAY, todayItems); }
+  }
+}
+
 function addScheduleItem(blockId){
   var textEl = document.getElementById('sadd-text-'+blockId);
   var timeEl = document.getElementById('sadd-time-'+blockId);
   var prioEl = document.getElementById('sadd-prio-'+blockId);
+  var recurEl = document.getElementById('sadd-recur-'+blockId);
   var text = textEl ? textEl.value.trim() : '';
   if(!text) return;
-  var time = timeEl ? timeEl.value.trim() : '';
+  var time = timeEl ? (formatTime(timeEl.value.trim())||timeEl.value.trim()) : '';
   var priority = prioEl ? prioEl.value : '';
+  var recurring = recurEl ? recurEl.checked : false;
+
   var item = {
     id:'si'+Date.now(),
     blockId,
     text,
     time,
     priority,
+    recurring,
     done:false,
     date:TODAY,
     archived:false
   };
+
   var items = getScheduleItems(TODAY);
   items.push(item);
   saveScheduleItems(TODAY, items);
-  // Also save as a task if has priority
+
+  // If recurring — save to recurring template
+  if(recurring){
+    var recurItems = getRecurringItems();
+    recurItems.push({
+      id:'sr'+Date.now(),
+      blockId,
+      text,
+      time,
+      priority,
+      recurring:true
+    });
+    saveRecurringItems(recurItems);
+    showToast('Added + will repeat daily ↻');
+  }
+
+  // Save as task if priority
   if(priority){
     var taskId = Date.now()+1;
-    var taskSection = 'personal';
-    var task = {id:taskId, text:text, done:false, priority:priority==='1'?'high':priority==='2'?'med':'low'};
-    var tasks = ld(taskSection,[]);
+    var task = {id:taskId, text, done:false, priority:priority==='1'?'high':priority==='2'?'med':'low'};
+    var tasks = ld('personal',[]);
     tasks.push(task);
-    sv(taskSection, tasks);
+    sv('personal', tasks);
     item.taskId = taskId;
     saveScheduleItems(TODAY, items);
   }
+
   if(textEl) textEl.value = '';
   if(timeEl) timeEl.value = '';
   if(prioEl) prioEl.value = '';
+  if(recurEl) recurEl.checked = false;
   renderSchedule();
-  d1Save('daily_log', {id:String(item.id), text, section:'schedule', blockId, time, priority, log_date:TODAY});
+  d1Save('schedule_items', {id:String(item.id), block_id:blockId, text, item_time:time, priority, done:0, archived:0, item_date:TODAY});
+}
+
+// Check on load — populate today from recurring template if today is fresh
+function populateRecurringItems(){
+  var recurItems = getRecurringItems();
+  if(!recurItems.length) return;
+
+  var todayItems = getScheduleItems(TODAY);
+  var todayTexts = todayItems.map(function(i){return i.text.toLowerCase();});
+
+  var added = 0;
+  recurItems.forEach(function(r){
+    // Only add if not already in today's schedule
+    if(!todayTexts.includes(r.text.toLowerCase())){
+      var item = {
+        id:'si'+Date.now()+Math.random(),
+        blockId: r.blockId,
+        text: r.text,
+        time: r.time||'',
+        priority: r.priority||'',
+        recurring: true,
+        done: false,
+        date: TODAY,
+        archived: false
+      };
+      todayItems.push(item);
+      todayTexts.push(r.text.toLowerCase());
+      added++;
+    }
+  });
+
+  if(added > 0){
+    saveScheduleItems(TODAY, todayItems);
+  }
+}
+
+// Manage recurring items — remove from template
+function removeRecurring(text){
+  saveRecurringItems(getRecurringItems().filter(function(r){return r.text!==text;}));
+  showToast('Removed from daily repeat');
 }
 
 function toggleScheduleItem(id, checked){
@@ -2240,7 +2438,14 @@ function editScheduleItem(id, text){
 }
 
 function deleteScheduleItem(id){
-  saveScheduleItems(TODAY, getScheduleItems(TODAY).filter(function(i){return i.id!==id;}));
+  var items = getScheduleItems(TODAY);
+  var item = items.find(function(i){return i.id===id;});
+  if(item && item.recurring){
+    if(confirm('Remove from daily repeat too? (Cancel = just today)')){
+      removeRecurring(item.text);
+    }
+  }
+  saveScheduleItems(TODAY, items.filter(function(i){return i.id!==id;}));
   renderSchedule();
 }
 
