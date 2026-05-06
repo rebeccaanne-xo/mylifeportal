@@ -793,10 +793,26 @@ async function loadTasksFromD1(){
       _tasksLoaded = true;
       render();
       console.log('Loaded ' + mapped.length + ' tasks from D1');
+    } else {
+      // D1 is empty — seed it with default tasks
+      console.log('D1 has no tasks — seeding defaults');
+      await seedDefaultTasksToD1();
     }
   } catch(e) {
     console.log('D1 task load failed:', e.message);
+    // Use defaults from cache or DEFAULT_TASKS
   }
+}
+
+// Seed default tasks to D1 if it's empty
+async function seedDefaultTasksToD1(){
+  var tasks = DEFAULT_TASKS;
+  for(var i=0; i<tasks.length; i++){
+    await syncTaskToD1(tasks[i]);
+  }
+  saveTasks(tasks);
+  render();
+  console.log('Seeded ' + tasks.length + ' default tasks to D1');
 }
 
 function mapSectionToProject(section){
@@ -871,10 +887,17 @@ function switchView(id,btn){
   document.querySelectorAll('.view-tab').forEach(function(t,i){
     if(TAB_IDS[i]===id) t.classList.add('active'); else t.classList.remove('active');
   });
-  document.getElementById('view-title').textContent=VTITLES[id]||id;
+  var titleEl = document.getElementById('view-title');
+  if(titleEl) titleEl.textContent=VTITLES[id]||id;
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
   var el=document.getElementById('view-'+id);
   if(el) el.classList.add('active');
+  // Sync rail icons
+  document.querySelectorAll('.icon-rail .rail-icon').forEach(function(r){r.classList.remove('active');});
+  var viewIconMap={projects:0,today:1,kanban:2,list:3,decisions:4,sessions:5,infra:6};
+  var icons=document.querySelectorAll('.icon-rail .rail-icon');
+  var idx=viewIconMap[id];
+  if(idx!==undefined && icons[idx]) icons[idx].classList.add('active');
   render();
 }
 
@@ -1040,7 +1063,7 @@ function makeCard(task){
       (due?'<span class="task-due-tag '+due.cls+'">📅 '+due.text+'</span>':'')+
     '</div>'+
     (footer?'<div class="task-card-footer">'+footer+'</div>':'');
-  div.addEventListener('click',function(){openCard(task.id);});
+  div.addEventListener('click',function(e){if(!e.target.classList.contains('task-prio-dot'))openCard(String(task.id));});
   div.addEventListener('dragstart',function(e){draggedId=task.id;div.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
   div.addEventListener('dragend',function(){div.classList.remove('dragging');});
   return div;
@@ -1068,8 +1091,8 @@ function onDrop(e,status){
 // CARD DETAIL
 function openCard(id){
   var tasks=getAllTasks();
-  var task=tasks.find(function(t){return t.id==id;});
-  if(!task) return;
+  var task=tasks.find(function(t){return String(t.id)===String(id);});
+  if(!task){console.log('Task not found:',id);return;}
   activeCardId=id;
   var color=PC[task.project]||'#C2738A';
   document.getElementById('cm-color-bar').style.background=color;
@@ -1199,8 +1222,10 @@ function deleteCard(){
 }
 
 function closeCardModal(){
-  document.getElementById('card-modal').classList.remove('open');
-  activeCardId=null;render();
+  var modal = document.getElementById('card-modal');
+  if(modal) modal.classList.remove('open');
+  activeCardId=null;
+  render();
 }
 
 // ADD TASK
@@ -1396,16 +1421,7 @@ function closeNavPanel(){
   if(main) main.classList.remove('panel-open');
 }
 
-// Update switchView to sync rail icons
-var _origSwitchView = switchView;
-function switchView(id,btn){
-  _origSwitchView(id,btn);
-  document.querySelectorAll('.rail-icon').forEach(function(r){r.classList.remove('active');});
-  var viewIconMap={projects:0,today:1,kanban:2,list:3,decisions:4,sessions:5,infra:6};
-  var icons=document.querySelectorAll('.icon-rail .rail-icon');
-  var idx=viewIconMap[id];
-  if(idx!==undefined && icons[idx]) icons[idx].classList.add('active');
-}
+// rail icon sync is handled inside switchView directly
 
 // INIT
 render();
