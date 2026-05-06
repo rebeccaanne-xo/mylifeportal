@@ -825,22 +825,34 @@ async function seedDefaultTasksToD1(){
 }
 
 function mapSectionToProject(section){
+  if(!section) return 'personal';
   var map = {
-    gbb:'gbb', biz_tasks:'gbb',
+    // D1 section values
+    gbb:'gbb', biz_tasks:'gbb', business:'gbb',
     wtc:'wtc', wtc_tasks:'wtc',
-    aligned:'aligned', al_tasks:'aligned',
-    mustard:'mustard', ms_tasks:'mustard',
-    homelife:'personal', hl_tasks:'personal',
-    portal:'portal', personal:'personal'
+    aligned:'aligned', al_tasks:'aligned', aligned_life:'aligned',
+    mustard:'mustard', ms_tasks:'mustard', mustard_seed:'mustard',
+    homelife:'personal', hl_tasks:'personal', home:'personal', home_life:'personal',
+    portal:'portal',
+    personal:'personal', followup_list:'personal', followup:'personal',
+    // Project names passed directly
+    mission_wtc:'wtc', mission_aligned:'aligned', mission_mustard:'mustard',
+    biz:'gbb'
   };
-  return map[section] || section || 'personal';
+  var result = map[section.toLowerCase()] || map[section] || null;
+  // If still not found but matches a known project, use it directly
+  if(!result && ['gbb','wtc','aligned','mustard','portal','personal'].includes(section)){
+    result = section;
+  }
+  return result || 'personal';
 }
 
 // Write task change to D1
 async function syncTaskToD1(task) {
   var projectToSection = {
     gbb:'gbb', wtc:'wtc', aligned:'aligned',
-    mustard:'mustard', portal:'portal', personal:'personal'
+    mustard:'mustard', portal:'portal', personal:'personal',
+    homelife:'personal'
   };
   try {
     await fetch(D1_URL, {
