@@ -2412,21 +2412,26 @@ function addAppt(){
   renderAppts();
 }
 function renderAppts(){
-  var appts=ld('appts',[]).filter(a=>a.date===TODAY);
+  var appts=ld('appts',[]).filter(function(a){return a.date===TODAY;});
   var list=document.getElementById('appt-list');
   var empty=document.getElementById('appt-empty');
+  // appt-list was replaced by schedule system — just refresh schedule
+  if(!list){ renderSchedule(); return; }
   list.innerHTML='';
-  if(!appts.length){empty.style.display='block';return;}
-  empty.style.display='none';
-  appts.sort((a,b)=>(a.time||'').localeCompare(b.time||''));
-  appts.forEach(a=>{
+  if(!appts.length){if(empty)empty.style.display='block';return;}
+  if(empty)empty.style.display='none';
+  appts.sort(function(a,b){return (a.time||'').localeCompare(b.time||'');});
+  appts.forEach(function(a){
     var div=document.createElement('div');
     div.className='appt-item';
-    div.innerHTML=`<div class="appt-time">${esc(a.time||'—')}</div><div class="appt-title">${esc(a.title)}</div><button class="appt-del" onclick="removeAppt(${a.id})">✕</button>`;
+    div.innerHTML='<div class="appt-time">'+esc(a.time||'—')+'</div><div class="appt-title">'+esc(a.title)+'</div><button class="appt-del" onclick="removeAppt('+a.id+')">✕</button>';
     list.appendChild(div);
   });
 }
-function removeAppt(id){sv('appts',ld('appts',[]).filter(a=>a.id!=id));renderAppts();}
+function removeAppt(id){
+  sv('appts',ld('appts',[]).filter(function(a){return a.id!=id;}));
+  renderSchedule();
+}
 
 // ══ PRIORITIES ══
 function savePriorities(){
