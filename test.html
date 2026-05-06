@@ -16,9 +16,58 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--navy);colo
 select,select option{background:#1a2d4a;color:#fff;}
 
 /* ══ LAYOUT ══ */
-#app{display:flex;height:100vh;position:relative;flex-direction:column}
+#app{display:flex;height:100vh;position:relative}
 
+/* ══ ICON RAIL ══ */
+.icon-rail{
+  width:52px;flex-shrink:0;
+  background:#0d1b2e;
+  border-right:1px solid rgba(255,255,255,.07);
+  display:flex;flex-direction:column;
+  align-items:center;
+  padding:.5rem 0;
+  z-index:50;
+  position:relative;
+}
+.rail-icon{
+  width:40px;height:40px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;
+  transition:all .15s;margin-bottom:2px;
+  border:none;background:none;
+  position:relative;color:rgba(255,255,255,.4);
+}
+.rail-icon:hover{background:rgba(255,255,255,.08);color:#fff}
+.rail-icon.active{background:rgba(255,255,255,.1);color:#fff}
+.rail-icon .rail-tooltip{
+  position:absolute;left:calc(100% + 10px);
+  background:#0d1b2e;border:1px solid rgba(255,255,255,.12);
+  color:#fff;font-size:11px;font-weight:500;font-family:'Inter',sans-serif;
+  padding:.3rem .65rem;border-radius:6px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s;z-index:200;
+}
+.rail-icon:hover .rail-tooltip{opacity:1}
+.rail-sep{width:28px;height:1px;background:rgba(255,255,255,.08);margin:.3rem 0}
+.rail-bottom{margin-top:auto;display:flex;flex-direction:column;align-items:center;padding-bottom:.3rem}
+.rail-menu-btn{
+  width:40px;height:40px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;cursor:pointer;transition:all .15s;
+  border:none;background:none;color:rgba(255,255,255,.5);
+  position:relative;
+}
+.rail-menu-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.rail-menu-btn .rail-tooltip{
+  position:absolute;left:calc(100% + 10px);
+  background:#0d1b2e;border:1px solid rgba(255,255,255,.12);
+  color:#fff;font-size:11px;font-weight:500;font-family:'Inter',sans-serif;
+  padding:.3rem .65rem;border-radius:6px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s;z-index:200;
+}
+.rail-menu-btn:hover .rail-tooltip{opacity:1}
+.pts-rail{font-size:9px;color:var(--sage);font-weight:700;margin-top:3px;font-family:'Inter',sans-serif}
 
+/* ══ NAV PANEL (popup from rail) ══ */
 .nav-panel{
   position:absolute;left:52px;top:0;bottom:0;
   width:220px;
@@ -74,8 +123,12 @@ select,select option{background:#1a2d4a;color:#fff;}
 .nav-overlay.open{display:block}
 
 /* ══ CONTENT AREA ══ */
-.content{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
-
+.content{
+  flex:1;display:flex;flex-direction:column;overflow:hidden;
+  transition:margin-left .22s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.content.panel-open{margin-left:220px}
 
 /* ══ HEADER ══ */
 .app-header{
@@ -118,6 +171,7 @@ select,select option{background:#1a2d4a;color:#fff;}
 
 /* MOBILE */
 @media(max-width:768px){
+  .icon-rail{display:none}
   .nav-panel{left:0;width:80vw;max-width:280px;transform:translateX(-110%);z-index:100}
   .nav-panel.open{transform:translateX(0)}
   .nav-overlay{left:0;z-index:99}
@@ -300,17 +354,17 @@ select,select option{background:#1a2d4a;color:#fff;}
 .home-greeting-block{padding:0}
 .greeting-bar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:.5rem 1.25rem .35rem;
+  padding:.75rem 1.25rem .5rem;
 }
 .greeting-left{}
 .greeting-time-label{
   font-size:9px;font-weight:700;letter-spacing:.12em;
-  color:#4A7C6F;text-transform:uppercase;margin-bottom:3px;
+  color:#4A7C6F;text-transform:uppercase;margin-bottom:2px;
   font-family:'Montserrat',sans-serif;
 }
 .greeting-name{
-  font-size:15px;font-weight:600;color:#fff;line-height:1.35;
-  font-family:'Montserrat',sans-serif;max-width:220px;
+  font-size:19px;font-weight:700;color:#fff;line-height:1.2;
+  font-family:'Montserrat',sans-serif;
 }
 .greeting-date{font-size:10px;color:rgba(255,255,255,.3);margin-top:1px;font-weight:500}
 .greeting-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
@@ -330,34 +384,24 @@ select,select option{background:#1a2d4a;color:#fff;}
 
 /* HORIZONTAL TAB NAV */
 .horiz-tabs{
-  display:flex;gap:2px;overflow-x:auto;
-  padding:.5rem .75rem 0;
-  border-top:1px solid rgba(255,255,255,.07);
-  flex-wrap:wrap;
+  display:flex;gap:3px;overflow-x:auto;
+  padding:.4rem 1rem .4rem;
+  border-top:1px solid rgba(255,255,255,.05);
 }
 .horiz-tabs::-webkit-scrollbar{display:none}
 .horiz-tab{
   display:flex;flex-direction:column;align-items:center;gap:2px;
-  padding:.45rem .8rem .55rem;
-  border-radius:7px 7px 0 0;
-  border:1px solid rgba(255,255,255,.08);
-  border-bottom:none;
+  padding:.4rem .7rem;border-radius:7px;
+  border:1px solid rgba(255,255,255,.06);
   background:rgba(255,255,255,.03);
   cursor:pointer;white-space:nowrap;flex-shrink:0;
   transition:all .15s;font-family:'Montserrat',sans-serif;
-  margin-bottom:0;position:relative;bottom:-1px;
 }
-.horiz-tab:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}
-.horiz-tab.active{
-  background:#1B2A4A;
-  border-color:rgba(255,255,255,.18);
-  border-bottom:2px solid #1B2A4A;
-  z-index:2;
-}
-.horiz-tab-icon{font-size:13px;line-height:1}
+.horiz-tab:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.horiz-tab.active{background:rgba(27,42,74,.9);border-color:rgba(255,255,255,.15)}
+.horiz-tab-icon{font-size:14px;line-height:1}
 .horiz-tab-label{font-size:8px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.04em}
 .horiz-tab.active .horiz-tab-label{color:#fff}
-.horiz-tabs-border{height:1px;background:rgba(255,255,255,.1);margin:0 .75rem;}
 
 /* CONTACT CARD */
 .contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:.75rem}
@@ -502,7 +546,9 @@ select,select option{background:#1a2d4a;color:#fff;}
 .flip-cal-dow{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem}
 .flip-divider{width:1px;height:60px;background:rgba(255,255,255,.08)}
 
-/* scripture styles moved to scripture-bar */
+.scripture-block{background:linear-gradient(135deg,rgba(27,42,74,.9),rgba(45,65,112,.7));border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:.875rem}
+.scripture-verse{font-family:'Montserrat',sans-serif;font-size:22px;font-style:italic;color:rgba(255,255,255,.9);line-height:1.7;margin-bottom:.5rem;letter-spacing:.01em}
+.scripture-cite{font-size:13px;color:rgba(255,255,255,.45);letter-spacing:.05em;font-weight:500}
 
 .finance-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:.75rem}
 .finance-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:1rem}
@@ -606,7 +652,75 @@ select,select option{background:#1a2d4a;color:#fff;}
 </style>
 </head>
 <body>
+<button class="mob-toggle" id="mob-toggle" onclick="toggleNavPanel()" style="display:none;position:fixed;top:.65rem;left:.65rem;z-index:200;background:var(--peony);border:none;border-radius:7px;padding:.4rem .55rem;cursor:pointer;color:#fff;font-size:15px;align-items:center;justify-content:center">☰</button>
+
 <div id="app">
+
+<!-- ══ ICON RAIL ══ -->
+<div class="icon-rail" id="icon-rail">
+  <button class="rail-icon tab-home active" onclick="goTab('home',this);closeNavPanel()" title="Home">🏠<span class="rail-tooltip">Home</span></button>
+  <button class="rail-icon tab-homelife" onclick="goTab('homelife',this);closeNavPanel()" title="Home Life">🏡<span class="rail-tooltip">Home Life</span></button>
+  <button class="rail-icon tab-shopping" onclick="goTab('shopping',this);closeNavPanel()" title="Shopping">🛒<span class="rail-tooltip">Shopping</span></button>
+  <button class="rail-icon tab-habits" onclick="goTab('habits',this);closeNavPanel()" title="Health & Habits">💪<span class="rail-tooltip">Health & Habits</span></button>
+  <button class="rail-icon tab-people" onclick="goTab('people',this);closeNavPanel()" title="People">👥<span class="rail-tooltip">People</span></button>
+  <button class="rail-icon tab-faith" onclick="goTab('faith',this);closeNavPanel()" title="Faith">✝️<span class="rail-tooltip">Faith</span></button>
+  <div class="rail-sep"></div>
+  <button class="rail-icon tab-business" onclick="goTab('business',this);closeNavPanel()" title="GBB">💼<span class="rail-tooltip">Get Booked & Branded</span></button>
+  <button class="rail-icon tab-mission" onclick="goTab('mission',this);closeNavPanel()" title="Mission">🌱<span class="rail-tooltip">Mission</span></button>
+  <button class="rail-icon tab-brain" onclick="goTab('brain',this);closeNavPanel()" title="Brain">🧠<span class="rail-tooltip">Brain Dump</span></button>
+  <div class="rail-sep"></div>
+  <a class="rail-icon" href="projects.html" title="Projects" style="text-decoration:none">📋<span class="rail-tooltip">Project Board</span></a>
+  <div class="rail-bottom">
+    <button class="rail-menu-btn" onclick="toggleNavPanel()" title="Menu">☰<span class="rail-tooltip">Menu</span></button>
+    <div class="pts-rail" id="rail-pts">0 pts</div>
+  </div>
+</div>
+
+<!-- ══ NAV PANEL (popup) ══ -->
+<div class="nav-panel" id="nav-panel">
+  <div class="nav-panel-header">
+    <div class="nav-panel-title">Rebecca's Portal</div>
+    <button class="nav-panel-close" onclick="closeNavPanel()">✕</button>
+  </div>
+  <div class="nav-panel-body">
+    <span class="nav-group-label">Daily</span>
+    <button class="nav-btn tab-home active" onclick="goTab('home',this);closeNavPanel()"><span class="nav-emoji">🏠</span>Home</button>
+    <span class="nav-group-label">Life</span>
+    <button class="nav-btn tab-homelife" onclick="goTab('homelife',this);closeNavPanel()"><span class="nav-emoji">🏡</span>Home Life</button>
+    <button class="nav-btn tab-shopping" onclick="goTab('shopping',this);closeNavPanel()"><span class="nav-emoji">🛒</span>Shopping</button>
+    <button class="nav-btn tab-habits" onclick="goTab('habits',this);closeNavPanel()"><span class="nav-emoji">💪</span>Health & Habits</button>
+    <button class="nav-btn tab-people" onclick="goTab('people',this);closeNavPanel()"><span class="nav-emoji">👥</span>People</button>
+    <button class="nav-btn tab-faith" onclick="goTab('faith',this);closeNavPanel()"><span class="nav-emoji">✝️</span>Faith</button>
+    <span class="nav-group-label">Work</span>
+    <button class="nav-btn tab-business" onclick="goTab('business',this);closeNavPanel()"><span class="nav-emoji">💼</span>Get Booked & Branded</button>
+    <button class="nav-btn tab-mission" onclick="goTab('mission',this);closeNavPanel()"><span class="nav-emoji">🌱</span>Mission</button>
+    <span class="nav-group-label">Mind</span>
+    <button class="nav-btn tab-brain" onclick="goTab('brain',this);closeNavPanel()"><span class="nav-emoji">🧠</span>Brain Dump</button>
+    <span class="nav-group-label">Tools</span>
+    <a class="nav-btn" href="projects.html" style="text-decoration:none"><span class="nav-emoji">📋</span>Project Board</a>
+    <a class="nav-btn" href="daily.html" style="text-decoration:none"><span class="nav-emoji">📓</span>Daily Log</a>
+    <a class="nav-btn" href="https://getbookednbranded.pages.dev" target="_blank" style="text-decoration:none"><span class="nav-emoji">🌐</span>GBB Site<span class="nav-external">↗</span></a>
+    <a class="nav-btn" href="https://dash.cloudflare.com" target="_blank" style="text-decoration:none"><span class="nav-emoji">☁️</span>Cloudflare<span class="nav-external">↗</span></a>
+    <a class="nav-btn" href="https://github.com/rebeccaanne-xo" target="_blank" style="text-decoration:none"><span class="nav-emoji">💻</span>GitHub<span class="nav-external">↗</span></a>
+  </div>
+  <div class="nav-panel-footer">
+    <div class="user-row">
+      <div class="user-av">R</div>
+      <div>
+        <div class="user-name">Rebecca Holka</div>
+        <div class="user-email">rebeccaannexo@gmail.com</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.4rem">
+      <div style="font-size:9px;color:rgba(255,255,255,.25)" id="db-status">connecting...</div>
+      <button onclick="hardRefresh()" style="font-size:9px;background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-family:inherit;padding:0" title="Refresh data">↻ sync</button>
+    </div>
+    <div class="pts-display" id="sb-points">⭐ 0 points</div>
+  </div>
+</div>
+
+<!-- Nav overlay -->
+<div class="nav-overlay" id="nav-overlay" onclick="closeNavPanel()"></div>
 
 <!-- ══ CONTENT ══ -->
 <div class="content" id="main-content">
@@ -643,8 +757,8 @@ select,select option{background:#1a2d4a;color:#fff;}
       <!-- GREETING -->
       <div class="greeting-bar">
         <div class="greeting-left">
-          <div class="greeting-time-label" id="greeting-label">Tuesday Afternoon</div>
-          <div class="greeting-name" id="greeting-name">Hey there, Rebecca. Let's do stuff.</div>
+          <div class="greeting-time-label" id="greeting-label">Good morning · Monday</div>
+          <div class="greeting-name">Rebecca.</div>
         </div>
         <div class="greeting-right">
           <div class="greeting-pts-val" id="header-pts">⭐ 0</div>
@@ -674,7 +788,6 @@ select,select option{background:#1a2d4a;color:#fff;}
       <div class="horiz-tab" data-tab="business" onclick="goTab('business',this)"><div class="horiz-tab-icon">💼</div><div class="horiz-tab-label">GBB</div></div>
       <div class="horiz-tab" data-tab="mission" onclick="goTab('mission',this)"><div class="horiz-tab-icon">🌱</div><div class="horiz-tab-label">Mission</div></div>
       <div class="horiz-tab" data-tab="brain" onclick="goTab('brain',this)"><div class="horiz-tab-icon">🧠</div><div class="horiz-tab-label">Brain</div></div>
-      <a class="horiz-tab" href="projects.html" style="text-decoration:none"><div class="horiz-tab-icon">📋</div><div class="horiz-tab-label">Projects</div></a>
     </div>
 
   </div><!-- end portal-header -->
@@ -692,7 +805,6 @@ select,select option{background:#1a2d4a;color:#fff;}
     <button class="top-tab" data-tab="brain" onclick="goTab('brain',this)">🧠 Brain</button>
   </div>
 
-  <div class="horiz-tabs-border"></div>
   <!-- PAGES -->
   <div class="pages">
 
@@ -1672,7 +1784,7 @@ function toggleNavPanel(){
   var overlay = document.getElementById('nav-overlay');
   var content = document.getElementById('main-content');
   if(panel.classList.contains('open')){
-    
+    closeNavPanel();
   } else {
     panel.classList.add('open');
     overlay.classList.add('open');
@@ -1850,16 +1962,8 @@ function loadScripture(){
   var idx=ld('scr_idx',0);
   if(lastDate!==TODAY){idx=(idx+1)%SCRIPTURES.length;sv('scr_idx',idx);sv('scr_date',TODAY);}
   var s=SCRIPTURES[idx];
-  // New persistent header
-  var st=document.getElementById('scripture-text');
-  var sr=document.getElementById('scripture-ref');
-  if(st) st.textContent='\u201c'+s.t+'\u201d';
-  if(sr) sr.textContent=s.r;
-  // Legacy fallbacks
-  var sv2=document.getElementById('scripture-verse');
-  var sc=document.getElementById('scripture-cite');
-  if(sv2) sv2.textContent='\u201c'+s.t+'\u201d';
-  if(sc) sc.textContent=s.r;
+  document.getElementById('scripture-verse').textContent='\u201c'+s.t+'\u201d';
+  document.getElementById('scripture-cite').textContent=s.r;
 }
 
 // ══ DATE ══
@@ -1871,28 +1975,23 @@ function loadDate(){
   var day=days[d.getDay()];
   var month=months[d.getMonth()];
   var date=d.getDate();
-  var period=h<12?'Morning':h<17?'Afternoon':h<21?'Evening':'Night';
 
-  // Personal message pool — line 2 of greeting
-  var messages={
-    morning:['Hey there, Rebecca. Let\'s make it count.','Good to see you, Rebecca.','Rise and shine, Rebecca. New day, new wins.','Today is yours, Rebecca.','Make it count, Rebecca.','A fresh start, Rebecca.'],
-    afternoon:['Hey there, Rebecca. Let\'s do stuff.','Keep pushing, Rebecca.','Good to see you, Rebecca.','You\'re doing great, Rebecca.','The work matters, Rebecca.','Halfway through. Keep going, Rebecca.'],
-    evening:['Hey there, Rebecca. Wind it down.','Good to see you, Rebecca.','Finish strong, Rebecca.','Rest is earned, Rebecca.','Reflect and recharge, Rebecca.','You showed up today, Rebecca.'],
-    night:['Still at it, Rebecca? You\'ve got this.','Rest well, Rebecca. You earned it.','Proud of you, Rebecca.','Good to see you, Rebecca.','Tomorrow is ready when you are, Rebecca.']
+  var greetings={
+    morning:['Good morning, Rebecca.','Rise and shine, Rebecca.','Good to see you, Rebecca.','A new day, Rebecca.','Morning, Rebecca. Let\'s go.','Today is yours, Rebecca.'],
+    afternoon:['Good afternoon, Rebecca.','Keep going, Rebecca.','Good to see you, Rebecca.','Hey there, Rebecca.','You\'re doing great, Rebecca.','Afternoon, Rebecca.'],
+    evening:['Good evening, Rebecca.','Wind down well, Rebecca.','Good to see you, Rebecca.','Evening, Rebecca.','Rest is coming, Rebecca.','Almost there, Rebecca.'],
+    night:['Still at it, Rebecca?','Good night, Rebecca.','Rest well, Rebecca.','Proud of you, Rebecca.','Good to see you, Rebecca.']
   };
-  var pool=h<12?messages.morning:h<17?messages.afternoon:h<21?messages.evening:messages.night;
-  var message=pool[d.getDay()%pool.length];
 
-  // Line 1 — day + period in sage green
+  var pool=h<12?greetings.morning:h<17?greetings.afternoon:h<21?greetings.evening:greetings.night;
+  var greeting=pool[d.getDay()%pool.length];
+
   var gl=document.getElementById('greeting-label');
-  if(gl) gl.textContent=day+' \u2014 '+period;
-
-  // Line 2 — personal message
-  var gn=document.getElementById('greeting-name');
-  if(gn) gn.textContent=message;
-
+  if(gl) gl.textContent=greeting;
   var gd=document.getElementById('greeting-date');
   if(gd) gd.textContent='Allen, TX \u00b7 '+month+' '+date;
+  var greetEl=document.getElementById('home-greeting');
+  if(greetEl) greetEl.textContent=greeting;
   var sbDate=document.getElementById('sb-date');
   if(sbDate) sbDate.textContent=day+' \u00b7 '+month+' '+date+', '+d.getFullYear();
 }
@@ -5190,6 +5289,12 @@ updateHeaderTime();
 setInterval(updateHeaderTime, 1000);
 updateSidebarPoints();
 loadGlance();
+
+// Show mobile toggle on small screens
+if(window.innerWidth <= 768){
+  var mt = document.getElementById('mob-toggle');
+  if(mt) mt.style.display = 'flex';
+}
 
 // Auto-sync every 60 seconds
 setInterval(function(){
