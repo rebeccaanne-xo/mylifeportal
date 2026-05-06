@@ -1971,7 +1971,7 @@ function renderSchedule(){
     startInput.value = block.start;
     startInput.title = 'Start time — click to edit';
     startInput.onclick = function(e){e.stopPropagation();};
-    startInput.onblur = function(){saveBlockField(block.id,'start',this.value);};
+    startInput.onblur = function(){this.value=formatTime(this.value)||this.value;saveBlockField(block.id,'start',this.value);};
 
     var sep = document.createElement('span');
     sep.className = 'schedule-time-sep';
@@ -1982,7 +1982,7 @@ function renderSchedule(){
     endInput.value = block.end;
     endInput.title = 'End time — click to edit';
     endInput.onclick = function(e){e.stopPropagation();};
-    endInput.onblur = function(){saveBlockField(block.id,'end',this.value);};
+    endInput.onblur = function(){this.value=formatTime(this.value)||this.value;saveBlockField(block.id,'end',this.value);};
 
     timeRange.appendChild(startInput);
     timeRange.appendChild(sep);
@@ -2105,7 +2105,8 @@ function renderSchedule(){
 
       var addTime = document.createElement('input');
       addTime.className = 'schedule-add-time';
-      addTime.placeholder = '9:00 AM';
+      addTime.placeholder = '9am';
+      addTime.onblur = function(){this.value=formatTime(this.value)||this.value;};
       addTime.id = 'sadd-time-'+block.id;
 
       var addText = document.createElement('input');
@@ -4050,6 +4051,124 @@ function deleteTaskUniversal(id, section) {
 }
 
 
+
+// ══════════════════════════════════════════════
+// FORMATTING UTILITIES
+// ══════════════════════════════════════════════
+
+// Phone — international aware
+function formatPhone(raw) {
+  if (!raw) return '';
+  var digits = raw.replace(/\D/g, '');
+  // International — starts with + or more than 11 digits
+  if (raw.startsWith('+') || digits.length > 11) {
+    return raw; // leave international as-is, too many formats
+  }
+  // US/Canada 10 digits
+  if (digits.length === 10) {
+    return '(' + digits.slice(0,3) + ') ' + digits.slice(3,6) + '-' + digits.slice(6);
+  }
+  // US with country code 11 digits
+  if (digits.length === 11 && digits[0] === '1') {
+    return '+1 (' + digits.slice(1,4) + ') ' + digits.slice(4,7) + '-' + digits.slice(7);
+  }
+  return raw;
+}
+
+// Auto-format phone as user types
+function phoneInput(input) {
+  var raw = input.value.replace(/[\s\-\(\)]/g, '');
+  if (raw.startsWith('+')) return; // leave international alone while typing
+  var digits = raw.replace(/\D/g, '');
+  if (digits.length <= 3) { input.value = digits; return; }
+  if (digits.length <= 6) { input.value = '(' + digits.slice(0,3) + ') ' + digits.slice(3); return; }
+  if (digits.length <= 10) { input.value = '(' + digits.slice(0,3) + ') ' + digits.slice(3,6) + '-' + digits.slice(6); return; }
+  // 11+ digits — international
+  input.value = raw;
+}
+
+// Date — short display format
+function formatDateShort(dateStr) {
+  if (!dateStr) return '';
+  var d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[d.getMonth()] + ' ' + d.getDate();
+}
+
+function formatDateFull(dateStr) {
+  if (!dateStr) return '';
+  var d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+}
+
+// Time — parse and normalize
+// Accepts: 9am, 9:00am, 9:00 AM, 14:00, etc
+function formatTime(raw) {
+  if (!raw) return '';
+  raw = raw.trim().toLowerCase();
+  // Already formatted
+  if (/^\d{1,2}:\d{2}\s*(am|pm)$/i.test(raw)) return raw.toUpperCase();
+  // 14:00 format
+  var military = raw.match(/^(\d{1,2}):(\d{2})$/);
+  if (military) {
+    var h = parseInt(military[1]);
+    var m = military[2];
+    var period = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return h + ':' + m + ' ' + period;
+  }
+  // 9am or 9:30am
+  var ampm = raw.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)$/i);
+  if (ampm) {
+    var h2 = parseInt(ampm[1]);
+    var m2 = ampm[2] || '00';
+    var period2 = ampm[3].toUpperCase();
+    return h2 + ':' + m2.padStart(2,'0') + ' ' + period2;
+  }
+  // Just a number like 9 → 9:00 AM
+  var num = raw.match(/^(\d{1,2})$/);
+  if (num) {
+    var h3 = parseInt(num[1]);
+    var period3 = h3 >= 12 ? 'PM' : 'AM';
+    h3 = h3 % 12 || 12;
+    return h3 + ':00 ' + period3;
+  }
+  return raw;
+}
+
+// Auto-format time on blur
+function timeBlur(input) {
+  var formatted = formatTime(input.value);
+  if (formatted) input.value = formatted;
+}
+
+// Currency — format dollar amount
+function formatCurrency(raw) {
+  if (!raw && raw !== 0) return '';
+  var num = parseFloat(String(raw).replace(/[^0-9.]/g, ''));
+  if (isNaN(num)) return raw;
+  return '$' + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function formatCurrencyShort(raw) {
+  if (!raw && raw !== 0) return '';
+  var num = parseFloat(String(raw).replace(/[^0-9.]/g, ''));
+  if (isNaN(num)) return raw;
+  if (num >= 1000) return '$' + (num/1000).toFixed(1).replace(/\.0$/,'') + 'k';
+  return '$' + num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+// Auto-format currency on blur
+function currencyBlur(input) {
+  var raw = input.value.replace(/[$,]/g,'');
+  var num = parseFloat(raw);
+  if (!isNaN(num)) input.value = '$' + num.toFixed(2);
+}
+
+
 // NEED TO
 var selectedNTType = {type:'call', icon:'📞'};
 
@@ -4422,9 +4541,14 @@ function renderBills(){
 
     var amtInput = document.createElement('input');
     amtInput.className = 'bill-amount-input';
-    amtInput.value = bill.amount ? '$'+bill.amount : '';
+    amtInput.value = bill.amount ? formatCurrencyShort(bill.amount) : '';
     amtInput.placeholder = '$0';
-    amtInput.onblur = (function(bid){return function(){editBillField(bid,'amount',this.value.replace('$',''));};})(bill.id);
+    amtInput.onblur = (function(bid){return function(){
+      var raw = this.value.replace(/[$,k]/g,'');
+      if(this.value.endsWith('k')) raw = parseFloat(raw)*1000;
+      editBillField(bid,'amount',String(raw));
+      this.value = formatCurrencyShort(raw);
+    };})(bill.id);
     amtInput.onkeydown = function(e){if(e.key==='Enter')this.blur();};
 
     var catBadge = document.createElement('span');
@@ -4511,9 +4635,9 @@ function renderBills(){
   });
 
   // Update summary cards
-  var oel=document.getElementById('bs-overdue');if(oel)oel.textContent='$'+overdueTotal.toLocaleString();
-  var wel=document.getElementById('bs-week');if(wel)wel.textContent='$'+weekTotal.toLocaleString();
-  var mel=document.getElementById('bs-monthly');if(mel)mel.textContent='$'+monthlyTotal.toLocaleString();
+  var oel=document.getElementById('bs-overdue');if(oel)oel.textContent=formatCurrencyShort(overdueTotal);
+  var wel=document.getElementById('bs-week');if(wel)wel.textContent=formatCurrencyShort(weekTotal);
+  var mel=document.getElementById('bs-monthly');if(mel)mel.textContent=formatCurrencyShort(monthlyTotal);
 }
 
 function editBillField(id, field, value){
@@ -4580,7 +4704,7 @@ function renderHomeBills(){
     else if(soon) name.style.color='var(--amber)';
     var amt=document.createElement('div');amt.className='bills-widget-amount';amt.textContent=bill.amount?'$'+bill.amount:'';
     var due=document.createElement('div');due.className='bills-widget-due';
-    due.textContent=overdue?'OVERDUE':d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    due.textContent=overdue?'OVERDUE':formatDateShort(bill.due_date);
     if(overdue) due.style.color='#F1948A';
     div.appendChild(dot);div.appendChild(name);div.appendChild(amt);div.appendChild(due);
     list.appendChild(div);
