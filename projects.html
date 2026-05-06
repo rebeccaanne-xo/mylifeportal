@@ -18,21 +18,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 select,select option{background:#1a2d4a;color:#fff}
 
 /* SIDEBAR */
-/* ICON RAIL */
-.icon-rail{width:48px;flex-shrink:0;background:#0a1628;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:.5rem 0;position:relative;z-index:50}
-.rail-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .15s;margin-bottom:2px;border:none;background:none;color:rgba(255,255,255,.4);position:relative;flex-direction:column;gap:2px}
-.rail-icon:hover{background:rgba(255,255,255,.08);color:#fff}
-.rail-icon.active{background:rgba(255,255,255,.1);color:#fff}
-.rail-icon-label{font-size:7px;font-family:'DM Sans',sans-serif;font-weight:600;color:inherit;text-align:center;line-height:1;letter-spacing:.02em}
-.rail-icon .rail-tip{position:absolute;left:calc(100% + 8px);background:#0d1b2e;border:1px solid rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:500;font-family:'DM Sans',sans-serif;padding:.28rem .6rem;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:200}
-.rail-icon:hover .rail-tip{opacity:1}
-.rail-sep{width:26px;height:1px;background:rgba(255,255,255,.08);margin:.25rem 0}
-.rail-bottom{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:3px;padding-bottom:.4rem}
-.rail-menu-btn{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all .15s;border:none;background:none;color:rgba(255,255,255,.5);position:relative}
-.rail-menu-btn:hover{background:rgba(255,255,255,.08);color:#fff}
-.rail-menu-btn .rail-tip{position:absolute;left:calc(100% + 8px);background:#0d1b2e;border:1px solid rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:500;font-family:'DM Sans',sans-serif;padding:.28rem .6rem;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:200}
-.rail-menu-btn:hover .rail-tip{opacity:1}
-
 /* NAV PANEL */
 .nav-panel{position:absolute;left:48px;top:0;bottom:0;width:210px;background:#0d1b2e;border-right:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;z-index:40;transform:translateX(-110%);transition:transform .22s cubic-bezier(.4,0,.2,1);box-shadow:4px 0 20px rgba(0,0,0,.4)}
 .nav-panel.open{transform:translateX(0)}
@@ -56,8 +41,8 @@ select,select option{background:#1a2d4a;color:#fff}
 .back-link:hover{color:#fff}
 .nav-overlay{display:none;position:absolute;top:0;left:258px;right:0;bottom:0;background:rgba(0,0,0,.25);z-index:39;cursor:pointer}
 .nav-overlay.open{display:block}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;transition:margin-left .22s cubic-bezier(.4,0,.2,1)}
-.main.panel-open{margin-left:210px}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
 
 /* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
@@ -280,62 +265,14 @@ select,select option{background:#1a2d4a;color:#fff}
 </style>
 </head>
 <body>
-<a href="index.html" id="mobile-back" style="display:none;position:fixed;top:.65rem;left:.65rem;z-index:300;background:var(--peony);color:#fff;text-decoration:none;border-radius:7px;padding:.4rem .8rem;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif">← Portal</a>
 <div id="app">
 
-<!-- ICON RAIL -->
-<div class="icon-rail">
-  <button class="rail-icon active" onclick="switchView('projects',null);closeNavPanel()" style="flex-direction:column">📋<span class="rail-icon-label">Projects</span><span class="rail-tip">Projects</span></button>
-  <button class="rail-icon" onclick="switchView('today',null);closeNavPanel()" style="flex-direction:column">⚡<span class="rail-icon-label">Today</span><span class="rail-tip">Today</span></button>
-  <button class="rail-icon" onclick="switchView('kanban',null);closeNavPanel()" style="flex-direction:column">🗂<span class="rail-icon-label">Kanban</span><span class="rail-tip">Kanban Board</span></button>
-  <button class="rail-icon" onclick="switchView('list',null);closeNavPanel()" style="flex-direction:column">📝<span class="rail-icon-label">Tasks</span><span class="rail-tip">All Tasks</span></button>
-  <div class="rail-sep"></div>
-  <button class="rail-icon" onclick="switchView('decisions',null);closeNavPanel()" style="flex-direction:column">🧭<span class="rail-icon-label">Decisions</span><span class="rail-tip">Decisions Log</span></button>
-  <button class="rail-icon" onclick="switchView('sessions',null);closeNavPanel()" style="flex-direction:column">📓<span class="rail-icon-label">Sessions</span><span class="rail-tip">Session Log</span></button>
-  <button class="rail-icon" onclick="switchView('infra',null);closeNavPanel()" style="flex-direction:column">⚙️<span class="rail-icon-label">Infra</span><span class="rail-tip">Infrastructure</span></button>
-  <div class="rail-bottom">
-    <a href="index.html" class="rail-menu-btn" title="Back to Portal" style="text-decoration:none;font-size:14px;color:rgba(255,255,255,.4)">←<span class="rail-tip">← Back to Portal</span></a>
-    <button class="rail-menu-btn" onclick="toggleNavPanel()">☰<span class="rail-tip">Menu</span></button>
-  </div>
-</div>
-
-<!-- NAV PANEL -->
-<div class="nav-panel" id="nav-panel">
-  <div class="nav-panel-header">
-    <div class="nav-panel-title">Build Board</div>
-    <button class="nav-panel-close" onclick="closeNavPanel()">✕</button>
-  </div>
-  <div class="nav-panel-body">
-    <span class="nav-label">Views</span>
-    <button class="nav-btn active" onclick="switchView('projects',this);closeNavPanel()"><span class="nav-emoji">📋</span>Projects<span class="nav-count">5</span></button>
-    <button class="nav-btn" onclick="switchView('today',this);closeNavPanel()"><span class="nav-emoji">⚡</span>Today<span class="nav-count" id="nc-today">0</span></button>
-    <button class="nav-btn" onclick="switchView('kanban',this);closeNavPanel()"><span class="nav-emoji">🗂</span>Kanban</button>
-    <button class="nav-btn" onclick="switchView('list',this);closeNavPanel()"><span class="nav-emoji">📝</span>All Tasks<span class="nav-count" id="nc-tasks">0</span></button>
-    <button class="nav-btn" onclick="switchView('decisions',this);closeNavPanel()"><span class="nav-emoji">🧭</span>Decisions</button>
-    <button class="nav-btn" onclick="switchView('sessions',this);closeNavPanel()"><span class="nav-emoji">📓</span>Session Log</button>
-    <button class="nav-btn" onclick="switchView('infra',this);closeNavPanel()"><span class="nav-emoji">⚙️</span>Infrastructure</button>
-    <span class="nav-label">Filter by project</span>
-    <div class="proj-pill active" onclick="setFilter('all',this)"><div class="proj-dot" style="background:rgba(255,255,255,.3)"></div>All<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-all">0</span></div>
-    <div class="proj-pill" onclick="setFilter('gbb',this)"><div class="proj-dot" style="background:var(--gbb)"></div>GBB<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-gbb">0</span></div>
-    <div class="proj-pill" onclick="setFilter('wtc',this)"><div class="proj-dot" style="background:var(--wtc)"></div>WTC<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-wtc">0</span></div>
-    <div class="proj-pill" onclick="setFilter('aligned',this)"><div class="proj-dot" style="background:var(--aligned)"></div>Aligned Life<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-aligned">0</span></div>
-    <div class="proj-pill" onclick="setFilter('mustard',this)"><div class="proj-dot" style="background:var(--mustard)"></div>Mustard Seed<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-mustard">0</span></div>
-    <div class="proj-pill" onclick="setFilter('portal',this)"><div class="proj-dot" style="background:var(--portal)"></div>Portal<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-portal">0</span></div>
-    <div class="proj-pill" onclick="setFilter('home',this)"><div class="proj-dot" style="background:var(--home)"></div>Home<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-home">0</span></div>
-    <div class="proj-pill" onclick="setFilter('personal',this)"><div class="proj-dot" style="background:var(--personal)"></div>Personal<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-personal">0</span></div>
-  </div>
-  <div class="nav-panel-footer">
-    <a href="index.html" class="back-link">← Back to Portal</a>
-  </div>
-</div>
-<div class="nav-overlay" id="nav-overlay" onclick="closeNavPanel()"></div>
 
 <!-- MAIN -->
 <div class="main" id="main-area">
   <div class="topbar">
     <div class="topbar-left">
-      <a href="index.html" style="font-size:12px;color:rgba(255,255,255,.45);text-decoration:none;padding:.35rem .65rem;border:1px solid rgba(255,255,255,.12);border-radius:6px;font-weight:500;transition:all .15s;white-space:nowrap;flex-shrink:0" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,.3)'" onmouseout="this.style.color='rgba(255,255,255,.45)';this.style.borderColor='rgba(255,255,255,.12)'">← Portal</a>
-      <div class="page-title" id="view-title">Projects</div>
+      <a href="index.html" class="back-to-portal">← Portal</a>
       <span id="filter-crumb" style="display:none"></span>
       <div class="view-tabs">
         <button class="view-tab active" onclick="switchViewTab('projects')"><div class="vt-icon">📋</div><div class="vt-label">Projects</div></button>
@@ -1428,7 +1365,7 @@ document.getElementById('time-badge').textContent=new Date().toLocaleTimeString(
 // TOAST
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
 
-// NAV PANEL
+// NAV PANEL (removed)
 function toggleNavPanel(){
   var panel=document.getElementById('nav-panel');
   var overlay=document.getElementById('nav-overlay');

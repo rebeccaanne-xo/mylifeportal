@@ -956,7 +956,7 @@ select,select option{background:#1a2d4a;color:#fff;}
         <div class="items" id="errand-list"></div>
       </div>
       <div class="tab-content-inner" id="hl-finances">
-        <div class="finance-grid"><div class="finance-card"><div class="finance-label">Monthly budget</div><div class="finance-amount" id="hl-budget" contenteditable="true" onblur="saveText('hl-budget','hl_budget')">$0</div></div><div class="finance-card"><div class="finance-label">Bills due</div><div class="finance-amount" id="hl-bills" contenteditable="true" onblur="saveText('hl-bills','hl_bills')">$0</div></div></div>
+        <div class="finance-grid"><div class="finance-card"><div class="finance-label">Monthly budget</div><div class="finance-amount" id="hl-budget" contenteditable="true" onblur="saveText('hl-budget','hl_budget')">$0</div></div><div class="finance-card"><div class="finance-label">Bills due</div><div class="finance-amount" id="hl-bills-amt" contenteditable="true" onblur="saveText('hl-bills-amt','hl_bills')">$0</div></div></div>
         <div class="dump-box"><textarea class="dump-textarea" id="hl-fin-notes" placeholder="Budget notes, bills, household expenses..." onblur="saveText('hl-fin-notes','hl_fin_notes')" style="min-height:60px"></textarea></div>
       </div>
       <div class="tab-content-inner" id="hl-goals">
@@ -3903,7 +3903,7 @@ function loadSaved(){
   texts.forEach(([elId,key])=>{var v=ld(key,'');if(v){var el=document.getElementById(elId);if(el&&el.tagName==='TEXTAREA')el.value=v;}});
 
   var editables=[
-    ['hl-budget','hl_budget'],['hl-bills','hl_bills'],
+    ['hl-budget','hl_budget'],['hl-bills-amt','hl_bills'],
     ['biz-rev','biz_rev'],['biz-out','biz_out'],
     ['seth-week','seth_week'],['seth-month','seth_month'],
   ];
@@ -4636,13 +4636,15 @@ function addDailyLogEntry(){
   if(!text) return;
   var symbol = document.getElementById('log-symbol-select').value || '•';
   var tag = document.getElementById('log-tag-select').value || '';
+  var now = new Date();
   var entry = {
     id: Date.now(),
     symbol,
     text,
     tag,
     date: TODAY,
-    time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
+    time: now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+    dateDisplay: now.toLocaleDateString([],{month:'long',day:'numeric',year:'numeric'})
   };
   var log = ld('daily_log_entries', []);
   log.unshift(entry);
@@ -5011,7 +5013,14 @@ function renderHomeBills(){
     var dotColor=overdue?'#F1948A':soon?'var(--amber)':'rgba(255,255,255,.25)';
     var div=document.createElement('div');
     div.className='bills-widget-item';
-    div.onclick=function(){goTab('homelife',null);};
+    div.style.cursor='pointer';
+    div.onclick=function(){
+      goTab('homelife',null);
+      setTimeout(function(){
+        var billsTab=document.querySelector('.tab-inner[onclick*="hl-bills"]');
+        if(billsTab) innerTab(billsTab,'hl-bills');
+      },150);
+    };
     var dot=document.createElement('div');dot.className='bills-widget-dot';dot.style.background=dotColor;
     var name=document.createElement('div');name.className='bills-widget-name';name.textContent=bill.name;
     if(overdue) name.style.color='#F1948A';
@@ -5026,8 +5035,15 @@ function renderHomeBills(){
 
   if(noDue.length){
     var sep=document.createElement('div');
-    sep.style.cssText='font-size:10px;color:rgba(255,255,255,.2);font-style:italic;padding:.2rem .4rem';
-    sep.textContent=noDue.length+' bill'+(noDue.length>1?'s':'')+' with no due date';
+    sep.style.cssText='font-size:10px;color:rgba(255,255,255,.2);font-style:italic;padding:.2rem .4rem;cursor:pointer';
+    sep.textContent=noDue.length+' bill'+(noDue.length>1?'s':'')+' with no due date — tap to set';
+    sep.onclick=function(){
+      goTab('homelife',null);
+      setTimeout(function(){
+        var billsTab=document.querySelector('.tab-inner[onclick*="hl-bills"]');
+        if(billsTab) innerTab(billsTab,'hl-bills');
+      },150);
+    };
     list.appendChild(sep);
   }
 }

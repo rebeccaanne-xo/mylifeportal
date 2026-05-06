@@ -222,7 +222,7 @@ html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--navy
 <div class="toast" id="toast"></div>
 
 <script>
-var DB_URL='https://script.google.com/macros/s/AKfycbyWqjL7MxquIleef7gRozobV2xgolWbTxmF7SuXIlUkBuyyVbme9wAuUJhhOFnro1sj/exec';
+var DB_URL='https://script.google.com/macros/s/AKfycbynyi3DsQZDwOHZg_Ue0HBdlMJtQ2BN4JeBPRMAW6vBBETAm_TuJNV48602D8snAQVJ/exec';
 function sv(k,v){try{localStorage.setItem('log_'+k,JSON.stringify(v))}catch(e){}}
 function ld(k,d){try{var x=localStorage.getItem('log_'+k);return x?JSON.parse(x):d}catch(e){return d}}
 function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
@@ -341,8 +341,51 @@ function feedPortal(entry){
 }
 
 // ══ RENDER LOG ══
+
+function symbolToType(sym){
+  var map={'•':'task','○':'event','—':'note','*':'priority','†':'prayer','!':'idea'};
+  return map[sym]||'note';
+}
+function formatDateDisplay(dateStr){
+  if(!dateStr) return '';
+  var d = new Date(dateStr);
+  if(isNaN(d)) return dateStr;
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return months[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+}
+
 function renderLog(){
-  var entries=ld('entries',[]);
+  // Merge both storage keys — home widget uses daily_log_entries, full log uses entries
+  var entries = ld('entries',[]);
+  var homeEntries = ld('daily_log_entries',[]);
+  // Convert home entries to full log format and merge
+  homeEntries.forEach(function(he){
+    if(!entries.find(function(e){return String(e.id)===String(he.id);})){
+      entries.push({
+        id: he.id,
+        text: he.text,
+        symbol: he.symbol||'•',
+        type: symbolToType(he.symbol||'•'),
+        tag: he.tag||'',
+        tags: he.tag ? [he.tag] : [],
+        date: he.date||TODAY,
+        dateDisplay: formatDateDisplay(he.date||TODAY),
+        time: he.time||'',
+        done: false,
+        migrated: false,
+        source: 'home'
+      });
+    }
+  });
+  // Sort newest first
+  entries.sort(function(a,b){
+    var da = new Date(a.date||TODAY);
+    var db = new Date(b.date||TODAY);
+    if(db-da !== 0) return db-da;
+    return String(b.id).localeCompare(String(a.id));
+  });
+  // Save merged back
+  sv('entries', entries);
   var container=document.getElementById('log-container');
   var empty=document.getElementById('log-empty');
 
@@ -404,6 +447,7 @@ function makeEntryEl(entry){
     </div>
     <div class="entry-actions">
       ${(entry.type==='task'||entry.type==='priority')&&!entry.done?`<button class="act-btn done-btn" onclick="markDone(${entry.id})" title="Mark done">×</button>`:''}
+      ${entry.type==='event'?`<button class="act-btn" onclick="addEntryToSchedule(${entry.id})" title="Add to schedule" style="color:var(--amber)">📅</button>`:''}
       <button class="act-btn migrate-btn" onclick="toggleMigrateMenu(${entry.id},this)" title="Migrate to section">›</button>
       <button class="act-btn del-btn" onclick="deleteEntry(${entry.id})" title="Delete">✕</button>
     </div>
@@ -417,6 +461,25 @@ function makeEntryEl(entry){
     </div>
   `;
   return div;
+}
+
+
+function addEntryToSchedule(id){
+  var entries=ld('entries',[]);
+  var e=entries.find(x=>x.id==id);
+  if(!e) return;
+  var time = prompt('What time is this event?', e.time||'');
+  if(time===null) return;
+  var appts = ld('appts',[]);
+  appts.push({
+    id: Date.now(),
+    title: e.text,
+    time: time,
+    date: e.date||TODAY,
+    blockId: 'b1'
+  });
+  sv('appts', appts);
+  showToast('Added to schedule ✓');
 }
 
 function editEntry(id,text){
