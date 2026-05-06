@@ -203,7 +203,7 @@ select,select option{background:#1a2d4a;color:#fff;}
 
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:.75rem}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:.75rem}
-.grid4{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:.75rem}
+.grid4{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:5px;margin-bottom:.5rem}
 
 .dump-box{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.09);border-radius:12px;padding:.875rem 1rem;margin-bottom:.75rem}
 .dump-box:focus-within{border-color:var(--peony)}
@@ -558,11 +558,11 @@ select,select option{background:#1a2d4a;color:#fff;}
 .gbb-portal-btn{background:var(--peony);color:#fff;border:none;border-radius:999px;padding:.65rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap;display:inline-block}
 .gbb-portal-btn:hover{opacity:.85}
 
-.tool-card{display:flex;flex-direction:column;align-items:center;gap:5px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:.8rem .6rem;font-size:11px;font-weight:500;color:rgba(255,255,255,.58);text-decoration:none;cursor:pointer;transition:all .15s;text-align:center}
+.tool-card{display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:.4rem .3rem;font-size:9px;font-weight:500;color:rgba(255,255,255,.5);text-decoration:none;cursor:pointer;transition:all .15s;text-align:center;min-width:0}
 .tool-card:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.12)}
 .tool-link-sm{font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;padding:.2rem .6rem;border-radius:999px;border:1px solid rgba(255,255,255,.08);transition:all .15s;white-space:nowrap}
 .tool-link-sm:hover{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.2)}
-.tool-emoji{font-size:20px}
+.tool-emoji{font-size:16px}
 
 /* TOAST */
 .toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--sage);color:#fff;padding:.65rem 1.1rem;border-radius:9px;font-size:12px;font-weight:500;display:none;z-index:300;animation:slideUp .25s ease}
@@ -759,7 +759,7 @@ select,select option{background:#1a2d4a;color:#fff;}
       <div class="card" style="margin-bottom:14px">
         <div class="card-hdr">
           <div class="card-title">🎯 Today's Priorities</div>
-          <a class="s-action" href="projects.html?view=list" style="text-decoration:none">All tasks →</a>
+          <a class="s-action" href="projects.html?view=today" style="text-decoration:none">All tasks →</a>
         </div>
         <div class="priority-cards" id="priority-cards"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic" id="priority-hint">Flag tasks as P1 · P2 · P3 in any section to surface them here</div>
@@ -844,7 +844,7 @@ select,select option{background:#1a2d4a;color:#fff;}
         <div class="card">
           <div class="card-hdr"><div class="card-title">👁 At a Glance</div></div>
           <div class="glance-grid">
-            <div class="glance-item" onclick="window.location='projects.html?view=list'"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
+            <div class="glance-item" onclick="window.location='projects.html?view=today'"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
             <div class="glance-item" onclick="goTab('people',null)"><div class="glance-val" id="g-followup">—</div><div class="glance-label">Follow ups</div><div class="glance-dot" id="gd-followup"></div></div>
             <div class="glance-item" onclick="goTab('faith',null)"><div class="glance-val" id="g-prayers">—</div><div class="glance-label">Prayers</div><div class="glance-dot" id="gd-prayers"></div></div>
             <div class="glance-item" onclick="goTab('shopping',null)"><div class="glance-val" id="g-shopping">—</div><div class="glance-label">Shopping</div><div class="glance-dot" id="gd-shopping"></div></div>

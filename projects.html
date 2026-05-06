@@ -46,6 +46,8 @@ select,select option{background:#1a2d4a;color:#fff}
 
 /* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.back-to-portal{font-size:12px;font-weight:600;color:rgba(255,255,255,.5);text-decoration:none;padding:.32rem .65rem;border:1px solid rgba(255,255,255,.12);border-radius:6px;transition:all .15s;white-space:nowrap;flex-shrink:0;font-family:'DM Sans',sans-serif}
+.back-to-portal:hover{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.05)}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.1rem;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15);flex-shrink:0;gap:.75rem;flex-wrap:wrap}
 .topbar-left{display:flex;align-items:center;gap:.6rem}
 .page-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#fff}
@@ -276,9 +278,9 @@ select,select option{background:#1a2d4a;color:#fff}
       <span id="filter-crumb" style="display:none"></span>
       <div class="view-tabs">
         <button class="view-tab active" onclick="switchViewTab('projects')"><div class="vt-icon">📋</div><div class="vt-label">Projects</div></button>
-        <button class="view-tab" onclick="switchViewTab('today')"><div class="vt-icon">⚡</div><div class="vt-label">Today</div></button>
+        
         <button class="view-tab" onclick="switchViewTab('kanban')"><div class="vt-icon">🗂</div><div class="vt-label">Kanban</div></button>
-        <button class="view-tab" onclick="switchViewTab('list')"><div class="vt-icon">📝</div><div class="vt-label">Tasks</div></button>
+        <button class="view-tab" onclick="switchViewTab('today')"><div class="vt-icon">📝</div><div class="vt-label">Today</div></button>
         <button class="view-tab" onclick="switchViewTab('decisions')"><div class="vt-icon">🧭</div><div class="vt-label">Decisions</div></button>
         <button class="view-tab" onclick="switchViewTab('sessions')"><div class="vt-icon">📓</div><div class="vt-label">Sessions</div></button>
         <button class="view-tab" onclick="switchViewTab('infra')"><div class="vt-icon">⚙️</div><div class="vt-label">Infra</div></button>
@@ -1366,26 +1368,8 @@ document.getElementById('time-badge').textContent=new Date().toLocaleTimeString(
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
 
 // NAV PANEL (removed)
-function toggleNavPanel(){
-  var panel=document.getElementById('nav-panel');
-  var overlay=document.getElementById('nav-overlay');
-  var main=document.getElementById('main-area');
-  if(panel.classList.contains('open')){
-    closeNavPanel();
-  } else {
-    panel.classList.add('open');
-    overlay.classList.add('open');
-    if(window.innerWidth>768 && main) main.classList.add('panel-open');
-  }
-}
-function closeNavPanel(){
-  var panel=document.getElementById('nav-panel');
-  var overlay=document.getElementById('nav-overlay');
-  var main=document.getElementById('main-area');
-  if(panel) panel.classList.remove('open');
-  if(overlay) overlay.classList.remove('open');
-  if(main) main.classList.remove('panel-open');
-}
+function toggleNavPanel(){ /* nav panel removed */ }
+function closeNavPanel(){ /* nav panel removed */ }
 
 // rail icon sync is handled inside switchView directly
 
