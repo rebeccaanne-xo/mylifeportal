@@ -241,11 +241,12 @@ select,select option{background:#1a2d4a;color:#fff;}
 .schedule-header{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer}
 .schedule-header:hover{background:rgba(255,255,255,.03)}
 .schedule-block-color{width:3px;height:18px;border-radius:999px;flex-shrink:0}
-.schedule-block-name{font-size:13px;font-weight:600;color:#fff;outline:none;background:none;border:none;font-family:inherit;flex:1;min-width:0;border-bottom:1px solid transparent;transition:border-color .15s}
+.schedule-block-name{font-size:13px;font-weight:600;color:#fff;outline:none;background:none;border:none;font-family:inherit;flex:1;min-width:0;border-bottom:1px solid transparent;transition:border-color .15s;cursor:text}
 .schedule-block-name:focus{border-bottom-color:var(--peony)}
-.schedule-time-range{display:flex;align-items:center;gap:.25rem;flex-shrink:0}
-.schedule-time-input{font-size:11px;font-weight:600;color:rgba(255,255,255,.45);background:none;border:none;outline:none;font-family:'JetBrains Mono',monospace;width:48px;text-align:center;border-bottom:1px solid transparent;transition:border-color .15s;cursor:pointer}
-.schedule-time-input:focus{border-bottom-color:var(--peony);color:#fff}
+.schedule-time-range{display:flex;align-items:center;gap:.2rem;flex-shrink:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:.18rem .45rem}
+.schedule-time-range:focus-within{border-color:var(--peony);background:rgba(194,115,138,.08)}
+.schedule-time-input{font-size:11px;font-weight:600;color:rgba(255,255,255,.7);background:none;border:none;outline:none;font-family:'JetBrains Mono',monospace;width:65px;text-align:center;transition:color .15s;cursor:text;padding:.1rem 0}
+.schedule-time-input:focus{color:#fff}
 .schedule-time-sep{font-size:10px;color:rgba(255,255,255,.2)}
 .schedule-block-actions{display:flex;gap:.25rem;opacity:0;transition:opacity .15s;flex-shrink:0}
 .schedule-header:hover .schedule-block-actions{opacity:1}
@@ -735,22 +736,23 @@ select,select option{background:#1a2d4a;color:#fff;}
 
       <!-- SCHEDULE -->
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hdr">
-          <div class="card-title">🗓 Today's Schedule</div>
-          <div style="display:flex;gap:.4rem">
+        <div class="card-hdr" onclick="toggleScheduleCard()" style="cursor:pointer;user-select:none">
+          <div class="card-title">🗓 Today's Schedule <span id="schedule-card-chevron" style="color:rgba(255,255,255,.3);font-size:11px;margin-left:.3rem">▾</span></div>
+          <div style="display:flex;gap:.4rem" onclick="event.stopPropagation()">
             <button class="s-action" onclick="addScheduleBlock()">+ Block</button>
             <button class="s-action" onclick="clearDoneScheduleItems()">Clear done</button>
             <button class="s-action" onclick="toggleManageRecurring()">↻ Daily</button>
           </div>
         </div>
         <!-- MANAGE RECURRING -->
+        <div id="schedule-card-body">
         <div id="manage-recurring" style="display:none;background:rgba(107,140,184,.06);border:1px solid rgba(107,140,184,.15);border-radius:9px;padding:.75rem;margin-bottom:.75rem">
           <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faith);margin-bottom:.5rem">↻ Daily Recurring Items</div>
           <div id="recurring-list"></div>
           <div style="font-size:11px;color:rgba(255,255,255,.25);margin-top:.4rem;font-style:italic">These populate automatically every morning. Edit inline or ✕ to remove.</div>
           </div>
-        </div>
         <div id="schedule-wrap"></div>
+        </div>
       </div>
 
       <!-- TODAY'S PRIORITIES -->
@@ -1926,6 +1928,16 @@ if(!ld('schedule_recurring', null)){
   }
 })();
 
+function toggleScheduleCard(){
+  var body = document.getElementById('schedule-card-body');
+  var chevron = document.getElementById('schedule-card-chevron');
+  if(!body) return;
+  var collapsed = body.style.display === 'none';
+  body.style.display = collapsed ? 'block' : 'none';
+  if(chevron) chevron.textContent = collapsed ? '▾' : '▸';
+  sv('schedule_card_collapsed', !collapsed);
+}
+
 function getRecurringItems(){ return ld('schedule_recurring', DEFAULT_RECURRING || []); }
 function saveRecurringItems(r){ sv('schedule_recurring', r); }
 
@@ -2276,16 +2288,16 @@ function renderRecurringList(){
     row.style.cssText = 'display:flex;align-items:center;gap:.4rem;padding:.3rem .2rem;border-bottom:1px solid rgba(255,255,255,.05)';
 
     var nameInput = document.createElement('input');
-    nameInput.style.cssText = 'flex:1;background:none;border:none;outline:none;font-family:inherit;font-size:12px;color:#fff;border-bottom:1px solid transparent;transition:border-color .15s;padding:.15rem 0';
+    nameInput.style.cssText = 'flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:5px;outline:none;font-family:inherit;font-size:12px;color:#fff;padding:.25rem .5rem;transition:border-color .15s';
     nameInput.value = item.text;
-    nameInput.onfocus = function(){this.style.borderBottomColor='var(--faith)';};
+    nameInput.onfocus = function(){this.style.borderColor='var(--faith)';};
     nameInput.onblur = (function(iid){return function(){
       editRecurringItem(iid,'text',this.value);
-      this.style.borderBottomColor='transparent';
+      this.style.borderColor='rgba(255,255,255,.07)';
     };})(item.id);
 
     var timeInput = document.createElement('input');
-    timeInput.style.cssText = 'width:70px;background:none;border:none;outline:none;font-family:JetBrains Mono,monospace;font-size:11px;color:rgba(255,255,255,.45);border-bottom:1px solid transparent;transition:border-color .15s;text-align:center;padding:.15rem 0';
+    timeInput.style.cssText = 'width:80px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:5px;outline:none;font-family:JetBrains Mono,monospace;font-size:11px;color:rgba(255,255,255,.7);text-align:center;padding:.2rem .3rem;transition:border-color .15s';
     timeInput.value = item.time||'';
     timeInput.placeholder = 'time';
     timeInput.onfocus = function(){this.style.borderBottomColor='var(--faith)';};
@@ -3924,6 +3936,13 @@ function loadSaved(){
   renderHomeDailyLog();
   populateRecurringItems();
   renderSchedule();
+  // Restore schedule card collapsed state
+  if(ld('schedule_card_collapsed', false)){
+    var body = document.getElementById('schedule-card-body');
+    var chevron = document.getElementById('schedule-card-chevron');
+    if(body) body.style.display = 'none';
+    if(chevron) chevron.textContent = '▸';
+  }
   updateSidebarPoints();
   loadGlance();
 
