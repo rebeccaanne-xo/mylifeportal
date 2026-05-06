@@ -1343,13 +1343,15 @@ function renderInfra(){
 function updateCounts(){
   var tasks=getTasks();
   var today=new Date();today.setHours(0,0,0,0);
-  document.getElementById('nc-tasks').textContent=tasks.filter(function(t){return t.status!=='done';}).length;
-  document.getElementById('nc-today').textContent=tasks.filter(function(t){return t.status!=='done'&&t.due&&new Date(t.due)<=today;}).length;
-  var allCount=tasks.filter(function(t){return t.status!=='done';}).length;
-  var allEl=document.getElementById('pf-all');if(allEl)allEl.textContent=allCount;
-  ['gbb','wtc','aligned','mustard','portal'].forEach(function(k){
+  var ncTasks=document.getElementById('nc-tasks');
+  if(ncTasks) ncTasks.textContent=tasks.filter(function(t){return t.status!=='done';}).length;
+  var ncToday=document.getElementById('nc-today');
+  if(ncToday) ncToday.textContent=tasks.filter(function(t){return t.status!=='done'&&t.due&&new Date(t.due)<=today;}).length;
+  var allEl=document.getElementById('pf-all');
+  if(allEl) allEl.textContent=tasks.filter(function(t){return t.status!=='done';}).length;
+  ['gbb','wtc','aligned','mustard','portal','home','personal'].forEach(function(k){
     var el=document.getElementById('pf-'+k);
-    if(el)el.textContent=tasks.filter(function(t){return t.project===k&&t.status!=='done';}).length;
+    if(el) el.textContent=tasks.filter(function(t){return t.project===k&&t.status!=='done';}).length;
   });
 }
 
