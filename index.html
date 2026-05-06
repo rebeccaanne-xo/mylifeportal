@@ -4680,9 +4680,36 @@ function addDailyLogEntry(){
     log_time: entry.time,
     section: 'home'
   });
+
+  // If symbol is • Task or * Priority — also create as a task in D1
+  if(symbol === '•' || symbol === '*'){
+    var tagToSection = {
+      business:'gbb', home:'home', faith:'personal',
+      people:'personal', health:'personal', mission:'wtc'
+    };
+    var section = tagToSection[tag] || 'personal';
+    var priority = symbol === '*' ? '1' : '';
+    var taskId = 'log'+entry.id;
+    var task = {id:taskId, text:text, done:false, priority:priority==='1'?'high':'med', priority_flag:priority, block:''};
+    var tasks = ld(section, []);
+    tasks.push(task);
+    sv(section, tasks);
+    d1Save('tasks', {
+      id: taskId,
+      text: text,
+      section: section,
+      done: 0,
+      priority: priority === '1' ? 'high' : 'med',
+      priority_flag: priority,
+      status: 'backlog'
+    });
+    showToast('Logged + added to '+(section==='gbb'?'GBB':section)+' tasks ✓');
+  } else {
+    showToast('Logged ✓');
+  }
+
   input.value = '';
   renderHomeDailyLog();
-  showToast('Logged ✓');
 }
 
 function renderHomeDailyLog(){

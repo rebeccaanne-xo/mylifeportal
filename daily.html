@@ -317,26 +317,57 @@ function addEntry(){
   input.value='';
   renderLog();
   updateStats();
-  showToast('Logged ✓');
+  if(entry.type==='task'||entry.type==='priority'){
+    showToast('Logged + added to Project Board ✓');
+  } else {
+    showToast('Logged ✓');
+  }
 }
 
 // ══ FEED OTHER SECTIONS ══
+var D1_URL = 'https://rebecca-portal-api.rebeccaannexo.workers.dev';
+
 function feedPortal(entry){
   if(entry.type==='task'||entry.type==='priority'){
-    // Add to portal tasks
-    var allDumps=JSON.parse(localStorage.getItem('p_all_dumps')||'[]');
-    allDumps.unshift({id:entry.id,text:entry.text,cat:entry.tags[0]||'brain',date:entry.dateDisplay,source:'daily_log'});
-    localStorage.setItem('p_all_dumps',JSON.stringify(allDumps));
+    // Map tag to project section
+    var tagToSection = {
+      business:'gbb', home:'home', faith:'personal',
+      people:'personal', health:'personal', mission:'wtc'
+    };
+    var section = tagToSection[entry.tags&&entry.tags[0]] || 'personal';
+    var taskId = 'log'+entry.id;
+    // Save to D1 tasks
+    fetch(D1_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        action:'upsert',
+        table:'tasks',
+        data:{
+          id: taskId,
+          text: entry.text,
+          section: section,
+          done: 0,
+          priority: entry.type==='priority' ? 'high' : 'med',
+          priority_flag: entry.type==='priority' ? '1' : '',
+          status: 'backlog'
+        }
+      })
+    }).catch(function(){});
+    // Also update localStorage cache
+    var tasks = JSON.parse(localStorage.getItem(section+'_tasks')||localStorage.getItem(section)||'[]');
+    tasks.push({id:taskId, text:entry.text, done:false, priority:entry.type==='priority'?'high':'med'});
+    localStorage.setItem(section, JSON.stringify(tasks));
   }
   if(entry.type==='prayer'){
-    var prayers=JSON.parse(localStorage.getItem('p_faith_praying')||'[]');
+    var prayers=JSON.parse(localStorage.getItem('faith_praying')||'[]');
     prayers.unshift({id:entry.id,text:entry.text,person:entry.text,date:entry.dateDisplay});
-    localStorage.setItem('p_faith_praying',JSON.stringify(prayers));
+    localStorage.setItem('faith_praying',JSON.stringify(prayers));
   }
   if(entry.type==='idea'){
-    var brainDumps=JSON.parse(localStorage.getItem('p_brain_dumps')||'[]');
-    brainDumps.unshift({id:entry.id,text:entry.text,cat:'idea',date:entry.dateDisplay});
-    localStorage.setItem('p_brain_dumps',JSON.stringify(brainDumps));
+    var brainDumps=JSON.parse(localStorage.getItem('brain_dumps')||'[]');
+    brainDumps.unshift({id:entry.id,text:entry.text,cat:'idea',date:entry.dateDisplay,source:'daily_log'});
+    localStorage.setItem('brain_dumps',JSON.stringify(brainDumps));
   }
 }
 
