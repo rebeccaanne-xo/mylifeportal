@@ -294,6 +294,50 @@ select,select option{background:#1a2d4a;color:#fff;}
 .priority-empty-slot{padding:.55rem .7rem;border:1px dashed rgba(255,255,255,.08);border-radius:9px;font-size:12px;color:rgba(255,255,255,.2);font-style:italic;text-align:center;cursor:pointer;transition:all .15s}
 .priority-empty-slot:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.45)}
 
+
+/* BILLS */
+.bills-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:.875rem}
+.bill-sum-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:.65rem .75rem;text-align:center}
+.bill-sum-val{font-size:20px;font-weight:700;font-family:'Cormorant Garamond',serif;color:#fff;line-height:1}
+.bill-sum-label{font-size:9px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem}
+.bill-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.65rem .875rem;margin-bottom:5px;display:flex;align-items:flex-start;gap:.6rem;transition:all .15s;border-left:3px solid rgba(255,255,255,.1)}
+.bill-item:hover{background:rgba(255,255,255,.07)}
+.bill-item.overdue{border-left-color:#F1948A;background:rgba(241,148,138,.04)}
+.bill-item.due-soon{border-left-color:var(--amber);background:rgba(196,137,90,.04)}
+.bill-item.paid{opacity:.42;border-left-color:var(--sage)}
+.bill-check{width:15px;height:15px;accent-color:var(--sage);flex-shrink:0;margin-top:3px;cursor:pointer}
+.bill-info{flex:1;min-width:0}
+.bill-name{font-size:13px;font-weight:500;color:#fff;outline:none;background:none;border:none;font-family:inherit;border-bottom:1px solid transparent;transition:border-color .15s;padding:.1rem 0;width:100%}
+.bill-name:focus{border-bottom-color:var(--peony)}
+.bill-name.paid-name{text-decoration:line-through;color:rgba(255,255,255,.3)}
+.bill-amount-input{font-size:12px;font-weight:700;color:var(--amber);outline:none;background:none;border:none;font-family:inherit;border-bottom:1px solid transparent;transition:border-color .15s;width:75px}
+.bill-amount-input:focus{border-bottom-color:var(--peony)}
+.bill-due-input{font-size:10px;color:rgba(255,255,255,.35);background:none;border:none;outline:none;font-family:'JetBrains Mono',monospace;border-bottom:1px solid transparent;transition:border-color .15s;cursor:pointer}
+.bill-due-input:focus{border-bottom-color:var(--peony);color:#fff}
+.bill-badge{font-size:9px;padding:1px 6px;border-radius:999px;font-weight:600}
+.bill-actions{display:flex;gap:.25rem;opacity:0;transition:opacity .15s;flex-shrink:0;margin-top:2px}
+.bill-item:hover .bill-actions{opacity:1}
+
+/* FINANCIAL LINKS */
+.fin-links{display:flex;flex-direction:column;gap:4px;margin-bottom:.75rem}
+.fin-link-item{display:flex;align-items:center;gap:.5rem;padding:.45rem .6rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:8px;transition:background .15s}
+.fin-link-item:hover{background:rgba(255,255,255,.08)}
+.fin-link-icon{font-size:14px;flex-shrink:0;width:20px;text-align:center}
+.fin-link-name{font-size:12px;font-weight:500;color:#fff;outline:none;background:none;border:none;font-family:inherit;flex:1;border-bottom:1px solid transparent;transition:border-color .15s}
+.fin-link-name:focus{border-bottom-color:var(--peony)}
+.fin-link-url{font-size:11px;color:var(--faith);text-decoration:none;outline:none;background:none;border:none;font-family:'JetBrains Mono',monospace;flex:1;border-bottom:1px solid transparent;transition:border-color .15s;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.fin-link-url:focus{border-bottom-color:var(--peony);color:#fff}
+.fin-link-actions{display:flex;gap:.25rem;opacity:0;transition:opacity .15s}
+.fin-link-item:hover .fin-link-actions{opacity:1}
+
+/* HOME BILLS WIDGET */
+.bills-widget-item{display:flex;align-items:center;gap:.5rem;padding:.35rem .4rem;border-radius:6px;font-size:12px;transition:background .15s}
+.bills-widget-item:hover{background:rgba(255,255,255,.05)}
+.bills-widget-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.bills-widget-name{flex:1;color:rgba(255,255,255,.75);font-size:12px}
+.bills-widget-amount{color:var(--amber);font-weight:700;font-size:11px;flex-shrink:0}
+.bills-widget-due{font-size:10px;color:rgba(255,255,255,.28);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+
 /* CONTACT CARD */
 .contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:.75rem}
 .contact-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:1rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
@@ -700,10 +744,20 @@ select,select option{background:#1a2d4a;color:#fff;}
       <div class="card" style="margin-bottom:14px">
         <div class="card-hdr">
           <div class="card-title">🎯 Today's Priorities</div>
-          <button class="s-action" onclick="goTab('business',document.querySelector('[data-tab=business]'))">All tasks →</button>
+          <button class="s-action" onclick="goTab('business',null)">All tasks →</button>
         </div>
         <div class="priority-cards" id="priority-cards"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic" id="priority-hint">Flag tasks as P1 · P2 · P3 in any section to surface them here</div>
+      </div>
+
+      <!-- BILLS WIDGET -->
+      <div class="card" style="margin-bottom:14px" id="home-bills-card">
+        <div class="card-hdr">
+          <div class="card-title">💳 Bills & Money</div>
+          <button class="s-action" onclick="goTab('homelife',null);setTimeout(function(){innerTab(document.querySelector('.tab-inner[onclick*=hl-bills]'),\'hl-bills\');},100)">All bills →</button>
+        </div>
+        <div id="home-bills-list" style="display:flex;flex-direction:column;gap:3px"></div>
+        <div id="home-bills-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;display:none">No upcoming bills</div>
       </div>
 
       <!-- DAILY LOG WIDGET -->
@@ -775,12 +829,12 @@ select,select option{background:#1a2d4a;color:#fff;}
         <div class="card">
           <div class="card-hdr"><div class="card-title">👁 At a Glance</div></div>
           <div class="glance-grid">
-            <div class="glance-item" onclick="goTab('business',document.querySelector('[data-tab=business]'))"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
-            <div class="glance-item" onclick="goTab('people',document.querySelector('[data-tab=people]'))"><div class="glance-val" id="g-followup">—</div><div class="glance-label">Follow ups</div><div class="glance-dot" id="gd-followup"></div></div>
-            <div class="glance-item" onclick="goTab('faith',document.querySelector('[data-tab=faith]'))"><div class="glance-val" id="g-prayers">—</div><div class="glance-label">Prayers</div><div class="glance-dot" id="gd-prayers"></div></div>
-            <div class="glance-item" onclick="goTab('shopping',document.querySelector('[data-tab=shopping]'))"><div class="glance-val" id="g-shopping">—</div><div class="glance-label">Shopping</div><div class="glance-dot" id="gd-shopping"></div></div>
-            <div class="glance-item" onclick="goTab('mission',document.querySelector('[data-tab=mission]'))"><div class="glance-val" id="g-mission">—</div><div class="glance-label">Mission</div><div class="glance-dot" id="gd-mission"></div></div>
-            <div class="glance-item" onclick="goTab('brain',document.querySelector('[data-tab=brain]'))"><div class="glance-val" id="g-brain">—</div><div class="glance-label">Brain</div><div class="glance-dot" id="gd-brain"></div></div>
+            <div class="glance-item" onclick="goTab('business',null)"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
+            <div class="glance-item" onclick="goTab('people',null)"><div class="glance-val" id="g-followup">—</div><div class="glance-label">Follow ups</div><div class="glance-dot" id="gd-followup"></div></div>
+            <div class="glance-item" onclick="goTab('faith',null)"><div class="glance-val" id="g-prayers">—</div><div class="glance-label">Prayers</div><div class="glance-dot" id="gd-prayers"></div></div>
+            <div class="glance-item" onclick="goTab('shopping',null)"><div class="glance-val" id="g-shopping">—</div><div class="glance-label">Shopping</div><div class="glance-dot" id="gd-shopping"></div></div>
+            <div class="glance-item" onclick="goTab('mission',null)"><div class="glance-val" id="g-mission">—</div><div class="glance-label">Mission</div><div class="glance-dot" id="gd-mission"></div></div>
+            <div class="glance-item" onclick="goTab('brain',null)"><div class="glance-val" id="g-brain">—</div><div class="glance-label">Brain</div><div class="glance-dot" id="gd-brain"></div></div>
           </div>
         </div>
 
@@ -788,7 +842,7 @@ select,select option{background:#1a2d4a;color:#fff;}
         <div class="card">
           <div class="card-hdr">
             <div class="card-title">💪 Habits Today</div>
-            <span class="card-link" onclick="goTab('habits',document.querySelector('[data-tab=habits]'))">Open →</span>
+            <span class="card-link" onclick="goTab('habits',null)">Open →</span>
           </div>
           <div class="stat-row" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:.5rem">
             <div class="stat"><div class="stat-val" id="snap-done">0</div><div class="stat-label">Done</div></div>
@@ -803,15 +857,15 @@ select,select option{background:#1a2d4a;color:#fff;}
       <div class="card">
         <div class="card-hdr"><div class="card-title">⚡ Quick Access</div></div>
         <div class="grid4">
-          <div class="tool-card" onclick="goTab('faith',document.querySelector('[data-tab=faith]'))" style="border-color:rgba(107,140,184,.3);background:rgba(107,140,184,.08)"><div class="tool-emoji">✝️</div>Faith</div>
-          <div class="tool-card" onclick="goTab('brain',document.querySelector('[data-tab=brain]'))"><div class="tool-emoji">🧠</div>Brain Dump</div>
+          <div class="tool-card" onclick="goTab('faith',null)" style="border-color:rgba(107,140,184,.3);background:rgba(107,140,184,.08)"><div class="tool-emoji">✝️</div>Faith</div>
+          <div class="tool-card" onclick="goTab('brain',null)"><div class="tool-emoji">🧠</div>Brain Dump</div>
           <a class="tool-card" href="daily.html" style="border-color:rgba(194,115,138,.3);background:rgba(194,115,138,.08)"><div class="tool-emoji">📓</div>Daily Log</a>
-          <div class="tool-card" onclick="goTab('habits',document.querySelector('[data-tab=habits]'))"><div class="tool-emoji">💪</div>Habits</div>
-          <div class="tool-card" onclick="goTab('people',document.querySelector('[data-tab=people]'))"><div class="tool-emoji">👥</div>People</div>
-          <div class="tool-card" onclick="goTab('shopping',document.querySelector('[data-tab=shopping]'))"><div class="tool-emoji">🛒</div>Shopping</div>
-          <div class="tool-card" onclick="goTab('business',document.querySelector('[data-tab=business]'))"><div class="tool-emoji">💼</div>GBB</div>
-          <div class="tool-card" onclick="goTab('mission',document.querySelector('[data-tab=mission]'))"><div class="tool-emoji">🌱</div>Mission</div>
-          <div class="tool-card" onclick="goTab('homelife',document.querySelector('[data-tab=homelife]'))"><div class="tool-emoji">🏡</div>Home Life</div>
+          <div class="tool-card" onclick="goTab('habits',null)"><div class="tool-emoji">💪</div>Habits</div>
+          <div class="tool-card" onclick="goTab('people',null)"><div class="tool-emoji">👥</div>People</div>
+          <div class="tool-card" onclick="goTab('shopping',null)"><div class="tool-emoji">🛒</div>Shopping</div>
+          <div class="tool-card" onclick="goTab('business',null)"><div class="tool-emoji">💼</div>GBB</div>
+          <div class="tool-card" onclick="goTab('mission',null)"><div class="tool-emoji">🌱</div>Mission</div>
+          <div class="tool-card" onclick="goTab('homelife',null)"><div class="tool-emoji">🏡</div>Home Life</div>
           <a class="tool-card" href="https://getbookednbranded.pages.dev" target="_blank"><div class="tool-emoji">🌐</div>GBB Site</a>
           <a class="tool-card" href="https://calendly.com/rebeccaannexo/meet" target="_blank"><div class="tool-emoji">📅</div>Calendly</a>
           <a class="tool-card" href="https://drive.google.com" target="_blank"><div class="tool-emoji">📁</div>Drive</a>
@@ -898,15 +952,51 @@ select,select option{background:#1a2d4a;color:#fff;}
         <div class="dump-box"><textarea class="dump-textarea" id="hl-notes-text" placeholder="Home life notes, family updates, anything about daily life..." onblur="saveText('hl-notes-text','hl_notes')" style="min-height:150px"></textarea></div>
       </div>
       <div class="tab-content-inner" id="hl-bills">
-        <div class="s-label">Upcoming bills</div>
-        <div class="add-row">
-          <input class="add-input" id="bill-name-in" placeholder="Bill name..."/>
-          <input class="add-input" id="bill-amount-in" placeholder="Amount" style="max-width:90px"/>
-          <input class="add-input" id="bill-due-in" placeholder="Due date" type="date" style="max-width:140px"/>
-          <button class="add-btn" onclick="addBill()">Add</button>
+
+        <!-- SUMMARY CARDS -->
+        <div class="bills-summary">
+          <div class="bill-sum-card"><div class="bill-sum-val" id="bs-overdue" style="color:#F1948A">$0</div><div class="bill-sum-label">Overdue</div></div>
+          <div class="bill-sum-card"><div class="bill-sum-val" id="bs-week" style="color:var(--amber)">$0</div><div class="bill-sum-label">Due This Week</div></div>
+          <div class="bill-sum-card"><div class="bill-sum-val" id="bs-monthly" style="color:var(--sage)">$0</div><div class="bill-sum-label">Monthly Total</div></div>
         </div>
-        <div class="items" id="bills-list"></div>
-        <div id="bills-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;padding:.5rem 0">No bills added yet</div>
+
+        <!-- ADD BILL -->
+        <div class="card" style="margin-bottom:.75rem;padding:.75rem 1rem">
+          <div class="card-hdr" style="margin-bottom:.5rem"><div class="card-title">Add Bill</div></div>
+          <div class="add-row" style="flex-wrap:wrap;gap:.35rem">
+            <input class="add-input" id="bill-name-in" placeholder="Bill name..." style="min-width:110px"/>
+            <input class="add-input" id="bill-amount-in" placeholder="$Amount" style="max-width:85px"/>
+            <input class="add-input" id="bill-due-in" type="date" style="max-width:140px"/>
+            <select class="add-select" id="bill-cat-in">
+              <option value="housing">🏠 Housing</option>
+              <option value="utility">⚡ Utility</option>
+              <option value="subscription">📱 Subscription</option>
+              <option value="insurance">🛡 Insurance</option>
+              <option value="debt">💳 Debt</option>
+              <option value="transport">🚗 Transport</option>
+              <option value="other">📋 Other</option>
+            </select>
+            <select class="add-select" id="bill-recur-in">
+              <option value="monthly">Monthly</option>
+              <option value="weekly">Weekly</option>
+              <option value="yearly">Yearly</option>
+              <option value="once">One-time</option>
+            </select>
+            <button class="add-btn" onclick="addBill()">Add</button>
+          </div>
+        </div>
+
+        <!-- BILLS LIST -->
+        <div id="bills-list"></div>
+        <div id="bills-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;padding:.5rem 0;display:none">No bills added yet — add one above</div>
+
+        <!-- FINANCIAL SITES & LINKS -->
+        <div class="s-label" style="margin-top:1rem">
+          Financial Sites
+          <button class="s-action" onclick="addFinLink()">+ Add</button>
+        </div>
+        <div class="fin-links" id="fin-links-list"></div>
+
       </div>
     </div>
 
@@ -1467,6 +1557,9 @@ async function loadFromSheets(forceRefresh){
 
     // Re-render everything
     sv('last_sync_time', Date.now());
+    // Load all tasks from D1 immediately on connect
+    loadAllTasksFromD1();
+    loadBillsFromD1();
     // Load schedule blocks from D1 if available
     var dbBlocks = await dbRead('schedule_blocks');
     if(dbBlocks && dbBlocks.length){
@@ -3584,6 +3677,8 @@ function loadSaved(){
   renderHabitSnapshot();
   renderBrainRecent();
   renderBills();
+  renderFinLinks();
+  renderHomeBills();
   renderNeedTo();
   renderHomeDailyLog();
   renderSchedule();
@@ -3848,6 +3943,113 @@ function saveContactFromVCard(data){
   d1Save('people',Object.assign({},p,{id:String(p.id)}));
 }
 
+
+// ══════════════════════════════════════════════
+// UNIVERSAL TASK LAYER — D1 as source of truth
+// localStorage = display cache only
+// ══════════════════════════════════════════════
+
+// Section → project mapping for D1
+var SECTION_TO_PROJECT = {
+  biz_tasks:'gbb', wtc_tasks:'wtc', al_tasks:'aligned',
+  ms_tasks:'mustard', hl_tasks:'homelife', personal:'personal',
+  followup_list:'personal', portal:'portal'
+};
+var PROJECT_TO_SECTION = {
+  gbb:'biz_tasks', wtc:'wtc_tasks', aligned:'al_tasks',
+  mustard:'ms_tasks', homelife:'hl_tasks', personal:'personal', portal:'portal'
+};
+
+// Read tasks for a section from D1 (async)
+async function fetchTasksFromD1(section) {
+  var project = SECTION_TO_PROJECT[section] || section;
+  try {
+    var resp = await fetch(D1_URL + '?table=tasks&filter=section&value=' + project + '&t=' + Date.now());
+    var data = await resp.json();
+    if(data.success && data.data) {
+      // Map D1 format to portal format
+      var mapped = data.data.map(function(t){
+        return {
+          id: t.id,
+          text: t.text || '',
+          done: t.done === 1 || t.done === true,
+          priority: t.priority || 'med',
+          priority_flag: t.priority_flag || '',
+          block: t.block || '',
+          section: t.section || project,
+          created_at: t.created_at || ''
+        };
+      });
+      // Update cache
+      sv(section, mapped);
+      return mapped;
+    }
+  } catch(e) {
+    console.log('D1 task fetch failed for ' + section + ':', e.message);
+  }
+  // Fall back to cache
+  return ld(section, []);
+}
+
+// Write a task to D1
+function writeTaskToD1(task, section) {
+  var project = SECTION_TO_PROJECT[section] || section;
+  return d1Save('tasks', {
+    id: String(task.id),
+    text: task.text || '',
+    section: project,
+    done: task.done ? 1 : 0,
+    priority: task.priority || 'med',
+    priority_flag: task.priority_flag || '',
+    block: task.block || ''
+  });
+}
+
+// Load all task sections from D1 on startup
+async function loadAllTasksFromD1() {
+  if(!DB_ONLINE) return;
+  var sections = ['biz_tasks','wtc_tasks','al_tasks','ms_tasks','hl_tasks','personal','followup_list'];
+  for(var i=0; i<sections.length; i++) {
+    await fetchTasksFromD1(sections[i]);
+  }
+  // Reload the visible task lists
+  loadSaved();
+}
+
+// Add task — writes to D1 + updates cache + refreshes UI
+function addTaskUniversal(text, section, priority) {
+  var id = Date.now();
+  var task = {id, text, done:false, priority:priority||'med', priority_flag:'', block:''};
+  var tasks = ld(section, []);
+  tasks.push(task);
+  sv(section, tasks);
+  writeTaskToD1(task, section);
+  return task;
+}
+
+// Toggle task done — updates D1 + cache
+function toggleTaskUniversal(id, section, done) {
+  var tasks = ld(section, []);
+  var task = tasks.find(function(t){return String(t.id)===String(id);});
+  if(task) {
+    task.done = done;
+    sv(section, tasks);
+    d1Save('tasks', {id:String(id), done:done?1:0});
+  }
+}
+
+// Delete task — removes from D1 + cache
+function deleteTaskUniversal(id, section) {
+  sv(section, ld(section,[]).filter(function(t){return String(t.id)!==String(id);}));
+  // Delete from D1
+  fetch(D1_URL, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'delete', table:'tasks', id:String(id)})
+  }).catch(function(){});
+}
+
+
 // NEED TO
 var selectedNTType = {type:'call', icon:'📞'};
 
@@ -4071,8 +4273,381 @@ document.addEventListener('click', function(e){
 });
 
 
-// BILLS TRACKER
+// ══════════════════════════════════════════════
+// BILLS SYSTEM — D1 backed, full featured
+// ══════════════════════════════════════════════
+
+var DEFAULT_BILLS = [
+  {id:'bl1',name:'Rent',amount:'1555',due_date:'',category:'housing',recurring:'monthly',paid:false,auto_pay:false,notes:'',url:''},
+  {id:'bl2',name:'Gexa Energy',amount:'130',due_date:'2026-05-08',category:'utility',recurring:'monthly',paid:false,auto_pay:false,notes:'',url:'https://gexaenergy.com'},
+  {id:'bl3',name:'Internet',amount:'100',due_date:'',category:'utility',recurring:'monthly',paid:false,auto_pay:false,notes:'',url:''},
+  {id:'bl4',name:'Phone (split)',amount:'105',due_date:'',category:'subscription',recurring:'monthly',paid:false,auto_pay:false,notes:'Full bill $210 split x2',url:''},
+];
+
+var DEFAULT_FIN_LINKS = [
+  {id:'fl1',name:'Bank',icon:'🏦',url:'https://chase.com',notes:''},
+  {id:'fl2',name:'Gexa Energy',icon:'⚡',url:'https://gexaenergy.com',notes:'Electric bill'},
+  {id:'fl3',name:'Venmo',icon:'💸',url:'https://venmo.com',notes:''},
+  {id:'fl4',name:'PayPal',icon:'💳',url:'https://paypal.com',notes:''},
+];
+
+function getBills(){ return ld('bills_v2', DEFAULT_BILLS); }
+function saveBillsLocal(b){ sv('bills_v2', b); }
+function getFinLinks(){ return ld('fin_links', DEFAULT_FIN_LINKS); }
+function saveFinLinks(f){ sv('fin_links', f); }
+
+// Load bills from D1
+async function loadBillsFromD1(){
+  if(!DB_ONLINE) return;
+  try {
+    var resp = await fetch(D1_URL + '?table=bills&t=' + Date.now());
+    var data = await resp.json();
+    if(data.success && data.data && data.data.length > 0){
+      var mapped = data.data.map(function(b){
+        return {
+          id: b.id,
+          name: b.name||'',
+          amount: String(b.amount||''),
+          due_date: b.due_date||b.next_due||'',
+          category: b.category||'other',
+          recurring: b.recurring||'monthly',
+          paid: b.paid===1||b.paid===true||false,
+          auto_pay: b.auto_pay===1||b.auto_pay===true||false,
+          notes: b.notes||'',
+          url: b.url||''
+        };
+      });
+      saveBillsLocal(mapped);
+    }
+  } catch(e){ console.log('Bills D1 load failed:', e.message); }
+}
+
+// Save bill to D1
+function saveBillToD1(bill){
+  d1Save('bills', {
+    id: String(bill.id),
+    name: bill.name,
+    amount: bill.amount||'',
+    due_date: bill.due_date||'',
+    category: bill.category||'other',
+    recurring: bill.recurring||'monthly',
+    paid: bill.paid ? 1 : 0,
+    auto_pay: bill.auto_pay ? 1 : 0,
+    notes: bill.notes||'',
+    url: bill.url||''
+  });
+}
+
 function addBill(){
+  var name = document.getElementById('bill-name-in').value.trim();
+  if(!name) return;
+  var bill = {
+    id: 'bl'+Date.now(),
+    name,
+    amount: document.getElementById('bill-amount-in').value.trim().replace('$',''),
+    due_date: document.getElementById('bill-due-in').value,
+    category: document.getElementById('bill-cat-in').value,
+    recurring: document.getElementById('bill-recur-in').value,
+    paid: false, auto_pay: false, notes:'', url:''
+  };
+  var bills = getBills();
+  bills.push(bill);
+  saveBillsLocal(bills);
+  saveBillToD1(bill);
+  renderBills();
+  renderHomeBills();
+  ['bill-name-in','bill-amount-in','bill-due-in'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value='';
+  });
+  showToast(name + ' added ✓');
+}
+
+function renderBills(){
+  var bills = getBills();
+  var list = document.getElementById('bills-list');
+  var empty = document.getElementById('bills-empty');
+  if(!list) return;
+  list.innerHTML = '';
+  if(!bills.length){ if(empty) empty.style.display='block'; return; }
+  if(empty) empty.style.display='none';
+
+  var today = new Date(); today.setHours(0,0,0,0);
+  bills.sort(function(a,b){
+    if(!a.due_date && !b.due_date) return 0;
+    if(!a.due_date) return 1;
+    if(!b.due_date) return -1;
+    return new Date(a.due_date) - new Date(b.due_date);
+  });
+
+  // Running totals
+  var overdueTotal=0, weekTotal=0, monthlyTotal=0;
+
+  var CAT_ICONS = {housing:'🏠',utility:'⚡',subscription:'📱',insurance:'🛡',debt:'💳',transport:'🚗',food:'🍕',other:'📋'};
+  var CAT_COLORS = {housing:'var(--amber)',utility:'var(--faith)',subscription:'var(--peony)',insurance:'var(--sage)',debt:'#F1948A',transport:'var(--teal)',food:'var(--amber)',other:'rgba(255,255,255,.3)'};
+
+  bills.forEach(function(bill){
+    var amt = parseFloat(bill.amount)||0;
+    var dueDate = bill.due_date ? new Date(bill.due_date) : null;
+    var overdue = dueDate && dueDate < today && !bill.paid;
+    var soon = dueDate && !overdue && !bill.paid && (dueDate-today) < 7*24*60*60*1000;
+
+    if(!bill.paid){
+      if(bill.recurring==='monthly'||!bill.recurring) monthlyTotal += amt;
+      if(overdue) overdueTotal += amt;
+      if(soon) weekTotal += amt;
+    }
+
+    var div = document.createElement('div');
+    div.className = 'bill-item' + (overdue?' overdue':soon?' due-soon':bill.paid?' paid':'');
+    div.dataset.id = bill.id;
+
+    // Checkbox
+    var cb = document.createElement('input');
+    cb.type='checkbox';cb.className='bill-check';cb.checked=bill.paid;
+    cb.onchange = (function(bid){return function(){toggleBill(bid,this.checked);};})(bill.id);
+
+    // Info area
+    var info = document.createElement('div');
+    info.className = 'bill-info';
+
+    // Name + amount row
+    var nameRow = document.createElement('div');
+    nameRow.style.cssText = 'display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.2rem';
+
+    var nameInput = document.createElement('input');
+    nameInput.className = 'bill-name'+(bill.paid?' paid-name':'');
+    nameInput.value = bill.name;
+    nameInput.onblur = (function(bid){return function(){editBillField(bid,'name',this.value);};})(bill.id);
+    nameInput.onkeydown = function(e){if(e.key==='Enter')this.blur();};
+
+    var amtInput = document.createElement('input');
+    amtInput.className = 'bill-amount-input';
+    amtInput.value = bill.amount ? '$'+bill.amount : '';
+    amtInput.placeholder = '$0';
+    amtInput.onblur = (function(bid){return function(){editBillField(bid,'amount',this.value.replace('$',''));};})(bill.id);
+    amtInput.onkeydown = function(e){if(e.key==='Enter')this.blur();};
+
+    var catBadge = document.createElement('span');
+    catBadge.className='bill-badge';
+    catBadge.style.cssText='background:'+CAT_COLORS[bill.category]+'18;color:'+CAT_COLORS[bill.category];
+    catBadge.textContent = (CAT_ICONS[bill.category]||'📋')+' '+bill.category;
+
+    var recurBadge = document.createElement('span');
+    recurBadge.className='bill-badge';
+    recurBadge.style.cssText='background:rgba(107,140,184,.12);color:var(--faith)';
+    recurBadge.textContent = bill.recurring||'monthly';
+
+    nameRow.appendChild(nameInput);
+    nameRow.appendChild(amtInput);
+    nameRow.appendChild(catBadge);
+    nameRow.appendChild(recurBadge);
+
+    // Due date + URL row
+    var metaRow = document.createElement('div');
+    metaRow.style.cssText='display:flex;align-items:center;gap:.5rem;flex-wrap:wrap';
+
+    var dueInput = document.createElement('input');
+    dueInput.type='date';
+    dueInput.className='bill-due-input';
+    dueInput.value=bill.due_date||'';
+    dueInput.title='Due date — click to change';
+    dueInput.onchange=(function(bid){return function(){editBillField(bid,'due_date',this.value);renderBills();renderHomeBills();};})(bill.id);
+
+    if(!bill.due_date){
+      var noDue=document.createElement('span');
+      noDue.style.cssText='font-size:10px;color:rgba(255,255,255,.2);font-style:italic';
+      noDue.textContent='No due date set';
+      metaRow.appendChild(noDue);
+    } else {
+      var dueLbl=document.createElement('span');
+      dueLbl.style.cssText='font-size:10px;font-weight:'+(overdue||soon?'700':'400')+';color:'+(overdue?'#F1948A':soon?'var(--amber)':'rgba(255,255,255,.3)');
+      dueLbl.textContent=(overdue?'⚠ OVERDUE — ':soon?'Due soon — ':'Due: ')+new Date(bill.due_date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      metaRow.appendChild(dueLbl);
+    }
+    metaRow.appendChild(dueInput);
+
+    if(bill.url){
+      var urlLink=document.createElement('a');
+      urlLink.href=bill.url;urlLink.target='_blank';
+      urlLink.style.cssText='font-size:10px;color:var(--faith);text-decoration:none';
+      urlLink.textContent='Pay online ↗';
+      metaRow.appendChild(urlLink);
+    }
+
+    info.appendChild(nameRow);
+    info.appendChild(metaRow);
+
+    // Notes if present
+    if(bill.notes){
+      var notesEl=document.createElement('div');
+      notesEl.style.cssText='font-size:10px;color:rgba(255,255,255,.28);margin-top:.15rem';
+      notesEl.textContent=bill.notes;
+      info.appendChild(notesEl);
+    }
+
+    // Actions
+    var actions=document.createElement('div');
+    actions.className='bill-actions';
+
+    var urlBtn=document.createElement('button');
+    urlBtn.className='item-btn';urlBtn.textContent='🔗';urlBtn.title='Set pay URL';
+    urlBtn.onclick=(function(bid){return function(){
+      var u=prompt('Payment URL (e.g. https://gexaenergy.com):',getBills().find(function(b){return b.id==bid;})||'');
+      if(u!==null){editBillField(bid,'url',u);renderBills();}
+    };})(bill.id);
+
+    var delBtn=document.createElement('button');
+    delBtn.className='item-btn del';delBtn.textContent='✕';
+    delBtn.onclick=(function(bid){return function(){
+      saveBillsLocal(getBills().filter(function(b){return b.id!=bid;}));
+      d1Delete('bills',String(bid));
+      renderBills();renderHomeBills();
+    };})(bill.id);
+
+    actions.appendChild(urlBtn);actions.appendChild(delBtn);
+
+    div.appendChild(cb);div.appendChild(info);div.appendChild(actions);
+    list.appendChild(div);
+  });
+
+  // Update summary cards
+  var oel=document.getElementById('bs-overdue');if(oel)oel.textContent='$'+overdueTotal.toLocaleString();
+  var wel=document.getElementById('bs-week');if(wel)wel.textContent='$'+weekTotal.toLocaleString();
+  var mel=document.getElementById('bs-monthly');if(mel)mel.textContent='$'+monthlyTotal.toLocaleString();
+}
+
+function editBillField(id, field, value){
+  var bills=getBills();
+  var bill=bills.find(function(b){return b.id==id;});
+  if(!bill) return;
+  bill[field]=value;
+  saveBillsLocal(bills);
+  saveBillToD1(bill);
+}
+
+function toggleBill(id, paid){
+  var bills=getBills();
+  var bill=bills.find(function(b){return b.id==id;});
+  if(!bill) return;
+  bill.paid=paid;
+  // For recurring bills, mark paid for this cycle
+  if(paid && bill.recurring!=='once'){
+    // Keep paid state — will reset manually or on next cycle
+    showToast(bill.name+' marked paid ✓');
+  }
+  saveBillsLocal(bills);
+  saveBillToD1(bill);
+  renderBills();
+  renderHomeBills();
+}
+
+// HOME DASHBOARD BILLS WIDGET
+function renderHomeBills(){
+  var list=document.getElementById('home-bills-list');
+  var empty=document.getElementById('home-bills-empty');
+  if(!list) return;
+  list.innerHTML='';
+  var bills=getBills();
+  var today=new Date();today.setHours(0,0,0,0);
+  // Show overdue + due within 14 days, unpaid only
+  var upcoming=bills.filter(function(b){
+    if(b.paid) return false;
+    if(!b.due_date) return false;
+    var d=new Date(b.due_date);
+    return (d-today)<14*24*60*60*1000;
+  }).sort(function(a,b){return new Date(a.due_date)-new Date(b.due_date);});
+
+  // Also show bills with no due date set
+  var noDue=bills.filter(function(b){return !b.paid&&!b.due_date;}).slice(0,2);
+
+  if(!upcoming.length && !noDue.length){
+    if(empty) empty.style.display='block';
+    return;
+  }
+  if(empty) empty.style.display='none';
+
+  upcoming.slice(0,5).forEach(function(bill){
+    var d=new Date(bill.due_date);
+    var overdue=d<today;
+    var soon=!overdue&&(d-today)<7*24*60*60*1000;
+    var dotColor=overdue?'#F1948A':soon?'var(--amber)':'rgba(255,255,255,.25)';
+    var div=document.createElement('div');
+    div.className='bills-widget-item';
+    div.onclick=function(){goTab('homelife',null);};
+    var dot=document.createElement('div');dot.className='bills-widget-dot';dot.style.background=dotColor;
+    var name=document.createElement('div');name.className='bills-widget-name';name.textContent=bill.name;
+    if(overdue) name.style.color='#F1948A';
+    else if(soon) name.style.color='var(--amber)';
+    var amt=document.createElement('div');amt.className='bills-widget-amount';amt.textContent=bill.amount?'$'+bill.amount:'';
+    var due=document.createElement('div');due.className='bills-widget-due';
+    due.textContent=overdue?'OVERDUE':d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    if(overdue) due.style.color='#F1948A';
+    div.appendChild(dot);div.appendChild(name);div.appendChild(amt);div.appendChild(due);
+    list.appendChild(div);
+  });
+
+  if(noDue.length){
+    var sep=document.createElement('div');
+    sep.style.cssText='font-size:10px;color:rgba(255,255,255,.2);font-style:italic;padding:.2rem .4rem';
+    sep.textContent=noDue.length+' bill'+(noDue.length>1?'s':'')+' with no due date';
+    list.appendChild(sep);
+  }
+}
+
+// FINANCIAL LINKS
+function renderFinLinks(){
+  var list=document.getElementById('fin-links-list');
+  if(!list) return;
+  list.innerHTML='';
+  var links=getFinLinks();
+  if(!links.length){
+    list.innerHTML='<div style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic">No links saved — click + Add</div>';
+    return;
+  }
+  links.forEach(function(link){
+    var div=document.createElement('div');div.className='fin-link-item';
+    var icon=document.createElement('span');icon.className='fin-link-icon';icon.textContent=link.icon||'🔗';
+
+    var nameInput=document.createElement('input');nameInput.className='fin-link-name';nameInput.value=link.name||'';
+    nameInput.onblur=(function(lid){return function(){editFinLink(lid,'name',this.value);};})(link.id);
+
+    var urlInput=document.createElement('input');urlInput.className='fin-link-url';urlInput.value=link.url||'';
+    urlInput.placeholder='https://...';
+    urlInput.onblur=(function(lid){return function(){editFinLink(lid,'url',this.value);};})(link.id);
+
+    var openBtn=document.createElement('a');openBtn.href=link.url||'#';openBtn.target='_blank';
+    openBtn.style.cssText='font-size:11px;color:var(--faith);text-decoration:none;flex-shrink:0;padding:2px 5px';
+    openBtn.textContent='↗';openBtn.title='Open';
+
+    var actions=document.createElement('div');actions.className='fin-link-actions';
+    var del=document.createElement('button');del.className='item-btn del';del.textContent='✕';
+    del.onclick=(function(lid){return function(){
+      saveFinLinks(getFinLinks().filter(function(l){return l.id!=lid;}));
+      renderFinLinks();
+    };})(link.id);
+    actions.appendChild(del);
+
+    div.appendChild(icon);div.appendChild(nameInput);div.appendChild(urlInput);div.appendChild(openBtn);div.appendChild(actions);
+    list.appendChild(div);
+  });
+}
+
+function addFinLink(){
+  var links=getFinLinks();
+  links.push({id:'fl'+Date.now(),name:'New Link',icon:'🔗',url:'https://',notes:''});
+  saveFinLinks(links);
+  renderFinLinks();
+}
+
+function editFinLink(id,field,value){
+  var links=getFinLinks();
+  var link=links.find(function(l){return l.id==id;});
+  if(link){link[field]=value;saveFinLinks(links);}
+}
+
+// legacy alias
+function addBill_legacy(){
+
   var name=document.getElementById('bill-name-in').value.trim();
   if(!name)return;
   var amount=document.getElementById('bill-amount-in').value.trim();
@@ -4088,45 +4663,7 @@ function addBill(){
   document.getElementById('bill-due-in').value='';
 }
 
-function renderBills(){
-  var bills=ld('bills',[]);
-  var list=document.getElementById('bills-list');
-  var empty=document.getElementById('bills-empty');
-  if(!list)return;
-  list.innerHTML='';
-  if(!bills.length){if(empty)empty.style.display='block';return;}
-  if(empty)empty.style.display='none';
-  var today=new Date();
-  bills.sort(function(a,b){return new Date(a.due)-new Date(b.due);});
-  bills.forEach(function(bill){
-    var overdue=bill.due&&new Date(bill.due)<today&&!bill.paid;
-    var soon=bill.due&&!overdue&&!bill.paid&&(new Date(bill.due)-today)<7*24*60*60*1000;
-    var div=document.createElement('div');
-    div.className='item'+(bill.paid?' done':'');
-    div.style.borderLeft='3px solid '+(overdue?'#F1948A':soon?'var(--amber)':bill.paid?'var(--sage)':'rgba(255,255,255,.1)');
-    div.innerHTML=`
-      <input type="checkbox" ${bill.paid?'checked':''} onchange="toggleBill(${bill.id},this.checked)" style="width:15px;height:15px;accent-color:var(--sage);flex-shrink:0;margin-top:2px;cursor:pointer"/>
-      <div style="flex:1">
-        <div class="item-text" ${bill.paid?'style="text-decoration:line-through;opacity:.4"':''}>${esc(bill.name)} ${bill.amount?'<span style="color:var(--amber);font-size:11px;font-weight:600">'+bill.amount+'</span>':''}</div>
-        <div class="item-meta">${bill.due?'<span style="color:'+(overdue?'#F1948A':soon?'var(--amber)':'rgba(255,255,255,.3)')+';font-size:10px">'+(overdue?'OVERDUE — ':soon?'Due soon — ':'Due: ')+new Date(bill.due).toLocaleDateString()+'</span>':''}</div>
-      </div>
-      <div class="item-actions"><button class="item-btn del" onclick="removeBill(${bill.id},this)">✕</button></div>
-    `;
-    list.appendChild(div);
-  });
-}
-
-function toggleBill(id,paid){
-  var bills=ld('bills',[]);
-  var b=bills.find(x=>x.id==id);
-  if(b){b.paid=paid;sv('bills',bills);d1Save('bills',{id:String(id),paid:paid?1:0});}
-  renderBills();
-}
-
-function removeBill(id,btn){
-  sv('bills',ld('bills',[]).filter(b=>b.id!=id));
-  btn.closest('.item').remove();
-}
+// old bills functions replaced
 
 // FLIP CLOCK
 var flipPrev={h1:-1,h2:-1,m1:-1,m2:-1,s1:-1,s2:-1};
@@ -4169,6 +4706,7 @@ checkDbConnection();
 updateHeaderTime();
 setInterval(updateHeaderTime, 1000);
 updateSidebarPoints();
+loadGlance();
 
 // Show mobile toggle on small screens
 if(window.innerWidth <= 768){

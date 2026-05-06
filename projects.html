@@ -743,9 +743,120 @@ var currentSort='project';
 var draggedId=null;
 var activeCardId=null;
 
-function getTasks(){return ld('tasks',DEFAULT_TASKS).filter(function(t){return !t.archived;});}
-function getAllTasks(){return ld('tasks',DEFAULT_TASKS);}
-function saveTasks(t){sv('tasks',t);}
+var D1_URL = 'https://rebecca-portal-api.rebeccaannexo.workers.dev';
+var _tasksCache = null;
+var _tasksLoaded = false;
+
+function getTasks(){
+  var cached = _tasksCache || JSON.parse(localStorage.getItem('pb_tasks')||'null') || DEFAULT_TASKS;
+  return cached.filter(function(t){return !t.archived;});
+}
+function getAllTasks(){
+  return _tasksCache || JSON.parse(localStorage.getItem('pb_tasks')||'null') || DEFAULT_TASKS;
+}
+function saveTasks(t){
+  _tasksCache = t;
+  localStorage.setItem('pb_tasks', JSON.stringify(t));
+}
+
+// Load tasks from D1 on startup
+async function loadTasksFromD1(){
+  try {
+    var resp = await fetch(D1_URL + '?table=tasks&t=' + Date.now());
+    var data = await resp.json();
+    if(data.success && data.data && data.data.length > 0){
+      // Map D1 tasks to projects format
+      var mapped = data.data.map(function(t){
+        // Find existing task to preserve checklist/comments
+        var existing = getAllTasks().find(function(x){return String(x.id)===String(t.id);});
+        return {
+          id: t.id,
+          title: t.text || t.title || '',
+          project: mapSectionToProject(t.section || t.project || 'personal'),
+          status: t.status || 'backlog',
+          priority: t.priority || 'med',
+          priority_flag: t.priority_flag || '',
+          block: t.block || '',
+          due: t.due_date || t.due || '',
+          time: parseFloat(t.time_estimate || t.time) || 0,
+          assignee: t.assignee || 'rebecca',
+          description: t.description || t.notes || '',
+          checklist: existing ? existing.checklist||[] : [],
+          comments: existing ? existing.comments||[] : [],
+          blocker: t.blocker || '',
+          archived: t.archived === 1 || t.archived === true || false,
+          done: t.done === 1 || t.done === true || false,
+          created: t.created_at ? new Date(t.created_at).getTime() : Date.now()
+        };
+      });
+      saveTasks(mapped);
+      _tasksLoaded = true;
+      render();
+      console.log('Loaded ' + mapped.length + ' tasks from D1');
+    }
+  } catch(e) {
+    console.log('D1 task load failed:', e.message);
+  }
+}
+
+function mapSectionToProject(section){
+  var map = {
+    gbb:'gbb', biz_tasks:'gbb',
+    wtc:'wtc', wtc_tasks:'wtc',
+    aligned:'aligned', al_tasks:'aligned',
+    mustard:'mustard', ms_tasks:'mustard',
+    homelife:'personal', hl_tasks:'personal',
+    portal:'portal', personal:'personal'
+  };
+  return map[section] || section || 'personal';
+}
+
+// Write task change to D1
+async function syncTaskToD1(task) {
+  var projectToSection = {
+    gbb:'gbb', wtc:'wtc', aligned:'aligned',
+    mustard:'mustard', portal:'portal', personal:'personal'
+  };
+  try {
+    await fetch(D1_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        action:'upsert',
+        table:'tasks',
+        data:{
+          id: String(task.id),
+          text: task.title || '',
+          section: projectToSection[task.project] || task.project || 'personal',
+          status: task.status || 'backlog',
+          done: (task.done||task.status==='done') ? 1 : 0,
+          priority: task.priority || 'med',
+          priority_flag: task.priority_flag || '',
+          block: task.block || '',
+          due_date: task.due || '',
+          time_estimate: task.time || 0,
+          assignee: task.assignee || 'rebecca',
+          description: task.description || '',
+          blocker: task.blocker || '',
+          archived: task.archived ? 1 : 0
+        }
+      })
+    });
+  } catch(e) {
+    console.log('D1 sync failed:', e.message);
+  }
+}
+
+// Delete task from D1
+async function deleteTaskFromD1(id){
+  try {
+    await fetch(D1_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'delete', table:'tasks', id:String(id)})
+    });
+  } catch(e){}
+}
 function getDecisions(){return ld('decisions',DEFAULT_DECISIONS);}
 function getSessions(){return ld('sessions',DEFAULT_SESSIONS);}
 
@@ -946,6 +1057,7 @@ function onDrop(e,status){
     if(status==='done') task.done=true;
     task.updated=Date.now();
     saveTasks(tasks);
+    syncTaskToD1(task);
     renderKanban();
     updateCounts();
     showToast('Moved → '+SL[status]+' ✓');
@@ -991,6 +1103,7 @@ function saveField(field){
   if(field==='time') task[field]=parseFloat(el.value)||0;
   task.updated=Date.now();
   saveTasks(tasks);
+  syncTaskToD1(task);
   document.getElementById('cm-proj-label').textContent=(PROJECTS[task.project]||{name:task.project}).name+' · '+SL[task.status||'backlog'];
   if(field==='status'||field==='project') render();
 }
@@ -1073,13 +1186,15 @@ function archiveCard(){
   if(!confirm('Archive this task?'))return;
   var tasks=getAllTasks();
   var task=tasks.find(function(t){return t.id==activeCardId;});
-  if(task){task.archived=true;saveTasks(tasks);}
+  if(task){task.archived=true;saveTasks(tasks);syncTaskToD1(task);}
   closeCardModal();render();showToast('Archived');
 }
 
 function deleteCard(){
   if(!confirm('Delete permanently?'))return;
-  saveTasks(getAllTasks().filter(function(t){return t.id!=activeCardId;}));
+  var delId = activeCardId;
+  saveTasks(getAllTasks().filter(function(t){return t.id!=delId;}));
+  deleteTaskFromD1(delId);
   closeCardModal();render();showToast('Deleted');
 }
 
@@ -1109,6 +1224,7 @@ function saveNewTask(){
     checklist:[],comments:[],blocker:'',archived:false,created:Date.now()
   };
   var tasks=getAllTasks();tasks.push(task);saveTasks(tasks);
+  syncTaskToD1(task);
   closeModal('add-task-modal');
   ['at-title','at-desc','at-due','at-time'].forEach(function(id){document.getElementById(id).value='';});
   render();showToast('Task added ✓');
@@ -1293,6 +1409,10 @@ function switchView(id,btn){
 
 // INIT
 render();
+// Load fresh tasks from D1
+loadTasksFromD1();
+// Auto-refresh every 60 seconds
+setInterval(function(){loadTasksFromD1();}, 60000);
 // ESC closes card modal
 document.addEventListener('keydown', function(e){
   if(e.key==='Escape'){
