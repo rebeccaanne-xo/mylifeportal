@@ -769,7 +769,7 @@ select,select option{background:#1a2d4a;color:#fff;}
       <div class="card" style="margin-bottom:14px" id="home-bills-card">
         <div class="card-hdr">
           <div class="card-title">💳 Bills & Money</div>
-          <button class="s-action" onclick="goTab('homelife',null);setTimeout(function(){innerTab(document.querySelector('.tab-inner[onclick*=hl-bills]'),\'hl-bills\');},100)">All bills →</button>
+          <button class="s-action" onclick="goToBills()">All bills →</button>
         </div>
         <div id="home-bills-list" style="display:flex;flex-direction:column;gap:3px"></div>
         <div id="home-bills-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;display:none">No upcoming bills</div>
@@ -1736,6 +1736,28 @@ function updateSidebarPoints(){
 }
 
 // ══ INNER TABS ══
+function goToBills(){
+  // Step 1 — switch to homelife tab
+  goTab('homelife', null);
+  // Step 2 — wait for page to be active then switch to bills inner tab
+  setTimeout(function(){
+    // Find the Bills tab button inside the homelife page
+    var homePage = document.getElementById('page-homelife');
+    if(!homePage) return;
+    var billsBtn = homePage.querySelector('.tab-inner[onclick*="hl-bills"]');
+    var billsContent = homePage.querySelector('#hl-bills');
+    if(!billsBtn || !billsContent) return;
+    // Deactivate all inner tabs
+    homePage.querySelectorAll('.tab-inner').forEach(function(t){t.classList.remove('active');});
+    homePage.querySelectorAll('.tab-content-inner').forEach(function(t){t.classList.remove('active');});
+    // Activate bills
+    billsBtn.classList.add('active');
+    billsContent.classList.add('active');
+    // Scroll to top
+    document.querySelector('.pages').scrollTo(0,0);
+  }, 200);
+}
+
 function innerTab(el,contentId){
   var page=el.closest('.page');
   var group=el.parentElement;
