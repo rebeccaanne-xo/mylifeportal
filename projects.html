@@ -321,6 +321,8 @@ select,select option{background:#1a2d4a;color:#fff}
     <div class="proj-pill" onclick="setFilter('aligned',this)"><div class="proj-dot" style="background:var(--aligned)"></div>Aligned Life<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-aligned">0</span></div>
     <div class="proj-pill" onclick="setFilter('mustard',this)"><div class="proj-dot" style="background:var(--mustard)"></div>Mustard Seed<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-mustard">0</span></div>
     <div class="proj-pill" onclick="setFilter('portal',this)"><div class="proj-dot" style="background:var(--portal)"></div>Portal<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-portal">0</span></div>
+    <div class="proj-pill" onclick="setFilter('home',this)"><div class="proj-dot" style="background:var(--home)"></div>Home<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-home">0</span></div>
+    <div class="proj-pill" onclick="setFilter('personal',this)"><div class="proj-dot" style="background:var(--personal)"></div>Personal<span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.28)" id="pf-personal">0</span></div>
   </div>
   <div class="nav-panel-footer">
     <a href="index.html" class="back-link">← Back to Portal</a>
@@ -650,7 +652,15 @@ var PROJECTS={
     offer:'Personal operating system — Faith · People · Habits · Home · Brain · GBB spoke',
     goal:'Zero Trust setup · Morning Alignment Agent · GBB admin spoke',
     urls:[{label:'Live Portal',url:'https://mylifeportal.pages.dev'},{label:'Projects',url:'https://mylifeportal.pages.dev/projects.html'}],
-    repo:'mylifeportal'}
+    repo:'mylifeportal'},
+  home:{name:'Home',color:'#A89880',status:'ongoing',
+    desc:'Household management — maintenance, errands, dogs, groceries, Seth coordination, home projects.',
+    offer:'',goal:'Run the house smoothly',
+    urls:[],repo:null},
+  personal:{name:'Personal',color:'#6B8CB8',status:'ongoing',
+    desc:'Personal health, faith practices, habits, self-care, and individual growth.',
+    offer:'',goal:'Show up healthy and grounded',
+    urls:[],repo:null}
 };
 
 // DEFAULT TASKS
@@ -826,23 +836,21 @@ async function seedDefaultTasksToD1(){
 
 function mapSectionToProject(section){
   if(!section) return 'personal';
+  var s = section.toLowerCase();
   var map = {
-    // D1 section values
-    gbb:'gbb', biz_tasks:'gbb', business:'gbb',
-    wtc:'wtc', wtc_tasks:'wtc',
-    aligned:'aligned', al_tasks:'aligned', aligned_life:'aligned',
-    mustard:'mustard', ms_tasks:'mustard', mustard_seed:'mustard',
-    homelife:'personal', hl_tasks:'personal', home:'personal', home_life:'personal',
+    gbb:'gbb', biz_tasks:'gbb', business:'gbb', biz:'gbb',
+    wtc:'wtc', wtc_tasks:'wtc', mission_wtc:'wtc',
+    aligned:'aligned', al_tasks:'aligned', aligned_life:'aligned', mission_aligned:'aligned',
+    mustard:'mustard', ms_tasks:'mustard', mustard_seed:'mustard', mission_mustard:'mustard',
     portal:'portal',
+    home:'home', hl_tasks:'home', homelife:'home', home_life:'home', household:'home',
+    errands:'home', seth:'home', dogs:'home',
     personal:'personal', followup_list:'personal', followup:'personal',
-    // Project names passed directly
-    mission_wtc:'wtc', mission_aligned:'aligned', mission_mustard:'mustard',
-    biz:'gbb'
+    health:'personal', habits:'personal', faith_personal:'personal'
   };
-  var result = map[section.toLowerCase()] || map[section] || null;
-  // If still not found but matches a known project, use it directly
-  if(!result && ['gbb','wtc','aligned','mustard','portal','personal'].includes(section)){
-    result = section;
+  var result = map[s] || null;
+  if(!result && ['gbb','wtc','aligned','mustard','portal','home','personal'].includes(s)){
+    result = s;
   }
   return result || 'personal';
 }
@@ -851,8 +859,8 @@ function mapSectionToProject(section){
 async function syncTaskToD1(task) {
   var projectToSection = {
     gbb:'gbb', wtc:'wtc', aligned:'aligned',
-    mustard:'mustard', portal:'portal', personal:'personal',
-    homelife:'personal'
+    mustard:'mustard', portal:'portal',
+    home:'home', personal:'personal'
   };
   try {
     await fetch(D1_URL, {
@@ -1450,6 +1458,10 @@ if(!localStorage.getItem('pb_tasks')){
   saveTasks(DEFAULT_TASKS);
 }
 render();
+// Check URL for ?view= parameter
+var urlParams = new URLSearchParams(window.location.search);
+var startView = urlParams.get('view');
+if(startView) switchView(startView, null);
 // Then load fresh from D1
 loadTasksFromD1();
 // Auto-refresh every 60 seconds

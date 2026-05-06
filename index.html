@@ -759,7 +759,7 @@ select,select option{background:#1a2d4a;color:#fff;}
       <div class="card" style="margin-bottom:14px">
         <div class="card-hdr">
           <div class="card-title">🎯 Today's Priorities</div>
-          <button class="s-action" onclick="goTab('business',null)">All tasks →</button>
+          <a class="s-action" href="projects.html?view=list" style="text-decoration:none">All tasks →</a>
         </div>
         <div class="priority-cards" id="priority-cards"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic" id="priority-hint">Flag tasks as P1 · P2 · P3 in any section to surface them here</div>
@@ -844,7 +844,7 @@ select,select option{background:#1a2d4a;color:#fff;}
         <div class="card">
           <div class="card-hdr"><div class="card-title">👁 At a Glance</div></div>
           <div class="glance-grid">
-            <div class="glance-item" onclick="goTab('business',null)"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
+            <div class="glance-item" onclick="window.location='projects.html?view=list'"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
             <div class="glance-item" onclick="goTab('people',null)"><div class="glance-val" id="g-followup">—</div><div class="glance-label">Follow ups</div><div class="glance-dot" id="gd-followup"></div></div>
             <div class="glance-item" onclick="goTab('faith',null)"><div class="glance-val" id="g-prayers">—</div><div class="glance-label">Prayers</div><div class="glance-dot" id="gd-prayers"></div></div>
             <div class="glance-item" onclick="goTab('shopping',null)"><div class="glance-val" id="g-shopping">—</div><div class="glance-label">Shopping</div><div class="glance-dot" id="gd-shopping"></div></div>
@@ -1316,7 +1316,7 @@ select,select option{background:#1a2d4a;color:#fff;}
         </div>
       </div>
       <div class="s-label">GBB tasks
-        <a class="s-action" href="projects.html" style="text-decoration:none">Manage in Projects →</a>
+        <a class="s-action" href="projects.html?view=kanban" style="text-decoration:none">Manage in Projects →</a>
       </div>
       <div id="biz-tasks-list" class="items"></div>
       <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board · add there to appear here</div>
@@ -1344,7 +1344,7 @@ select,select option{background:#1a2d4a;color:#fff;}
       </div>
       <div class="tab-content-inner active" id="m-aligned">
         <div class="s-label">Aligned Life tasks
-          <a class="s-action" href="projects.html" style="text-decoration:none">Manage in Projects →</a>
+          <a class="s-action" href="projects.html?view=kanban" style="text-decoration:none">Manage in Projects →</a>
         </div>
         <div class="items" id="al-list"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board</div>
@@ -1352,7 +1352,7 @@ select,select option{background:#1a2d4a;color:#fff;}
       </div>
       <div class="tab-content-inner" id="m-wtc">
         <div class="s-label">WTC tasks
-          <a class="s-action" href="projects.html" style="text-decoration:none">Manage in Projects →</a>
+          <a class="s-action" href="projects.html?view=kanban" style="text-decoration:none">Manage in Projects →</a>
         </div>
         <div class="items" id="wtc-list"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board</div>
@@ -1360,7 +1360,7 @@ select,select option{background:#1a2d4a;color:#fff;}
       </div>
       <div class="tab-content-inner" id="m-mustard">
         <div class="s-label">Mustard Seed tasks
-          <a class="s-action" href="projects.html" style="text-decoration:none">Manage in Projects →</a>
+          <a class="s-action" href="projects.html?view=kanban" style="text-decoration:none">Manage in Projects →</a>
         </div>
         <div class="items" id="ms-list"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board</div>
@@ -2137,14 +2137,24 @@ function renderSchedule(){
         cb.checked = item.done;
         cb.onchange = (function(iid){return function(){toggleScheduleItem(iid,this.checked);};})(item.id);
 
-        if(item.time){
-          var t = document.createElement('span');
-          t.className = 'schedule-item-time';
-          t.textContent = item.time;
-          row.appendChild(cb);row.appendChild(t);
-        } else {
-          row.appendChild(cb);
-        }
+        var timeInput = document.createElement('input');
+        timeInput.className = 'schedule-item-time-edit';
+        timeInput.value = item.time||'';
+        timeInput.placeholder = 'time';
+        timeInput.title = 'Click to set time';
+        timeInput.style.cssText = 'width:58px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.08);outline:none;font-family:JetBrains Mono,monospace;font-size:10px;color:rgba(255,255,255,.35);text-align:center;padding:.1rem 0;transition:all .15s;cursor:text;flex-shrink:0';
+        timeInput.onfocus = function(){this.style.borderBottomColor='var(--peony)';this.style.color='#fff';};
+        timeInput.onblur = (function(iid){return function(){
+          var t = formatTime(this.value)||this.value;
+          this.value = t;
+          this.style.borderBottomColor='rgba(255,255,255,.08)';
+          this.style.color = t ? 'rgba(255,255,255,.6)' : 'rgba(255,255,255,.25)';
+          editScheduleItemTime(iid, t);
+        };})(item.id);
+        timeInput.onkeydown = function(e){if(e.key==='Enter')this.blur();};
+
+        row.appendChild(cb);
+        row.appendChild(timeInput);
 
         var textInput = document.createElement('input');
         textInput.className = 'schedule-item-text' + (item.done?' done-item':'');
@@ -2475,6 +2485,12 @@ function editScheduleItem(id, text){
   var items = getScheduleItems(TODAY);
   var item = items.find(function(i){return i.id===id;});
   if(item && text){item.text=text; saveScheduleItems(TODAY, items);}
+}
+
+function editScheduleItemTime(id, time){
+  var items = getScheduleItems(TODAY);
+  var item = items.find(function(i){return i.id===id;});
+  if(item){item.time=time; saveScheduleItems(TODAY, items);}
 }
 
 function deleteScheduleItem(id){
@@ -4213,12 +4229,12 @@ function saveContactFromVCard(data){
 // Section → project mapping for D1
 var SECTION_TO_PROJECT = {
   biz_tasks:'gbb', wtc_tasks:'wtc', al_tasks:'aligned',
-  ms_tasks:'mustard', hl_tasks:'homelife', personal:'personal',
+  ms_tasks:'mustard', hl_tasks:'home', personal:'personal',
   followup_list:'personal', portal:'portal'
 };
 var PROJECT_TO_SECTION = {
   gbb:'biz_tasks', wtc:'wtc_tasks', aligned:'al_tasks',
-  mustard:'ms_tasks', homelife:'hl_tasks', personal:'personal', portal:'portal'
+  mustard:'ms_tasks', home:'hl_tasks', personal:'personal', portal:'portal'
 };
 
 // Read tasks for a section from D1 (async)
@@ -4437,7 +4453,7 @@ function renderProjectTasks(){
     {listId:'al-list', key:'al_tasks', project:'aligned'},
     {listId:'wtc-list', key:'wtc_tasks', project:'wtc'},
     {listId:'ms-list', key:'ms_tasks', project:'mustard'},
-    {listId:'hl-task-list', key:'hl_tasks', project:'homelife'},
+    {listId:'hl-task-list', key:'hl_tasks', project:'home'},
     {listId:'fu-list', key:'followup_list', project:'personal'},
   ];
   sections.forEach(function(s){
