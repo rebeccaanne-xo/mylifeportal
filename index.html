@@ -311,34 +311,41 @@ select,select option{background:#1a2d4a;color:#fff;}
 
 /* HORIZONTAL TAB NAV */
 .horiz-tabs{
-  display:flex;gap:2px;overflow-x:auto;
-  padding:.5rem .75rem 0;
-  border-top:1px solid rgba(255,255,255,.07);
-  flex-wrap:wrap;
+  display:flex;flex-wrap:wrap-reverse;gap:2px;
+  padding:.4rem .6rem 0;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  width:100%;
 }
-.horiz-tabs::-webkit-scrollbar{display:none}
 .horiz-tab{
   display:flex;flex-direction:column;align-items:center;gap:2px;
-  padding:.45rem .8rem .55rem;
-  border-radius:7px 7px 0 0;
+  padding:.38rem .7rem .48rem;
+  border-radius:6px 6px 0 0;
   border:1px solid rgba(255,255,255,.08);
   border-bottom:none;
   background:rgba(255,255,255,.03);
   cursor:pointer;white-space:nowrap;flex-shrink:0;
   transition:all .15s;font-family:'Montserrat',sans-serif;
-  margin-bottom:0;position:relative;bottom:-1px;
+  position:relative;bottom:-1px;
 }
 .horiz-tab:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}
 .horiz-tab.active{
   background:#1B2A4A;
-  border-color:rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.2);
   border-bottom:2px solid #1B2A4A;
   z-index:2;
 }
 .horiz-tab-icon{font-size:13px;line-height:1}
 .horiz-tab-label{font-size:8px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.04em}
 .horiz-tab.active .horiz-tab-label{color:#fff}
-.horiz-tabs-border{height:1px;background:rgba(255,255,255,.1);margin:0 .75rem;}
+.horiz-tabs-border{display:none}
+
+
+/* HOME PAGE DESIGN */
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:.875rem 1rem;margin-bottom:10px;transition:border-color .2s}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;user-select:none}
+.card-title{font-size:12px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.04em;font-family:'Montserrat',sans-serif;display:flex;align-items:center;gap:.25rem}
+.s-action{font-size:10px;font-weight:600;color:rgba(255,255,255,.35);background:none;border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:.2rem .55rem;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .15s;text-decoration:none;white-space:nowrap}
+.s-action:hover{color:#fff;border-color:rgba(255,255,255,.3)}
 
 /* CONTACT CARD */
 .contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:.75rem}
@@ -689,9 +696,9 @@ select,select option{background:#1a2d4a;color:#fff;}
 
       <!-- SCHEDULE -->
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hdr" onclick="toggleScheduleCard()" style="cursor:pointer;user-select:none">
-          <div class="card-title">🗓 Today's Schedule <span id="schedule-card-chevron" style="color:rgba(255,255,255,.3);font-size:11px;margin-left:.3rem">▾</span></div>
-          <div style="display:flex;gap:.4rem" onclick="event.stopPropagation()">
+        <div class="card-hdr" data-collapse="sched">
+          <div class="card-title">🗓 Today's Schedule <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
+          <div style="display:flex;gap:.4rem">
             <button class="s-action" onclick="addScheduleBlock()">+ Block</button>
             <button class="s-action" onclick="clearDoneScheduleItems()">Clear done</button>
             <button class="s-action" onclick="toggleManageRecurring()">↻ Daily</button>
@@ -710,18 +717,20 @@ select,select option{background:#1a2d4a;color:#fff;}
 
       <!-- TODAY'S PRIORITIES -->
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hdr">
-          <div class="card-title">🎯 Today's Priorities</div>
+        <div class="card-hdr" data-collapse="priorities">
+          <div class="card-title">🎯 Today's Priorities <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
           <a class="s-action" href="projects.html?view=today" style="text-decoration:none">All tasks →</a>
         </div>
+        <div id="priorities-body">
         <div class="priority-cards" id="priority-cards"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic" id="priority-hint">Flag tasks as P1 · P2 · P3 in any section to surface them here</div>
+        </div>
       </div>
 
       <!-- DAILY LOG WIDGET -->
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hdr">
-          <div class="card-title">📓 Today's Log</div>
+        <div class="card-hdr" data-collapse="log">
+          <div class="card-title">📓 Today's Log <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
           <div style="display:flex;gap:.4rem;align-items:center">
             <select class="add-select" id="log-symbol-select" style="font-size:11px;padding:.28rem .5rem;max-width:110px">
               <option value="•">• Task</option>
@@ -743,32 +752,34 @@ select,select option{background:#1a2d4a;color:#fff;}
             <a href="daily.html" style="font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;padding:.28rem .55rem;border:1px solid rgba(255,255,255,.1);border-radius:5px;transition:all .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Full log →</a>
           </div>
         </div>
+        <div id="log-body">
         <div class="add-row" style="margin-bottom:.5rem">
           <input class="add-input" id="log-entry-input" placeholder="Log something for today..." style="flex:1" onkeydown="if(event.key==='Enter')addDailyLogEntry()"/>
           <button class="add-btn" onclick="addDailyLogEntry()">Log</button>
         </div>
         <div id="home-log-list" style="display:flex;flex-direction:column;gap:3px;max-height:160px;overflow-y:auto"></div>
+        </div>
       </div>
 
       <!-- BILLS WIDGET -->
       <div class="card" style="margin-bottom:14px" id="home-bills-card">
-        <div class="card-hdr">
-          <div class="card-title">💳 Bills & Money</div>
+        <div class="card-hdr" data-collapse="bills">
+          <div class="card-title">💳 Bills & Money <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
           <button class="s-action" onclick="goToBills()">All bills →</button>
         </div>
-        <div id="home-bills-list" style="display:flex;flex-direction:column;gap:3px"></div>
-        <div id="home-bills-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;display:none">No upcoming bills</div>
+        <div id="bills-body"><div id="home-bills-list" style="display:flex;flex-direction:column;gap:3px"></div>
+        <div id="home-bills-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;display:none">No upcoming bills</div></div>
       </div>
 
 
       <!-- NEED TO -->
       <!-- NEED TO -->
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hdr">
-          <div class="card-title">⚡ Need To</div>
+        <div class="card-hdr" data-collapse="needto">
+          <div class="card-title">⚡ Need To <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
           <button class="s-action" onclick="toggleNeedToForm()">+ Add</button>
         </div>
-        <div class="needto-list" id="needto-list"></div>
+        <div id="needto-body"><div class="needto-list" id="needto-list"></div>
         <div id="needto-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;display:none">Nothing pending</div>
         <div class="needto-add-form" id="needto-form">
           <div class="needto-type-picker" id="needto-type-picker">
@@ -791,43 +802,44 @@ select,select option{background:#1a2d4a;color:#fff;}
             <button class="add-btn" onclick="addNeedTo()">Add</button>
           </div>
         </div>
+        </div>
       </div>
 
+
+      <!-- HABIT SNAPSHOT — compact collapsible -->
+      <div class="card" style="margin-bottom:10px">
+        <div class="card-hdr" data-collapse="habits-snap">
+          <div class="card-title">💪 Habits Today <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span style="font-size:10px;color:rgba(255,255,255,.3)"><span id="snap-done">0</span>/<span id="snap-total">0</span> · <span id="snap-pts" style="color:var(--sage)">0</span>pts</span>
+            <span class="s-action" onclick="goTab('habits',null);event.stopPropagation()">Open →</span>
+          </div>
+        </div>
+        <div id="habits-snap-body">
+          <div class="habit-dot-grid" id="habit-dots" style="margin-top:.3rem"></div>
+        </div>
+      </div>
 
       <div class="grid2">
         <!-- AT A GLANCE -->
         <div class="card">
-          <div class="card-hdr"><div class="card-title">👁 At a Glance</div></div>
-          <div class="glance-grid">
+          <div class="card-hdr" data-collapse="glance"><div class="card-title">👁 At a Glance <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div></div>
+          <div id="glance-body"><div class="glance-grid">
             <div class="glance-item" onclick="window.location='projects.html?view=today'"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
             <div class="glance-item" onclick="goTab('people',null)"><div class="glance-val" id="g-followup">—</div><div class="glance-label">Follow ups</div><div class="glance-dot" id="gd-followup"></div></div>
             <div class="glance-item" onclick="goTab('faith',null)"><div class="glance-val" id="g-prayers">—</div><div class="glance-label">Prayers</div><div class="glance-dot" id="gd-prayers"></div></div>
             <div class="glance-item" onclick="goTab('shopping',null)"><div class="glance-val" id="g-shopping">—</div><div class="glance-label">Shopping</div><div class="glance-dot" id="gd-shopping"></div></div>
             <div class="glance-item" onclick="goTab('mission',null)"><div class="glance-val" id="g-mission">—</div><div class="glance-label">Mission</div><div class="glance-dot" id="gd-mission"></div></div>
             <div class="glance-item" onclick="goTab('brain',null)"><div class="glance-val" id="g-brain">—</div><div class="glance-label">Brain</div><div class="glance-dot" id="gd-brain"></div></div>
-          </div>
-        </div>
-
-        <!-- HABIT SNAPSHOT -->
-        <div class="card">
-          <div class="card-hdr">
-            <div class="card-title">💪 Habits Today</div>
-            <span class="card-link" onclick="goTab('habits',null)">Open →</span>
-          </div>
-          <div class="stat-row" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:.5rem">
-            <div class="stat"><div class="stat-val" id="snap-done">0</div><div class="stat-label">Done</div></div>
-            <div class="stat"><div class="stat-val" id="snap-total">0</div><div class="stat-label">Total</div></div>
-            <div class="stat"><div class="stat-val" id="snap-pts" style="color:var(--sage)">0</div><div class="stat-label">Pts</div></div>
-          </div>
-          <div class="habit-dot-grid" id="habit-dots"></div>
+          </div></div>
         </div>
       </div>
 
 
       <!-- QUICK ACCESS -->
       <div class="card">
-        <div class="card-hdr"><div class="card-title">⚡ Quick Access</div></div>
-        <div class="grid4">
+        <div class="card-hdr" data-collapse="quickaccess"><div class="card-title">⚡ Quick Access <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div></div>
+        <div id="quickaccess-body"><div class="grid4">
           <div class="tool-card" onclick="goTab('faith',null)" style="border-color:rgba(107,140,184,.3);background:rgba(107,140,184,.08)"><div class="tool-emoji">✝️</div>Faith</div>
           <div class="tool-card" onclick="goTab('brain',null)"><div class="tool-emoji">🧠</div>Brain Dump</div>
           <a class="tool-card" href="daily.html" style="border-color:rgba(194,115,138,.3);background:rgba(194,115,138,.08)"><div class="tool-emoji">📓</div>Daily Log</a>
@@ -1853,6 +1865,7 @@ function loadScripture(){
   if(sc) sc.textContent=s.r;
 }
 
+
 // ══ DATE ══
 function loadDate(){
   var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -2600,8 +2613,8 @@ function renderPriorityCards(){
     var tasks = ld(key,[]);
     if(!Array.isArray(tasks)) return;
     tasks.filter(function(t){
-      return (t.priority_flag || t.priority_flag === '1' || t.priority_flag === '2' || t.priority_flag === '3') 
-        && t.priority_flag !== '' && !t.done && !t.archived;
+      return ['1','2','3'].indexOf(String(t.priority_flag)) !== -1
+        && !t.done && !t.archived;
     }).forEach(function(t){
       var tid = String(t.id);
       if(seen[tid]) return;
@@ -4009,6 +4022,7 @@ function loadSaved(){
   renderHomeDailyLog();
   populateRecurringItems();
   renderSchedule();
+  setTimeout(initCollapsibleCards, 100);
   // Restore schedule card collapsed state
   if(ld('schedule_card_collapsed', false)){
     var body = document.getElementById('schedule-card-body');
@@ -4537,6 +4551,33 @@ function renderProjectTasks(){
       more.textContent = '+ ' + (sorted.length-10) + ' more in Project Board';
       list.appendChild(more);
     }
+  });
+}
+
+
+// ══ COLLAPSIBLE CARDS ══
+function initCollapsibleCards(){
+  // Map collapse keys to actual body element IDs
+  var bodyIdMap = {sched:'schedule-card-body'};
+  document.querySelectorAll('.card-hdr[data-collapse]').forEach(function(hdr){
+    var key = hdr.dataset.collapse;
+    var bodyId = bodyIdMap[key] || (key+'-body');
+    var body = document.getElementById(bodyId);
+    var chevron = hdr.querySelector('.collapse-chevron');
+    var collapsed = ld('card_collapsed_'+key, false);
+    if(collapsed && body){
+      body.style.display='none';
+      if(chevron) chevron.textContent='▸';
+    }
+    hdr.style.cursor='pointer';
+    hdr.onclick = function(e){
+      if(e.target.tagName==='BUTTON'||e.target.tagName==='A'||e.target.tagName==='SELECT'||e.target.tagName==='INPUT') return;
+      var isCollapsed = body && body.style.display==='none';
+      if(body) body.style.display = isCollapsed ? '' : 'none';
+      if(chevron) chevron.textContent = isCollapsed ? '▾' : '▸';
+      sv('card_collapsed_'+key, !isCollapsed);
+      if(key==='sched') sv('schedule_card_collapsed', !isCollapsed);
+    };
   });
 }
 
