@@ -112,7 +112,7 @@ select,select option{background:#1a2d4a;color:#fff;}
 
 /* PAGE CONTENT */
 .pages{flex:1;overflow-y:auto;background:var(--navy)}
-.page{display:none;padding:1.5rem 1.75rem;min-height:100%}
+.page{display:none;padding:.875rem 1rem;min-height:100%}
 .page.active{display:block;animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
@@ -128,7 +128,7 @@ select,select option{background:#1a2d4a;color:#fff;}
 
 /* PAGE CONTENT */
 .pages{flex:1;overflow-y:auto;background:var(--navy)}
-.page{display:none;padding:1.5rem 1.75rem;min-height:100%}
+.page{display:none;padding:.875rem 1rem;min-height:100%}
 .page.active{display:block;animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
@@ -4300,7 +4300,7 @@ function saveContactFromVCard(data){
 // Section → project mapping for D1
 var SECTION_TO_PROJECT = {
   biz_tasks:'gbb', wtc_tasks:'wtc', al_tasks:'aligned',
-  ms_tasks:'mustard', hl_tasks:'home', personal:'personal',
+  ms_tasks:'mustard', hl_tasks:'home', home:'home', personal:'personal',
   followup_list:'personal', portal:'portal'
 };
 var PROJECT_TO_SECTION = {
@@ -4356,7 +4356,7 @@ function writeTaskToD1(task, section) {
 // Load all task sections from D1 on startup
 async function loadAllTasksFromD1() {
   if(!DB_ONLINE) return;
-  var sections = ['biz_tasks','wtc_tasks','al_tasks','ms_tasks','hl_tasks','personal','followup_list'];
+  var sections = ['biz_tasks','wtc_tasks','al_tasks','ms_tasks','hl_tasks','personal','followup_list','home'];
   for(var i=0; i<sections.length; i++) {
     await fetchTasksFromD1(sections[i]);
   }
