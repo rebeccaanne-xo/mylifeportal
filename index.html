@@ -1538,7 +1538,9 @@ async function loadFromSheets(forceRefresh){
     sv('last_sync_time', Date.now());
     // Load all tasks from D1 immediately on connect
     loadAllTasksFromD1().then(function(){
+      renderProjectTasks();
       renderPriorityCards();
+      console.log('Tasks loaded, priorities rendered');
     });
     loadBillsFromD1();
     // Load schedule blocks from D1 if available
@@ -4362,6 +4364,8 @@ async function loadAllTasksFromD1() {
   }
   // Reload the visible task lists
   loadSaved();
+  // Re-render priorities with fresh data
+  renderPriorityCards();
 }
 
 // Add task — writes to D1 + updates cache + refreshes UI
