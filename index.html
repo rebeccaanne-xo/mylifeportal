@@ -1652,8 +1652,15 @@ function goTab(id, el){
   if(recentTabs.length > 5) recentTabs = recentTabs.slice(0,5);
   renderRecentTabs(id);
   document.querySelector('.pages').scrollTo(0,0);
-  if(id==='home') loadGlance();
+  if(id==='home'){ loadGlance(); renderSchedule(); renderPriorityCards(); renderHomeBills(); renderHomeDailyLog(); }
   if(id==='habits') renderHabitsPage();
+  if(id==='people') renderPeople();
+  if(id==='faith') renderFaith();
+  if(id==='shopping') renderShopList();
+  if(id==='homelife'){ renderBills(); renderFinLinks(); }
+  if(id==='business') renderProjectTasks();
+  if(id==='mission') renderProjectTasks();
+  if(id==='brain') renderBrainRecent();
 }
 
 function renderRecentTabs(activeId){
