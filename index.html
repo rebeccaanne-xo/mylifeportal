@@ -478,6 +478,20 @@ select,select option{background:#1a2d4a;color:#fff;}
 .milestone-text span{font-size:12px;color:rgba(255,255,255,.5)}
 
 
+/* MINI CLOCK ROW */
+.clock-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;transition:background .15s;user-select:none}
+.clock-row:hover{background:rgba(255,255,255,.02)}
+.clock-row-left{display:flex;align-items:center}
+.mini-flip-group{display:flex;align-items:center;gap:.2rem}
+.mini-flip-card{background:#1B2A4A;border-radius:4px;padding:.18rem .38rem;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:#fff;letter-spacing:.02em;min-width:24px;text-align:center;border:1px solid rgba(255,255,255,.08)}
+.mini-flip-sep{color:rgba(255,255,255,.3);font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;padding:0 1px}
+.mini-ampm{font-size:9px;font-weight:700;color:#4A7C6F;letter-spacing:.12em;margin-left:.35rem;align-self:flex-end;padding-bottom:2px}
+.clock-row-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.clock-row-day{font-size:9px;font-weight:700;color:#4A7C6F;letter-spacing:.1em;text-transform:uppercase}
+.clock-row-date{font-size:10px;color:rgba(255,255,255,.35)}
+.clock-row-chevron{font-size:9px;color:rgba(255,255,255,.2);margin-top:1px;transition:transform .2s}
+.clock-row-chevron.open{transform:rotate(180deg)}
+
 /* FLIP CLOCK */
 .flip-display{display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-bottom:1rem;padding:1.25rem;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.07);border-radius:14px;flex-wrap:wrap}
 .flip-section{display:flex;flex-direction:column;align-items:center;gap:.4rem}
@@ -616,8 +630,30 @@ select,select option{background:#1a2d4a;color:#fff;}
 
     <!-- CLOCK + GREETING + SCRIPTURE -->
     <div class="persistent-top">
-      <!-- FLIP CLOCK + CALENDAR -->
-      <div class="flip-display">
+      <!-- CLOCK ROW — mini flip cards, tap to expand -->
+      <div class="clock-row" id="clock-row" onclick="toggleClock()">
+        <div class="clock-row-left">
+          <div class="mini-flip-group">
+            <div class="mini-flip-card" id="mc-h1"><span id="mcu-h1">0</span></div>
+            <div class="mini-flip-card" id="mc-h2"><span id="mcu-h2">0</span></div>
+            <div class="mini-flip-sep">:</div>
+            <div class="mini-flip-card" id="mc-m1"><span id="mcu-m1">0</span></div>
+            <div class="mini-flip-card" id="mc-m2"><span id="mcu-m2">0</span></div>
+            <div class="mini-flip-sep">:</div>
+            <div class="mini-flip-card" id="mc-s1"><span id="mcu-s1">0</span></div>
+            <div class="mini-flip-card" id="mc-s2"><span id="mcu-s2">0</span></div>
+            <div class="mini-ampm" id="mini-ampm">AM</div>
+          </div>
+        </div>
+        <div class="clock-row-right">
+          <div class="clock-row-day" id="clock-row-day">Tuesday</div>
+          <div class="clock-row-date" id="clock-row-date">May 6, 2026</div>
+          <div class="clock-row-chevron" id="clock-chevron">▾</div>
+        </div>
+      </div>
+
+      <!-- FULL FLIP CLOCK — expanded on tap -->
+      <div class="flip-display" id="flip-clock-full" style="display:none">
         <div class="flip-section">
           <div class="flip-section-label">Today</div>
           <div class="flip-cal-day" id="flip-day">01</div>
@@ -640,16 +676,17 @@ select,select option{background:#1a2d4a;color:#fff;}
           <div id="flip-ampm" style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:.3rem">AM</div>
         </div>
       </div>
+
       <!-- GREETING -->
       <div class="greeting-bar">
         <div class="greeting-left">
-          <div class="greeting-time-label" id="greeting-label">Tuesday Afternoon</div>
+          <div class="greeting-time-label" id="greeting-label">Tuesday — Afternoon</div>
           <div class="greeting-name" id="greeting-name">Hey there, Rebecca. Let's do stuff.</div>
         </div>
         <div class="greeting-right">
           <div class="greeting-pts-val" id="header-pts">⭐ 0</div>
           <div class="greeting-streak" id="greeting-streak">🔥 0 day streak</div>
-          <button onclick="hardRefresh()" style="font-size:9px;background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-family:inherit;margin-top:2px">↻</button>
+          <button onclick="hardRefresh();event.stopPropagation()" style="font-size:9px;background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-family:inherit;margin-top:2px">↻</button>
         </div>
       </div>
       <!-- SCRIPTURE -->
@@ -1893,13 +1930,58 @@ function loadDate(){
 
   var gd=document.getElementById('greeting-date');
   if(gd) gd.textContent='Allen, TX \u00b7 '+month+' '+date;
+  // Mini clock row
+  var crd=document.getElementById('clock-row-day');
+  if(crd) crd.textContent=day;
+  var cdate=document.getElementById('clock-row-date');
+  if(cdate) cdate.textContent=month+' '+date+', '+d.getFullYear();
+  // Restore expanded state
+  if(ld('clock_expanded',false)){
+    var full=document.getElementById('flip-clock-full');
+    var chevron=document.getElementById('clock-chevron');
+    if(full) full.style.display='flex';
+    if(chevron) chevron.classList.add('open');
+  }
   var sbDate=document.getElementById('sb-date');
   if(sbDate) sbDate.textContent=day+' \u00b7 '+month+' '+date+', '+d.getFullYear();
+}
+
+// MINI CLOCK
+function updateMiniClock(){
+  var now = new Date();
+  var h = now.getHours();
+  var m = now.getMinutes();
+  var s = now.getSeconds();
+  var ampm = h >= 12 ? 'PM' : 'AM';
+  var h12 = h % 12 || 12;
+  var hStr = String(h12).padStart(2,'0');
+  var mStr = String(m).padStart(2,'0');
+  var sStr = String(s).padStart(2,'0');
+  var el = function(id){return document.getElementById(id);};
+  if(el('mcu-h1')) el('mcu-h1').textContent = hStr[0];
+  if(el('mcu-h2')) el('mcu-h2').textContent = hStr[1];
+  if(el('mcu-m1')) el('mcu-m1').textContent = mStr[0];
+  if(el('mcu-m2')) el('mcu-m2').textContent = mStr[1];
+  if(el('mcu-s1')) el('mcu-s1').textContent = sStr[0];
+  if(el('mcu-s2')) el('mcu-s2').textContent = sStr[1];
+  if(el('mini-ampm')) el('mini-ampm').textContent = ampm;
+}
+
+function toggleClock(){
+  var full = document.getElementById('flip-clock-full');
+  var chevron = document.getElementById('clock-chevron');
+  if(!full) return;
+  var isOpen = full.style.display !== 'none';
+  full.style.display = isOpen ? 'none' : 'flex';
+  if(chevron) chevron.classList.toggle('open', !isOpen);
+  // Save state
+  sv('clock_expanded', !isOpen);
 }
 
 function updateHeaderTime(){
   var el = document.getElementById('header-time');
   if(el) el.textContent = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  updateMiniClock();
 }
 
 
