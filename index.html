@@ -1216,6 +1216,10 @@ select,select option{background:#1a2d4a;color:#fff;}
         <div class="page-eyebrow">Prayer · Scripture · Journal · Gratitude</div>
         <div class="page-title">Faith <em>& Spirit</em></div>
       </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+        <div style="font-size:11px;color:rgba(107,140,184,.6)">Bible study + community lives in WTC</div>
+        <a href="https://wethechurch.pages.dev" target="_blank" class="s-action" style="text-decoration:none">Open WTC →</a>
+      </div>
       <div class="tabs-inner">
         <button class="tab-inner active" onclick="innerTab(this,'f-praying')">Praying For</button>
         <button class="tab-inner" onclick="innerTab(this,'f-myself')">For Myself</button>
@@ -4532,35 +4536,56 @@ function currencyBlur(input) {
 // Render project tasks in portal tabs from D1 task cache
 function renderProjectTasks(){
   var sections = [
-    {listId:'biz-tasks-list', key:'biz_tasks', project:'gbb'},
-    {listId:'al-list', key:'al_tasks', project:'aligned'},
-    {listId:'wtc-list', key:'wtc_tasks', project:'wtc'},
-    {listId:'ms-list', key:'ms_tasks', project:'mustard'},
-    {listId:'hl-task-list', key:'hl_tasks', project:'home'},
-    {listId:'fu-list', key:'followup_list', project:'personal'},
+    {listId:'biz-tasks-list', section:'gbb'},
+    {listId:'al-list', section:'aligned'},
+    {listId:'wtc-list', section:'wtc'},
+    {listId:'ms-list', section:'mustard'},
+    {listId:'hl-task-list', section:'home'},
+    {listId:'fu-list', section:'personal'},
   ];
+
+  // Get all tasks from D1 cache
+  var allTasks = ld('biz_tasks',[]).concat(
+    ld('wtc_tasks',[]),
+    ld('al_tasks',[]),
+    ld('ms_tasks',[]),
+    ld('hl_tasks',[]),
+    ld('home',[]),
+    ld('personal',[]),
+    ld('followup_list',[])
+  );
+
   sections.forEach(function(s){
     var list = document.getElementById(s.listId);
     if(!list) return;
     list.innerHTML = '';
-    var tasks = ld(s.key, []);
+
+    // Filter by section from D1 data
+    var tasks = allTasks.filter(function(t){
+      return (t.section||t.project) === s.section && !t.done;
+    });
+
     if(!tasks.length){
-      list.innerHTML = '<div style="font-size:11px;color:rgba(255,255,255,.2);font-style:italic;padding:.3rem 0">No tasks yet — add in Project Board</div>';
+      list.innerHTML = '<div style="font-size:11px;color:rgba(255,255,255,.2);font-style:italic;padding:.3rem 0">No tasks — manage in Project Board</div>';
       return;
     }
-    // Show undone tasks first, then done
-    var sorted = tasks.slice().sort(function(a,b){
-      if(a.done && !b.done) return 1;
-      if(!a.done && b.done) return -1;
-      return 0;
+
+    tasks.slice(0,8).forEach(function(task){
+      var div = document.createElement('div');
+      div.className = 'item';
+      div.style.cssText = 'display:flex;align-items:center;gap:.5rem;padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer';
+      div.innerHTML = '<div class="item-dot" style="background:'+(task.priority_flag==='1'?'#F1948A':task.priority_flag==='2'?'#C4895A':'rgba(255,255,255,.2)')+'"></div>' +
+        '<div style="flex:1;font-size:12px;color:rgba(255,255,255,.75)">'+(task.text||task.title||'')+'</div>' +
+        (task.priority_flag?'<span style="font-size:9px;font-weight:700;color:'+(task.priority_flag==='1'?'#F1948A':'#C4895A')+'">P'+task.priority_flag+'</span>':'');
+      div.onclick = function(){ window.location='projects.html?view=list'; };
+      list.appendChild(div);
     });
-    sorted.slice(0,10).forEach(function(task){
-      list.appendChild(makeCheck(task, s.key));
-    });
-    if(sorted.length > 10){
+
+    if(tasks.length > 8){
       var more = document.createElement('div');
-      more.style.cssText = 'font-size:11px;color:rgba(255,255,255,.25);padding:.3rem 0;font-style:italic';
-      more.textContent = '+ ' + (sorted.length-10) + ' more in Project Board';
+      more.style.cssText = 'font-size:11px;color:rgba(255,255,255,.25);padding:.35rem 0;font-style:italic;cursor:pointer';
+      more.textContent = '+ '+(tasks.length-8)+' more → Project Board';
+      more.onclick = function(){ window.location='projects.html'; };
       list.appendChild(more);
     }
   });

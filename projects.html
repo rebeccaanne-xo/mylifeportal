@@ -967,6 +967,8 @@ function renderProjects(){
     var card=document.createElement('div');
     card.className='proj-card';
     card.onclick=function(){setFilter(key,null);switchView('kanban',null);};
+    // Edit button
+    card.style.position='relative';
     card.innerHTML=
       '<div class="proj-card-bar" style="background:'+p.color+'"></div>'+
       '<div class="proj-card-top"><div class="proj-name">'+esc(p.name)+'</div><span class="status-badge '+sc+'">'+p.status+'</span></div>'+
@@ -983,6 +985,15 @@ function renderProjects(){
         '<div class="proj-progress-bar"><div class="proj-progress-fill" style="width:'+pct+'%;background:'+p.color+'"></div></div>'+
       '</div>'+
       '<div class="proj-links">'+linksHtml+'</div>';
+    // Add edit button after innerHTML
+    var editBtn=document.createElement('button');
+    editBtn.textContent='✏️';
+    editBtn.title='Edit project';
+    editBtn.style.cssText='position:absolute;bottom:.6rem;right:.6rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:2px 6px;cursor:pointer;font-size:10px;z-index:2;opacity:.5;transition:opacity .15s';
+    editBtn.onmouseover=function(){this.style.opacity='1'};
+    editBtn.onmouseout=function(){this.style.opacity='.5'};
+    editBtn.onclick=function(e){e.stopPropagation();openProjEdit(key);};
+    card.appendChild(editBtn);
     grid.appendChild(card);
   });
 }
@@ -1379,6 +1390,100 @@ function closeNavPanel(){}
 // rail icon sync is handled inside switchView directly
 
 // INIT
+// PROJECT EDITING
+var activeProjKey = null;
+var PROJECTS_CUSTOM = {};
+
+function loadProjCustom(){
+  try{ PROJECTS_CUSTOM = JSON.parse(localStorage.getItem('projects_custom')||'{}'); }catch(e){ PROJECTS_CUSTOM={}; }
+  Object.keys(PROJECTS_CUSTOM).forEach(function(key){
+    if(PROJECTS[key]) Object.assign(PROJECTS[key], PROJECTS_CUSTOM[key]);
+  });
+}
+
+function saveProjCustom(){
+  localStorage.setItem('projects_custom', JSON.stringify(PROJECTS_CUSTOM));
+}
+
+function openProjEdit(key){
+  activeProjKey = key;
+  var p = PROJECTS[key] || {};
+  var modal = document.getElementById('proj-edit-modal');
+  if(!modal) return;
+  document.getElementById('pem-title').textContent = p.name || key;
+  document.getElementById('pem-name').value = p.name || '';
+  document.getElementById('pem-desc').value = p.desc || '';
+  document.getElementById('pem-goal').value = p.goal || '';
+  document.getElementById('pem-notes').value = p.notes || '';
+  document.getElementById('pem-status').value = p.status || 'planning';
+  var linksEl = document.getElementById('pem-links');
+  linksEl.innerHTML = '';
+  (p.urls||[]).forEach(function(u,i){
+    var row = document.createElement('div');
+    row.className = 'proj-link-row';
+    row.innerHTML = '<input class="proj-link-input" placeholder="Label" value="'+(u.label||'')+'" onblur="saveProjLinkField('+i+',\'label\',this.value)"/>' +
+      '<input class="proj-link-input" placeholder="https://..." value="'+(u.url||'')+'" onblur="saveProjLinkField('+i+',\'url\',this.value)"/>' +
+      '<button onclick="removeProjLink('+i+')" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:14px;padding:2px 6px">✕</button>';
+    linksEl.appendChild(row);
+  });
+  modal.classList.add('open');
+}
+
+function closeProjEdit(){
+  var modal = document.getElementById('proj-edit-modal');
+  if(modal) modal.classList.remove('open');
+  activeProjKey = null;
+  renderProjects();
+}
+
+function saveProjField(field, value){
+  if(!activeProjKey) return;
+  if(!PROJECTS_CUSTOM[activeProjKey]) PROJECTS_CUSTOM[activeProjKey] = {};
+  PROJECTS_CUSTOM[activeProjKey][field] = value;
+  if(PROJECTS[activeProjKey]) PROJECTS[activeProjKey][field] = value;
+  if(field==='name') document.getElementById('pem-title').textContent = value;
+  saveProjCustom();
+}
+
+function saveProjLinkField(idx, field, value){
+  if(!activeProjKey) return;
+  if(!PROJECTS_CUSTOM[activeProjKey]) PROJECTS_CUSTOM[activeProjKey]={};
+  if(!PROJECTS_CUSTOM[activeProjKey].urls) PROJECTS_CUSTOM[activeProjKey].urls=[];
+  if(!PROJECTS_CUSTOM[activeProjKey].urls[idx]) PROJECTS_CUSTOM[activeProjKey].urls[idx]={};
+  PROJECTS_CUSTOM[activeProjKey].urls[idx][field]=value;
+  if(PROJECTS[activeProjKey]) PROJECTS[activeProjKey].urls=PROJECTS_CUSTOM[activeProjKey].urls;
+  saveProjCustom();
+}
+
+function addProjLink(){
+  if(!activeProjKey) return;
+  if(!PROJECTS_CUSTOM[activeProjKey]) PROJECTS_CUSTOM[activeProjKey]={};
+  if(!PROJECTS_CUSTOM[activeProjKey].urls) PROJECTS_CUSTOM[activeProjKey].urls=[];
+  PROJECTS_CUSTOM[activeProjKey].urls.push({label:'',url:''});
+  if(PROJECTS[activeProjKey]) PROJECTS[activeProjKey].urls=PROJECTS_CUSTOM[activeProjKey].urls;
+  saveProjCustom();
+  openProjEdit(activeProjKey);
+}
+
+function removeProjLink(idx){
+  if(!activeProjKey) return;
+  var urls=(PROJECTS_CUSTOM[activeProjKey]||{}).urls||[];
+  urls.splice(idx,1);
+  PROJECTS_CUSTOM[activeProjKey].urls=urls;
+  if(PROJECTS[activeProjKey]) PROJECTS[activeProjKey].urls=urls;
+  saveProjCustom();
+  openProjEdit(activeProjKey);
+}
+
+function goToProjectKanban(){
+  if(!activeProjKey) return;
+  var key = activeProjKey;
+  closeProjEdit();
+  setFilter(key, null);
+  switchViewTab('kanban');
+}
+
+loadProjCustom();
 // Show DEFAULT_TASKS immediately so UI isn't empty
 if(!localStorage.getItem('pb_tasks')){
   saveTasks(DEFAULT_TASKS);
@@ -1402,5 +1507,50 @@ document.addEventListener('keydown', function(e){
   }
 });
 </script>
+<!-- PROJECT EDIT MODAL -->
+<div class="proj-edit-overlay" id="proj-edit-modal">
+  <div class="proj-edit-panel">
+    <div class="proj-edit-header">
+      <div class="proj-edit-title" id="pem-title">Edit Project</div>
+      <button onclick="closeProjEdit()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;padding:0 4px">✕</button>
+    </div>
+    <div class="proj-edit-body">
+      <div class="pef"><div class="pef-label">Name</div><input class="pef-input" id="pem-name" onblur="saveProjField('name',this.value)"/></div>
+      <div class="pef"><div class="pef-label">Description</div><textarea class="pef-input" id="pem-desc" rows="2" onblur="saveProjField('desc',this.value)"></textarea></div>
+      <div class="pef"><div class="pef-label">Goal</div><input class="pef-input" id="pem-goal" onblur="saveProjField('goal',this.value)"/></div>
+      <div class="pef"><div class="pef-label">Status</div>
+        <select class="pef-input" id="pem-status" onchange="saveProjField('status',this.value)">
+          <option value="planning">Planning</option>
+          <option value="building">Building</option>
+          <option value="live">Live</option>
+          <option value="paused">Paused</option>
+          <option value="ongoing">Ongoing</option>
+        </select>
+      </div>
+      <div class="pef"><div class="pef-label">Links</div><div id="pem-links"></div><button class="s-action" onclick="addProjLink()" style="margin-top:.4rem">+ Add Link</button></div>
+      <div class="pef"><div class="pef-label">Notes</div><textarea class="pef-input" id="pem-notes" rows="3" placeholder="Notes, strategy, ideas..." onblur="saveProjField('notes',this.value)"></textarea></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem 1.25rem;border-top:1px solid rgba(255,255,255,.08)">
+      <button class="btn-primary" onclick="goToProjectKanban()">View in Kanban →</button>
+      <button class="s-action" onclick="closeProjEdit()">Done</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.proj-edit-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.proj-edit-overlay.open{display:flex}
+.proj-edit-panel{background:#0d1b2e;border:1px solid rgba(255,255,255,.12);border-radius:14px;width:100%;max-width:520px;display:flex;flex-direction:column;max-height:90vh;overflow:hidden}
+.proj-edit-header{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.proj-edit-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:#fff}
+.proj-edit-body{flex:1;overflow-y:auto;padding:1rem 1.25rem;display:flex;flex-direction:column;gap:.75rem}
+.pef{display:flex;flex-direction:column;gap:.3rem}
+.pef-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;font-family:'Montserrat',sans-serif}
+.pef-input{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:.5rem .75rem;color:#fff;font-family:'Inter',sans-serif;font-size:13px;outline:none;resize:vertical;width:100%}
+.pef-input:focus{border-color:var(--peony)}
+.proj-link-row{display:flex;gap:.35rem;align-items:center;margin-bottom:.3rem}
+.proj-link-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:.3rem .6rem;color:#fff;font-family:'Inter',sans-serif;font-size:12px;outline:none}
+</style>
+
 </body>
 </html>
