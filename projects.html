@@ -424,7 +424,7 @@ select,select option{background:#1a2d4a;color:#fff}
           <select class="cf-select" id="cm-project" onchange="saveField('project')">
             <option value="gbb">💼 GBB</option><option value="wtc">✝️ WTC</option>
             <option value="aligned">🌱 Aligned Life</option><option value="mustard">🌿 Mustard Seed</option>
-            <option value="portal">⚡ Portal</option><option value="personal">👤 Personal</option>
+            <option value="portal">⚡ Portal</option><option value="home">🏠 Home</option><option value="personal">👤 Personal</option><option value="vision">✨ The Vision</option>
           </select></div>
         <div class="cf"><div class="cf-label">Due Date</div><input class="cf-input" type="date" id="cm-due" onchange="saveField('due')"/></div>
         <div class="cf"><div class="cf-label">Time (hrs)</div><input class="cf-input" type="number" id="cm-time" placeholder="e.g. 2" min="0" step="0.5" onblur="saveField('time')"/></div>
@@ -466,7 +466,7 @@ select,select option{background:#1a2d4a;color:#fff}
         <select class="modal-select" id="at-project">
           <option value="gbb">💼 GBB</option><option value="wtc">✝️ WTC</option>
           <option value="aligned">🌱 Aligned Life</option><option value="mustard">🌿 Mustard Seed</option>
-          <option value="portal">⚡ Portal</option><option value="personal">👤 Personal</option>
+          <option value="portal">⚡ Portal</option><option value="home">🏠 Home</option><option value="personal">👤 Personal</option><option value="vision">✨ The Vision</option>
         </select></div>
       <div><div class="modal-label">Status</div>
         <select class="modal-select" id="at-status">
@@ -522,7 +522,7 @@ select,select option{background:#1a2d4a;color:#fff}
     <div class="modal-label">What was decided</div><input class="modal-input" id="ad-title" placeholder="e.g. Use Google Sheets as primary database"/>
     <div class="modal-label">Project</div>
     <select class="modal-select" id="ad-project">
-      <option value="portal">Portal</option><option value="gbb">GBB</option><option value="wtc">WTC</option>
+      <option value="portal">Portal</option><option value="home">Home</option><option value="personal">Personal</option><option value="vision">The Vision</option><option value="gbb">GBB</option><option value="wtc">WTC</option>
       <option value="aligned">Aligned Life</option><option value="mustard">Mustard Seed</option><option value="infra">Infrastructure</option>
     </select>
     <div class="modal-label">Why</div><textarea class="modal-textarea" id="ad-why" placeholder="Reasoning..."></textarea>
@@ -556,8 +556,8 @@ function ld(k,d){try{var x=localStorage.getItem('pb_'+k);return x?JSON.parse(x):
 function esc(t){return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 // CONSTANTS
-var PC={gbb:'#C2738A',wtc:'#6B8CB8',aligned:'#4A7C6F',mustard:'#7A5C7A',portal:'#C4895A',personal:'#A89880',infra:'#A89880'};
-var PN={gbb:'GBB',wtc:'WTC',aligned:'Aligned Life',mustard:'Mustard Seed',portal:'Portal',personal:'Personal',infra:'Infra'};
+var PC={gbb:'#C2738A',wtc:'#6B8CB8',aligned:'#4A7C6F',mustard:'#7A5C7A',portal:'#C4895A',home:'#A89880',personal:'#6B8CB8',vision:'#C4895A',infra:'#A89880'};
+var PN={gbb:'GBB',wtc:'WTC',aligned:'Aligned Life',mustard:'Mustard Seed',portal:'Portal',home:'Home',personal:'Personal',vision:'The Vision',infra:'Infra'};
 var SL={backlog:'Backlog',todo:'To Do',inprogress:'In Progress',blocked:'Blocked',done:'Done'};
 var SC={backlog:'rgba(255,255,255,.1)',todo:'rgba(107,140,184,.22)',inprogress:'rgba(196,137,90,.22)',blocked:'rgba(241,148,138,.22)',done:'rgba(46,125,82,.22)'};
 var PR={high:'#F1948A',med:'#C4895A',low:'#4A7C6F'};
@@ -599,6 +599,10 @@ var PROJECTS={
   personal:{name:'Personal',color:'#6B8CB8',status:'ongoing',
     desc:'Personal health, faith practices, habits, self-care, and individual growth.',
     offer:'',goal:'Show up healthy and grounded',
+    urls:[],repo:null},
+  vision:{name:'The Vision',color:'#C4895A',status:'planning',
+    desc:"Land. Community. Family. Faith. A self-sustaining place where God's work gets done and people are cared for.",
+    offer:'',goal:"Own land, build community, do God's work",
     urls:[],repo:null}
 };
 
@@ -1027,7 +1031,7 @@ function makeCard(task){
     '<div class="task-prio-dot" style="background:'+(PR[task.priority]||'#888')+'"></div>'+
     '<div class="task-card-title">'+esc(task.title)+'</div>'+
     '<div class="task-card-meta">'+
-      '<span class="task-proj-tag" style="background:'+(PC[task.project]||'#fff')+'20;color:'+(PC[task.project]||'#fff')+'">'+PN[task.project]+'</span>'+
+      '<span class="task-proj-tag" style="background:'+(PC[task.project]||'#A89880')+'20;color:'+(PC[task.project]||'#A89880')+'">'+( PN[task.project]||task.project||'General')+'</span>'+
       (due?'<span class="task-due-tag '+due.cls+'">📅 '+due.text+'</span>':'')+
     '</div>'+
     (footer?'<div class="task-card-footer">'+footer+'</div>':'');
@@ -1245,7 +1249,7 @@ function renderList(){
       '<td style="max-width:280px"><div style="font-weight:500">'+esc(task.title)+'</div>'+
       (task.description?'<div style="font-size:10px;color:rgba(255,255,255,.26);margin-top:1px">'+esc(task.description.substring(0,50))+'...</div>':'')+
       (task.blocker?'<div style="font-size:10px;color:#F1948A;margin-top:1px">🔴 '+esc(task.blocker)+'</div>':'')+'</td>'+
-      '<td><span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;background:'+color+'20;color:'+color+'">'+PN[task.project]+'</span></td>'+
+      '<td><span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;background:'+color+'20;color:'+color+'">'+( PN[task.project]||task.project||'General')+'</span></td>'+
       '<td><span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;background:'+SC[task.status]+';color:#fff">'+SL[task.status]+'</span></td>'+
       '<td><span style="font-size:11px;font-weight:700;color:'+(PR[task.priority]||'#fff')+'">'+task.priority+'</span></td>'+
       '<td>'+(due?'<span class="task-due-tag '+due.cls+'" style="font-size:11px">'+due.text+'</span>':'<span style="color:rgba(255,255,255,.2)">—</span>')+'</td>'+
@@ -1349,7 +1353,7 @@ function updateCounts(){
   if(ncToday) ncToday.textContent=tasks.filter(function(t){return t.status!=='done'&&t.due&&new Date(t.due)<=today;}).length;
   var allEl=document.getElementById('pf-all');
   if(allEl) allEl.textContent=tasks.filter(function(t){return t.status!=='done';}).length;
-  ['gbb','wtc','aligned','mustard','portal','home','personal'].forEach(function(k){
+  ['gbb','wtc','aligned','mustard','portal','home','personal','vision'].forEach(function(k){
     var el=document.getElementById('pf-'+k);
     if(el) el.textContent=tasks.filter(function(t){return t.project===k&&t.status!=='done';}).length;
   });
