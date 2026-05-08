@@ -785,10 +785,11 @@ function mapSectionToProject(section){
     home:'home', hl_tasks:'home', homelife:'home', home_life:'home', household:'home',
     errands:'home', seth:'home', dogs:'home',
     personal:'personal', followup_list:'personal', followup:'personal',
-    health:'personal', habits:'personal', faith_personal:'personal'
+    health:'personal', habits:'personal', faith_personal:'personal',
+    vision:'vision', the_vision:'vision'
   };
   var result = map[s] || null;
-  if(!result && ['gbb','wtc','aligned','mustard','portal','home','personal'].includes(s)){
+  if(!result && ['gbb','wtc','aligned','mustard','portal','home','personal','vision'].includes(s)){
     result = s;
   }
   return result || 'personal';
@@ -799,7 +800,7 @@ async function syncTaskToD1(task) {
   var projectToSection = {
     gbb:'gbb', wtc:'wtc', aligned:'aligned',
     mustard:'mustard', portal:'portal',
-    home:'home', personal:'personal'
+    home:'home', personal:'personal', vision:'vision'
   };
   try {
     await fetch(D1_URL, {
@@ -846,14 +847,15 @@ function getSessions(){return ld('sessions',DEFAULT_SESSIONS);}
 
 // NAVIGATION
 var VTITLES={projects:'Projects',today:'Today',kanban:'Kanban Board',list:'All Tasks',decisions:'Decisions Log',sessions:'Session Log',infra:'Infrastructure'};
-var TAB_IDS=['projects','today','kanban','list','decisions','sessions','infra'];
+var TAB_IDS=['projects','kanban','today','decisions','sessions','infra'];
 
 function switchView(id,btn){
   currentView=id;
   document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
   if(btn) btn.classList.add('active');
-  document.querySelectorAll('.view-tab').forEach(function(t,i){
-    if(TAB_IDS[i]===id) t.classList.add('active'); else t.classList.remove('active');
+  document.querySelectorAll('.view-tab').forEach(function(t){
+    var oc = t.getAttribute('onclick') || '';
+    if(oc.includes("'"+id+"'")) t.classList.add('active'); else t.classList.remove('active');
   });
   var titleEl = document.getElementById('view-title');
   if(titleEl) titleEl.textContent=VTITLES[id]||id;
