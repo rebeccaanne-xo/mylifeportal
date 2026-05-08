@@ -745,17 +745,13 @@ async function loadTasksFromD1(){
         };
       });
 
-      // Also include any LOCAL tasks not yet in D1 (e.g. newly added before sync)
-      var d1Ids = mapped.map(function(t){return String(t.id);});
-      var localOnly = getAllTasks().filter(function(t){
-        return !d1Ids.includes(String(t.id));
-      });
-      var combined = mapped.concat(localOnly);
+      // D1 is source of truth — don't merge local tasks
+      var combined = mapped;
 
       saveTasks(combined);
       _tasksLoaded = true;
       render();
-      console.log('Loaded ' + mapped.length + ' tasks from D1, ' + localOnly.length + ' local only');
+      console.log('Loaded ' + mapped.length + ' tasks from D1');
     } else {
       // D1 is empty — seed defaults
       console.log('D1 has no tasks — seeding defaults');
