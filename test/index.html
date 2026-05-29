@@ -32,7 +32,7 @@
   <button class="rail-icon tab-mission" onclick="goTab('mission',this);closeNavPanel()" title="Mission">🌱<span class="rail-tooltip">Mission</span></button>
   <button class="rail-icon tab-brain" onclick="goTab('brain',this);closeNavPanel()" title="Brain">🧠<span class="rail-tooltip">Brain Dump</span></button>
   <div class="rail-sep"></div>
-  <a class="rail-icon" href="projects.html" title="Projects" style="text-decoration:none">📋<span class="rail-tooltip">Project Board</span></a>
+  <a class="rail-icon" href="/projects/" title="Projects" style="text-decoration:none">📋<span class="rail-tooltip">Project Board</span></a>
   <div class="rail-bottom">
     <button class="rail-menu-btn" onclick="toggleNavPanel()" title="Menu">☰<span class="rail-tooltip">Menu</span></button>
     <div class="pts-rail" id="rail-pts">0 pts</div>
@@ -60,8 +60,8 @@
     <span class="nav-group-label">Mind</span>
     <button class="nav-btn tab-brain" onclick="goTab('brain',this);closeNavPanel()"><span class="nav-emoji">🧠</span>Brain Dump</button>
     <span class="nav-group-label">Tools</span>
-    <a class="nav-btn" href="projects.html" style="text-decoration:none"><span class="nav-emoji">📋</span>Project Board</a>
-    <a class="nav-btn" href="daily.html" style="text-decoration:none"><span class="nav-emoji">📓</span>Daily Log</a>
+    <a class="nav-btn" href="/projects/" style="text-decoration:none"><span class="nav-emoji">📋</span>Project Board</a>
+    <a class="nav-btn" href="/daily/" style="text-decoration:none"><span class="nav-emoji">📓</span>Daily Log</a>
     <a class="nav-btn" href="https://getbookednbranded.pages.dev" target="_blank" style="text-decoration:none"><span class="nav-emoji">🌐</span>GBB Site<span class="nav-external">↗</span></a>
     <a class="nav-btn" href="https://dash.cloudflare.com" target="_blank" style="text-decoration:none"><span class="nav-emoji">☁️</span>Cloudflare<span class="nav-external">↗</span></a>
     <a class="nav-btn" href="https://github.com/rebeccaanne-xo" target="_blank" style="text-decoration:none"><span class="nav-emoji">💻</span>GitHub<span class="nav-external">↗</span></a>
@@ -198,7 +198,7 @@
       <div class="card" style="margin-bottom:14px">
         <div class="card-hdr">
           <div class="card-title">🎯 Today's Priorities</div>
-          <a class="s-action" href="projects.html?view=today" style="text-decoration:none">All tasks →</a>
+          <a class="s-action" href="/projects/?view=today" style="text-decoration:none">All tasks →</a>
         </div>
         <div class="priority-cards" id="priority-cards"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic" id="priority-hint">Flag tasks as P1 · P2 · P3 in any section to surface them here</div>
@@ -236,7 +236,7 @@
               <option value="health">💪 Health</option>
               <option value="mission">🌱 Mission</option>
             </select>
-            <a href="daily.html" style="font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;padding:.28rem .55rem;border:1px solid rgba(255,255,255,.1);border-radius:5px;transition:all .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Full log →</a>
+            <a href="/daily/" style="font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;padding:.28rem .55rem;border:1px solid rgba(255,255,255,.1);border-radius:5px;transition:all .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Full log →</a>
           </div>
         </div>
         <div class="add-row" style="margin-bottom:.5rem">
@@ -313,7 +313,7 @@
         <div class="grid4">
           <div class="tool-card" onclick="goTab('faith',null)" style="border-color:rgba(107,140,184,.3);background:rgba(107,140,184,.08)"><div class="tool-emoji">✝️</div>Faith</div>
           <div class="tool-card" onclick="goTab('brain',null)"><div class="tool-emoji">🧠</div>Brain Dump</div>
-          <a class="tool-card" href="daily.html" style="border-color:rgba(194,115,138,.3);background:rgba(194,115,138,.08)"><div class="tool-emoji">📓</div>Daily Log</a>
+          <a class="tool-card" href="/daily/" style="border-color:rgba(194,115,138,.3);background:rgba(194,115,138,.08)"><div class="tool-emoji">📓</div>Daily Log</a>
           <div class="tool-card" onclick="goTab('habits',null)"><div class="tool-emoji">💪</div>Habits</div>
           <div class="tool-card" onclick="goTab('people',null)"><div class="tool-emoji">👥</div>People</div>
           <div class="tool-card" onclick="goTab('shopping',null)"><div class="tool-emoji">🛒</div>Shopping</div>
@@ -327,7 +327,7 @@
           <a class="tool-card" href="https://github.com" target="_blank"><div class="tool-emoji">💻</div>GitHub</a>
           <a class="tool-card" href="https://script.google.com" target="_blank"><div class="tool-emoji">⚙️</div>Apps Script</a>
           <a class="tool-card" href="https://console.cloud.google.com" target="_blank"><div class="tool-emoji">🔑</div>Cloud Console</a>
-          <a class="tool-card" href="projects.html"><div class="tool-emoji">📋</div>Project Board</a>
+          <a class="tool-card" href="/projects/"><div class="tool-emoji">📋</div>Project Board</a>
           <a class="tool-card" href="https://getbookednbranded.pages.dev/prospecting-audit-tool.html" target="_blank"><div class="tool-emoji">🔍</div>Prospect Audit</a>
         </div>
       </div>
@@ -755,7 +755,7 @@
         </div>
       </div>
       <div class="s-label">GBB tasks
-        <a class="s-action" href="projects.html?view=kanban" style="text-decoration:none">Manage in Projects →</a>
+        <a class="s-action" href="/projects/?view=kanban" style="text-decoration:none">Manage in Projects →</a>
       </div>
       <div id="biz-tasks-list" class="items"></div>
       <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board · add there to appear here</div>
@@ -783,7 +783,7 @@
       </div>
       <div class="tab-content-inner active" id="m-aligned">
         <div class="s-label">Aligned Life tasks
-          <a class="s-action" href="projects.html?view=kanban" style="text-decoration:none">Manage in Projects →</a>
+          <a class="s-action" href="/projects/?view=kanban" style="text-decoration:none">Manage in Projects →</a>
         </div>
         <div class="items" id="al-list"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board</div>
@@ -791,7 +791,7 @@
       </div>
       <div class="tab-content-inner" id="m-wtc">
         <div class="s-label">WTC tasks
-          <a class="s-action" href="projects.html?view=kanban" style="text-decoration:none">Manage in Projects →</a>
+          <a class="s-action" href="/projects/?view=kanban" style="text-decoration:none">Manage in Projects →</a>
         </div>
         <div class="items" id="wtc-list"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board</div>
@@ -799,7 +799,7 @@
       </div>
       <div class="tab-content-inner" id="m-mustard">
         <div class="s-label">Mustard Seed tasks
-          <a class="s-action" href="projects.html?view=kanban" style="text-decoration:none">Manage in Projects →</a>
+          <a class="s-action" href="/projects/?view=kanban" style="text-decoration:none">Manage in Projects →</a>
         </div>
         <div class="items" id="ms-list"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic;margin-bottom:.5rem">Tasks managed in Project Board</div>
