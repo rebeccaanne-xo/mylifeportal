@@ -1,3 +1,12 @@
+/**
+ * update-sheet-structure.gs
+ * ─────────────────────────────────────
+ * Job:      Google Apps Script — updates the Google Sheet backup structure
+ * Connects: Run from Google Apps Script editor · writes to Google Sheets
+ * Reads:    Sheet data
+ * Returns:  Updated sheet structure
+ */
+
 // ════════════════════════════════════════════════════════
 // REBECCA PORTAL — SHEET UPDATER
 // Run updateSheetStructure() to add new tabs and fields

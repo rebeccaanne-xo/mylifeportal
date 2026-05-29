@@ -1,3 +1,12 @@
+/**
+ * seed-completed.js
+ * ─────────────────────────────────────
+ * Job:      One-time D1 database seed script — run manually via wrangler or node
+ * Connects: Writes to rebecca-portal-api D1 database
+ * Reads:    Hardcoded seed data below
+ * Returns:  Inserted rows in D1
+ */
+
 const D1 = 'https://rebecca-portal-api.rebeccaannexo.workers.dev';
 
 async function run(){

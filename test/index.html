@@ -1,9 +1,9 @@
 <!--
   index.html
   ─────────────────────────────────────
-  Job:      My Life Portal — main dashboard and navigation hub
-  Styles:   /styles/main.css
-  Scripts:  /js/portal.js
+  Job:      Development/testing copy of the portal (not for production)
+  Styles:   /styles/test.css
+  Scripts:  /js/test.js
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -11,11 +11,79 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>My Portal — Rebecca Holka</title>
-  <link rel="stylesheet" href="/styles/main.css"/>
+  <link rel="stylesheet" href="/styles/test.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 </head>
 <body>
+<button class="mob-toggle" id="mob-toggle" onclick="toggleNavPanel()" style="display:none;position:fixed;top:.65rem;left:.65rem;z-index:200;background:var(--peony);border:none;border-radius:7px;padding:.4rem .55rem;cursor:pointer;color:#fff;font-size:15px;align-items:center;justify-content:center">☰</button>
+
 <div id="app">
+
+<!-- ══ ICON RAIL ══ -->
+<div class="icon-rail" id="icon-rail">
+  <button class="rail-icon tab-home active" onclick="goTab('home',this);closeNavPanel()" title="Home">🏠<span class="rail-tooltip">Home</span></button>
+  <button class="rail-icon tab-homelife" onclick="goTab('homelife',this);closeNavPanel()" title="Home Life">🏡<span class="rail-tooltip">Home Life</span></button>
+  <button class="rail-icon tab-shopping" onclick="goTab('shopping',this);closeNavPanel()" title="Shopping">🛒<span class="rail-tooltip">Shopping</span></button>
+  <button class="rail-icon tab-habits" onclick="goTab('habits',this);closeNavPanel()" title="Health & Habits">💪<span class="rail-tooltip">Health & Habits</span></button>
+  <button class="rail-icon tab-people" onclick="goTab('people',this);closeNavPanel()" title="People">👥<span class="rail-tooltip">People</span></button>
+  <button class="rail-icon tab-faith" onclick="goTab('faith',this);closeNavPanel()" title="Faith">✝️<span class="rail-tooltip">Faith</span></button>
+  <div class="rail-sep"></div>
+  <button class="rail-icon tab-business" onclick="goTab('business',this);closeNavPanel()" title="GBB">💼<span class="rail-tooltip">Get Booked & Branded</span></button>
+  <button class="rail-icon tab-mission" onclick="goTab('mission',this);closeNavPanel()" title="Mission">🌱<span class="rail-tooltip">Mission</span></button>
+  <button class="rail-icon tab-brain" onclick="goTab('brain',this);closeNavPanel()" title="Brain">🧠<span class="rail-tooltip">Brain Dump</span></button>
+  <div class="rail-sep"></div>
+  <a class="rail-icon" href="projects.html" title="Projects" style="text-decoration:none">📋<span class="rail-tooltip">Project Board</span></a>
+  <div class="rail-bottom">
+    <button class="rail-menu-btn" onclick="toggleNavPanel()" title="Menu">☰<span class="rail-tooltip">Menu</span></button>
+    <div class="pts-rail" id="rail-pts">0 pts</div>
+  </div>
+</div>
+
+<!-- ══ NAV PANEL (popup) ══ -->
+<div class="nav-panel" id="nav-panel">
+  <div class="nav-panel-header">
+    <div class="nav-panel-title">Rebecca's Portal</div>
+    <button class="nav-panel-close" onclick="closeNavPanel()">✕</button>
+  </div>
+  <div class="nav-panel-body">
+    <span class="nav-group-label">Daily</span>
+    <button class="nav-btn tab-home active" onclick="goTab('home',this);closeNavPanel()"><span class="nav-emoji">🏠</span>Home</button>
+    <span class="nav-group-label">Life</span>
+    <button class="nav-btn tab-homelife" onclick="goTab('homelife',this);closeNavPanel()"><span class="nav-emoji">🏡</span>Home Life</button>
+    <button class="nav-btn tab-shopping" onclick="goTab('shopping',this);closeNavPanel()"><span class="nav-emoji">🛒</span>Shopping</button>
+    <button class="nav-btn tab-habits" onclick="goTab('habits',this);closeNavPanel()"><span class="nav-emoji">💪</span>Health & Habits</button>
+    <button class="nav-btn tab-people" onclick="goTab('people',this);closeNavPanel()"><span class="nav-emoji">👥</span>People</button>
+    <button class="nav-btn tab-faith" onclick="goTab('faith',this);closeNavPanel()"><span class="nav-emoji">✝️</span>Faith</button>
+    <span class="nav-group-label">Work</span>
+    <button class="nav-btn tab-business" onclick="goTab('business',this);closeNavPanel()"><span class="nav-emoji">💼</span>Get Booked & Branded</button>
+    <button class="nav-btn tab-mission" onclick="goTab('mission',this);closeNavPanel()"><span class="nav-emoji">🌱</span>Mission</button>
+    <span class="nav-group-label">Mind</span>
+    <button class="nav-btn tab-brain" onclick="goTab('brain',this);closeNavPanel()"><span class="nav-emoji">🧠</span>Brain Dump</button>
+    <span class="nav-group-label">Tools</span>
+    <a class="nav-btn" href="projects.html" style="text-decoration:none"><span class="nav-emoji">📋</span>Project Board</a>
+    <a class="nav-btn" href="daily.html" style="text-decoration:none"><span class="nav-emoji">📓</span>Daily Log</a>
+    <a class="nav-btn" href="https://getbookednbranded.pages.dev" target="_blank" style="text-decoration:none"><span class="nav-emoji">🌐</span>GBB Site<span class="nav-external">↗</span></a>
+    <a class="nav-btn" href="https://dash.cloudflare.com" target="_blank" style="text-decoration:none"><span class="nav-emoji">☁️</span>Cloudflare<span class="nav-external">↗</span></a>
+    <a class="nav-btn" href="https://github.com/rebeccaanne-xo" target="_blank" style="text-decoration:none"><span class="nav-emoji">💻</span>GitHub<span class="nav-external">↗</span></a>
+  </div>
+  <div class="nav-panel-footer">
+    <div class="user-row">
+      <div class="user-av">R</div>
+      <div>
+        <div class="user-name">Rebecca Holka</div>
+        <div class="user-email">rebeccaannexo@gmail.com</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.4rem">
+      <div style="font-size:9px;color:rgba(255,255,255,.25)" id="db-status">connecting...</div>
+      <button onclick="hardRefresh()" style="font-size:9px;background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-family:inherit;padding:0" title="Refresh data">↻ sync</button>
+    </div>
+    <div class="pts-display" id="sb-points">⭐ 0 points</div>
+  </div>
+</div>
+
+<!-- Nav overlay -->
+<div class="nav-overlay" id="nav-overlay" onclick="closeNavPanel()"></div>
 
 <!-- ══ CONTENT ══ -->
 <div class="content" id="main-content">
@@ -23,34 +91,53 @@
   <!-- PERSISTENT HEADER -->
   <div class="portal-header">
 
-    <!-- COMPACT HEADER ROW -->
-
-    <!-- CLOCK + GREETING row -->
-    <div style="background:#0d1b2e;border-bottom:1px solid rgba(255,255,255,.08);padding:.45rem 1rem;display:flex;align-items:center;justify-content:space-between">
-
-      <!-- CLOCK left -->
-      <div style="display:flex;flex-direction:column;gap:3px">
-        <div class="mini-flip-group">
-          <div class="mini-flip-card"><span id="mcu-h1">0</span></div>
-          <div class="mini-flip-card"><span id="mcu-h2">0</span></div>
-          <div class="mini-flip-sep">:</div>
-          <div class="mini-flip-card"><span id="mcu-m1">0</span></div>
-          <div class="mini-flip-card"><span id="mcu-m2">0</span></div>
-          <div class="mini-flip-sep">:</div>
-          <div class="mini-flip-card"><span id="mcu-s1">0</span></div>
-          <div class="mini-flip-card"><span id="mcu-s2">0</span></div>
-          <div class="mini-ampm" id="mini-ampm">AM</div>
+    <!-- CLOCK + GREETING + SCRIPTURE -->
+    <div class="persistent-top">
+      <!-- FLIP CLOCK + CALENDAR -->
+      <div class="flip-display">
+        <div class="flip-section">
+          <div class="flip-section-label">Today</div>
+          <div class="flip-cal-day" id="flip-day">01</div>
+          <div class="flip-cal-month" id="flip-month">January</div>
+          <div class="flip-cal-dow" id="flip-dow">Monday</div>
         </div>
-        <div style="font-size:8px;font-weight:700;color:#4A7C6F;letter-spacing:.04em" id="header-pts">⭐ 0</div>
+        <div class="flip-divider"></div>
+        <div class="flip-section">
+          <div class="flip-section-label">Time</div>
+          <div class="flip-group">
+            <div class="flip-card" id="fc-h1"><div class="flip-upper"><span id="fcu-h1">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-h1">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-card" id="fc-h2"><div class="flip-upper"><span id="fcu-h2">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-h2">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-separator">:</div>
+            <div class="flip-card" id="fc-m1"><div class="flip-upper"><span id="fcu-m1">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-m1">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-card" id="fc-m2"><div class="flip-upper"><span id="fcu-m2">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-m2">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-separator">:</div>
+            <div class="flip-card" id="fc-s1"><div class="flip-upper"><span id="fcu-s1">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-s1">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+            <div class="flip-card" id="fc-s2"><div class="flip-upper"><span id="fcu-s2">0</span><div class="flip-shadow-top"></div></div><div class="flip-lower"><span id="fcl-s2">0</span><div class="flip-shadow-bot"></div></div><div class="flip-line"></div></div>
+          </div>
+          <div id="flip-ampm" style="font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:.3rem">AM</div>
+        </div>
       </div>
-
-      <!-- GREETING right -->
-      <div style="text-align:right">
-        <div style="font-size:7px;font-weight:700;color:#4A7C6F;letter-spacing:.1em;text-transform:uppercase;font-family:'Montserrat',sans-serif" id="greeting-label">Tuesday — Afternoon</div>
-        <div style="font-size:11px;font-weight:700;color:#fff;line-height:1.3;font-family:'Montserrat',sans-serif" id="greeting-name">Hey there, Rebecca.</div>
-        <div style="font-size:8px;color:rgba(255,255,255,.3);margin-top:1px" id="greeting-streak">🔥 0</div>
+      <!-- GREETING -->
+      <div class="greeting-bar">
+        <div class="greeting-left">
+          <div class="greeting-time-label" id="greeting-label">Good morning · Monday</div>
+          <div class="greeting-name">Rebecca.</div>
+        </div>
+        <div class="greeting-right">
+          <div class="greeting-pts-val" id="header-pts">⭐ 0</div>
+          <div class="greeting-streak" id="greeting-streak">🔥 0 day streak</div>
+          <button onclick="hardRefresh()" style="font-size:9px;background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-family:inherit;margin-top:2px">↻</button>
+        </div>
       </div>
-
+      <!-- SCRIPTURE -->
+      <div class="scripture-bar">
+        <div class="scripture-accent"></div>
+        <div class="scripture-inner">
+          <div class="scripture-label">Today's word</div>
+          <div class="scripture-text-new" id="scripture-text"></div>
+          <div class="scripture-ref-new" id="scripture-ref"></div>
+        </div>
+      </div>
     </div>
 
     <!-- HORIZONTAL TAB NAV -->
@@ -64,7 +151,6 @@
       <div class="horiz-tab" data-tab="business" onclick="goTab('business',this)"><div class="horiz-tab-icon">💼</div><div class="horiz-tab-label">GBB</div></div>
       <div class="horiz-tab" data-tab="mission" onclick="goTab('mission',this)"><div class="horiz-tab-icon">🌱</div><div class="horiz-tab-label">Mission</div></div>
       <div class="horiz-tab" data-tab="brain" onclick="goTab('brain',this)"><div class="horiz-tab-icon">🧠</div><div class="horiz-tab-label">Brain</div></div>
-      <a class="horiz-tab" href="projects.html" style="text-decoration:none"><div class="horiz-tab-icon">📋</div><div class="horiz-tab-label">Projects</div></a>
     </div>
 
   </div><!-- end portal-header -->
@@ -82,30 +168,16 @@
     <button class="top-tab" data-tab="brain" onclick="goTab('brain',this)">🧠 Brain</button>
   </div>
 
-  <div class="horiz-tabs-border"></div>
   <!-- PAGES -->
   <div class="pages">
 
     <!-- ══════════ HOME ══════════ -->
-        <div class="page active" id="page-home">
-
-      <!-- TODAY'S SCRIPTURE -->
-      <div class="card" style="margin-bottom:14px;padding:.65rem 1rem">
-        <div style="display:flex;align-items:flex-start;gap:.5rem">
-          <div style="width:2px;background:#4A7C6F;border-radius:999px;align-self:stretch;min-height:32px;flex-shrink:0"></div>
-          <div style="flex:1">
-            <div style="font-size:8px;font-weight:700;color:#4A7C6F;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px;font-family:'Montserrat',sans-serif">Today's Word</div>
-            <div class="scripture-text" id="scripture-verse" style="font-size:13px;font-weight:700;color:#fff;line-height:1.5;font-family:'Montserrat',sans-serif"></div>
-            <div class="scripture-ref" id="scripture-cite" style="font-size:11px;color:#C2738A;font-style:italic;margin-top:3px;font-weight:500"></div>
-          </div>
-        </div>
-      </div>
-
+    <div class="page active" id="page-home">
       <!-- SCHEDULE -->
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hdr" data-collapse="sched">
-          <div class="card-title">🗓 Today's Schedule <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
-          <div style="display:flex;gap:.4rem">
+        <div class="card-hdr" onclick="toggleScheduleCard()" style="cursor:pointer;user-select:none">
+          <div class="card-title">🗓 Today's Schedule <span id="schedule-card-chevron" style="color:rgba(255,255,255,.3);font-size:11px;margin-left:.3rem">▾</span></div>
+          <div style="display:flex;gap:.4rem" onclick="event.stopPropagation()">
             <button class="s-action" onclick="addScheduleBlock()">+ Block</button>
             <button class="s-action" onclick="clearDoneScheduleItems()">Clear done</button>
             <button class="s-action" onclick="toggleManageRecurring()">↻ Daily</button>
@@ -124,20 +196,28 @@
 
       <!-- TODAY'S PRIORITIES -->
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hdr" data-collapse="priorities">
-          <div class="card-title">🎯 Today's Priorities <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
+        <div class="card-hdr">
+          <div class="card-title">🎯 Today's Priorities</div>
           <a class="s-action" href="projects.html?view=today" style="text-decoration:none">All tasks →</a>
         </div>
-        <div id="priorities-body">
         <div class="priority-cards" id="priority-cards"></div>
         <div style="font-size:11px;color:rgba(255,255,255,.25);font-style:italic" id="priority-hint">Flag tasks as P1 · P2 · P3 in any section to surface them here</div>
+      </div>
+
+      <!-- BILLS WIDGET -->
+      <div class="card" style="margin-bottom:14px" id="home-bills-card">
+        <div class="card-hdr">
+          <div class="card-title">💳 Bills & Money</div>
+          <button class="s-action" onclick="goToBills()">All bills →</button>
         </div>
+        <div id="home-bills-list" style="display:flex;flex-direction:column;gap:3px"></div>
+        <div id="home-bills-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;display:none">No upcoming bills</div>
       </div>
 
       <!-- DAILY LOG WIDGET -->
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hdr" data-collapse="log">
-          <div class="card-title">📓 Today's Log <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
+        <div class="card-hdr">
+          <div class="card-title">📓 Today's Log</div>
           <div style="display:flex;gap:.4rem;align-items:center">
             <select class="add-select" id="log-symbol-select" style="font-size:11px;padding:.28rem .5rem;max-width:110px">
               <option value="•">• Task</option>
@@ -159,34 +239,21 @@
             <a href="daily.html" style="font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;padding:.28rem .55rem;border:1px solid rgba(255,255,255,.1);border-radius:5px;transition:all .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.35)'">Full log →</a>
           </div>
         </div>
-        <div id="log-body">
         <div class="add-row" style="margin-bottom:.5rem">
           <input class="add-input" id="log-entry-input" placeholder="Log something for today..." style="flex:1" onkeydown="if(event.key==='Enter')addDailyLogEntry()"/>
           <button class="add-btn" onclick="addDailyLogEntry()">Log</button>
         </div>
         <div id="home-log-list" style="display:flex;flex-direction:column;gap:3px;max-height:160px;overflow-y:auto"></div>
-        </div>
       </div>
-
-      <!-- BILLS WIDGET -->
-      <div class="card" style="margin-bottom:14px" id="home-bills-card">
-        <div class="card-hdr" data-collapse="bills">
-          <div class="card-title">💳 Bills & Money <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
-          <button class="s-action" onclick="goToBills()">All bills →</button>
-        </div>
-        <div id="bills-body"><div id="home-bills-list" style="display:flex;flex-direction:column;gap:3px"></div>
-        <div id="home-bills-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;display:none">No upcoming bills</div></div>
-      </div>
-
 
       <!-- NEED TO -->
       <!-- NEED TO -->
       <div class="card" style="margin-bottom:14px">
-        <div class="card-hdr" data-collapse="needto">
-          <div class="card-title">⚡ Need To <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
+        <div class="card-hdr">
+          <div class="card-title">⚡ Need To</div>
           <button class="s-action" onclick="toggleNeedToForm()">+ Add</button>
         </div>
-        <div id="needto-body"><div class="needto-list" id="needto-list"></div>
+        <div class="needto-list" id="needto-list"></div>
         <div id="needto-empty" style="font-size:12px;color:rgba(255,255,255,.2);font-style:italic;display:none">Nothing pending</div>
         <div class="needto-add-form" id="needto-form">
           <div class="needto-type-picker" id="needto-type-picker">
@@ -209,44 +276,41 @@
             <button class="add-btn" onclick="addNeedTo()">Add</button>
           </div>
         </div>
-        </div>
-      </div>
-
-
-      <!-- HABIT SNAPSHOT — compact collapsible -->
-      <div class="card" style="margin-bottom:10px">
-        <div class="card-hdr" data-collapse="habits-snap">
-          <div class="card-title">💪 Habits Today <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div>
-          <div style="display:flex;align-items:center;gap:.5rem">
-            <span style="font-size:10px;color:rgba(255,255,255,.3)"><span id="snap-done">0</span>/<span id="snap-total">0</span> · <span id="snap-pts" style="color:var(--sage)">0</span>pts</span>
-            <span class="s-action" onclick="goTab('habits',null);event.stopPropagation()">Open →</span>
-          </div>
-        </div>
-        <div id="habits-snap-body">
-          <div class="habit-dot-grid" id="habit-dots" style="margin-top:.3rem"></div>
-        </div>
       </div>
 
       <div class="grid2">
         <!-- AT A GLANCE -->
         <div class="card">
-          <div class="card-hdr" data-collapse="glance"><div class="card-title">👁 At a Glance <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div></div>
-          <div id="glance-body"><div class="glance-grid">
+          <div class="card-hdr"><div class="card-title">👁 At a Glance</div></div>
+          <div class="glance-grid">
             <div class="glance-item" onclick="window.location='projects.html?view=today'"><div class="glance-val" id="g-tasks">—</div><div class="glance-label">Tasks</div><div class="glance-dot" id="gd-tasks"></div></div>
             <div class="glance-item" onclick="goTab('people',null)"><div class="glance-val" id="g-followup">—</div><div class="glance-label">Follow ups</div><div class="glance-dot" id="gd-followup"></div></div>
             <div class="glance-item" onclick="goTab('faith',null)"><div class="glance-val" id="g-prayers">—</div><div class="glance-label">Prayers</div><div class="glance-dot" id="gd-prayers"></div></div>
             <div class="glance-item" onclick="goTab('shopping',null)"><div class="glance-val" id="g-shopping">—</div><div class="glance-label">Shopping</div><div class="glance-dot" id="gd-shopping"></div></div>
             <div class="glance-item" onclick="goTab('mission',null)"><div class="glance-val" id="g-mission">—</div><div class="glance-label">Mission</div><div class="glance-dot" id="gd-mission"></div></div>
             <div class="glance-item" onclick="goTab('brain',null)"><div class="glance-val" id="g-brain">—</div><div class="glance-label">Brain</div><div class="glance-dot" id="gd-brain"></div></div>
-          </div></div>
+          </div>
+        </div>
+
+        <!-- HABIT SNAPSHOT -->
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-title">💪 Habits Today</div>
+            <span class="card-link" onclick="goTab('habits',null)">Open →</span>
+          </div>
+          <div class="stat-row" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:.5rem">
+            <div class="stat"><div class="stat-val" id="snap-done">0</div><div class="stat-label">Done</div></div>
+            <div class="stat"><div class="stat-val" id="snap-total">0</div><div class="stat-label">Total</div></div>
+            <div class="stat"><div class="stat-val" id="snap-pts" style="color:var(--sage)">0</div><div class="stat-label">Pts</div></div>
+          </div>
+          <div class="habit-dot-grid" id="habit-dots"></div>
         </div>
       </div>
 
-
       <!-- QUICK ACCESS -->
       <div class="card">
-        <div class="card-hdr" data-collapse="quickaccess"><div class="card-title">⚡ Quick Access <span class="collapse-chevron" style="color:rgba(255,255,255,.25);font-size:10px;margin-left:.25rem">▾</span></div></div>
-        <div id="quickaccess-body"><div class="grid4">
+        <div class="card-hdr"><div class="card-title">⚡ Quick Access</div></div>
+        <div class="grid4">
           <div class="tool-card" onclick="goTab('faith',null)" style="border-color:rgba(107,140,184,.3);background:rgba(107,140,184,.08)"><div class="tool-emoji">✝️</div>Faith</div>
           <div class="tool-card" onclick="goTab('brain',null)"><div class="tool-emoji">🧠</div>Brain Dump</div>
           <a class="tool-card" href="daily.html" style="border-color:rgba(194,115,138,.3);background:rgba(194,115,138,.08)"><div class="tool-emoji">📓</div>Daily Log</a>
@@ -266,10 +330,10 @@
           <a class="tool-card" href="projects.html"><div class="tool-emoji">📋</div>Project Board</a>
           <a class="tool-card" href="https://getbookednbranded.pages.dev/prospecting-audit-tool.html" target="_blank"><div class="tool-emoji">🔍</div>Prospect Audit</a>
         </div>
-        </div><!-- end quickaccess-body -->
-      </div><!-- end quickaccess card -->
-    </div><!-- end page-home -->
+      </div>
+    </div>
 
+    <!-- ══════════ HOME LIFE ══════════ -->
     <div class="page" id="page-homelife">
       <div class="page-header">
         <div class="page-eyebrow">Household · Seth · Bruno · Lavender · Shadow</div>
@@ -623,10 +687,6 @@
         <div class="page-eyebrow">Prayer · Scripture · Journal · Gratitude</div>
         <div class="page-title">Faith <em>& Spirit</em></div>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
-        <div style="font-size:11px;color:rgba(107,140,184,.6)">Bible study + community lives in WTC</div>
-        <a href="https://wethechurch.pages.dev" target="_blank" class="s-action" style="text-decoration:none">Open WTC →</a>
-      </div>
       <div class="tabs-inner">
         <button class="tab-inner active" onclick="innerTab(this,'f-praying')">Praying For</button>
         <button class="tab-inner" onclick="innerTab(this,'f-myself')">For Myself</button>
@@ -794,6 +854,6 @@
 </div><!-- end app -->
 
 <div class="toast" id="toast"></div>
-  <script src="/js/portal.js"></script>
+  <script src="/js/test.js"></script>
 </body>
 </html>

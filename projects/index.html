@@ -1,0 +1,331 @@
+<!--
+  index.html
+  ─────────────────────────────────────
+  Job:      Projects tracker and task board
+  Styles:   /styles/projects.css
+  Scripts:  /js/projects.js
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Project Board — Rebecca Holka</title>
+  <link rel="stylesheet" href="/styles/projects.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<div id="app">
+
+
+<!-- MAIN -->
+<div class="main" id="main-area">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="back-to-portal">← Portal</a>
+      <span id="filter-crumb" style="display:none"></span>
+      <div class="view-tabs">
+        <button class="view-tab active" onclick="switchViewTab('projects')"><div class="vt-icon">📋</div><div class="vt-label">Projects</div></button>
+        
+        <button class="view-tab" onclick="switchViewTab('kanban')"><div class="vt-icon">🗂</div><div class="vt-label">Kanban</div></button>
+        <button class="view-tab" onclick="switchViewTab('today')"><div class="vt-icon">📝</div><div class="vt-label">Today</div></button>
+        <button class="view-tab" onclick="switchViewTab('decisions')"><div class="vt-icon">🧭</div><div class="vt-label">Decisions</div></button>
+        <button class="view-tab" onclick="switchViewTab('sessions')"><div class="vt-icon">📓</div><div class="vt-label">Sessions</div></button>
+        <button class="view-tab" onclick="switchViewTab('infra')"><div class="vt-icon">⚙️</div><div class="vt-label">Infra</div></button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="time-badge" id="time-badge"></div>
+      <button class="btn-primary" onclick="openAddTask()">+ Add Task</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- PROJECTS VIEW -->
+    <div class="view active" id="view-projects">
+      <div class="projects-grid" id="projects-grid"></div>
+    </div>
+
+    <!-- TODAY VIEW -->
+    <div class="view" id="view-today">
+      <div class="today-cols">
+        <div>
+          <div class="today-sec-label">🔴 Overdue + Due today</div>
+          <div id="today-urgent"></div>
+          <div class="today-sec-label" style="margin-top:1rem">🟡 In progress</div>
+          <div id="today-inprog"></div>
+        </div>
+        <div>
+          <div class="today-sec-label">⚡ High priority</div>
+          <div id="today-high"></div>
+          <div class="today-sec-label" style="margin-top:1rem">✅ Done recently</div>
+          <div id="today-done-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KANBAN VIEW -->
+    <div class="view kanban-view" id="view-kanban">
+      <div id="kanban-back-bar" style="display:none;align-items:center;gap:.5rem;margin-bottom:.6rem;flex-shrink:0">
+        <button onclick="clearFilter();switchView('projects',null)" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);border-radius:6px;padding:.35rem .75rem;font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;transition:all .15s">← All Projects</button>
+        <span id="kanban-proj-label" style="font-size:12px;color:rgba(255,255,255,.4)"></span>
+      </div>
+      <div class="kanban-wrap" id="kanban-wrap">
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title">Backlog</span><span class="k-col-count" id="kc-backlog">0</span></div><div class="k-cards" id="col-backlog" ondragover="onDragOver(event)" ondrop="onDrop(event,'backlog')"></div></div>
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title">To Do</span><span class="k-col-count" id="kc-todo">0</span></div><div class="k-cards" id="col-todo" ondragover="onDragOver(event)" ondrop="onDrop(event,'todo')"></div></div>
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title" style="color:var(--amber)">In Progress</span><span class="k-col-count" id="kc-inprogress">0</span></div><div class="k-cards" id="col-inprogress" ondragover="onDragOver(event)" ondrop="onDrop(event,'inprogress')"></div></div>
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title" style="color:#F1948A">Blocked</span><span class="k-col-count" id="kc-blocked">0</span></div><div class="k-cards" id="col-blocked" ondragover="onDragOver(event)" ondrop="onDrop(event,'blocked')"></div></div>
+        <div class="k-col"><div class="k-col-header"><span class="k-col-title" style="color:var(--sage)">Done</span><span class="k-col-count" id="kc-done">0</span></div><div class="k-cards" id="col-done" ondragover="onDragOver(event)" ondrop="onDrop(event,'done')"></div></div>
+      </div>
+    </div>
+
+    <!-- LIST VIEW -->
+    <div class="view" id="view-list">
+      <div class="list-controls">
+        <input class="list-search" id="list-search" placeholder="Search tasks..." oninput="renderList()"/>
+        <button class="sort-pill active" onclick="setSort('project',this)">Project</button>
+        <button class="sort-pill" onclick="setSort('priority',this)">Priority</button>
+        <button class="sort-pill" onclick="setSort('due',this)">Due</button>
+        <button class="sort-pill" onclick="setSort('status',this)">Status</button>
+        <button class="sort-pill" onclick="setSort('updated',this)">Recent</button>
+      </div>
+      <table class="list-table">
+        <thead><tr><th>Task</th><th>Project</th><th>Status</th><th>Priority</th><th>Due</th><th>Time</th></tr></thead>
+        <tbody id="list-body"></tbody>
+      </table>
+    </div>
+
+    <!-- DECISIONS VIEW -->
+    <div class="view" id="view-decisions">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.875rem">
+        <div style="font-size:12px;color:rgba(255,255,255,.32)">Key decisions and why they were made</div>
+        <button class="btn-primary" onclick="openAddDecision()">+ Log Decision</button>
+      </div>
+      <div id="decisions-list"></div>
+    </div>
+
+    <!-- SESSION LOG VIEW -->
+    <div class="view" id="view-sessions">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.875rem">
+        <div style="font-size:12px;color:rgba(255,255,255,.32)">What was built each session</div>
+        <button class="btn-primary" onclick="openAddSession()">+ Log Session</button>
+      </div>
+      <div id="sessions-list"></div>
+    </div>
+
+    <!-- INFRA VIEW -->
+    <div class="view" id="view-infra">
+      <div class="infra-grid" id="infra-grid"></div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- CARD DETAIL MODAL -->
+<div class="card-modal-overlay" id="card-modal">
+  <div class="card-modal">
+    <div class="card-modal-header">
+      <div class="card-color-bar" id="cm-color-bar"></div>
+      <div class="card-title-wrap">
+        <textarea class="card-modal-title" id="cm-title" rows="2" onblur="saveField('title')"></textarea>
+        <div class="card-proj-label" id="cm-proj-label"></div>
+      </div>
+      <button class="card-close" onclick="closeCardModal()">✕</button>
+    </div>
+    <div class="card-modal-body">
+      <div class="card-main">
+        <div class="card-section">
+          <div class="card-section-label">📝 Description</div>
+          <textarea class="card-desc" id="cm-desc" placeholder="Add context, links, dependencies..." onblur="saveField('description')"></textarea>
+        </div>
+        <div class="card-section">
+          <div class="card-section-label">✅ Checklist <span id="cm-cl-pct" style="font-size:10px;color:rgba(255,255,255,.28)">0%</span></div>
+          <div class="cl-progress"><div class="cl-progress-fill" id="cm-cl-bar" style="width:0%"></div></div>
+          <div class="checklist-items" id="cm-checklist"></div>
+          <div class="cl-input-row">
+            <input class="cl-input" id="cm-cl-input" placeholder="Add item..." onkeydown="if(event.key==='Enter')addClItem()"/>
+            <button class="cl-add-btn" onclick="addClItem()">Add</button>
+          </div>
+        </div>
+        <div class="card-section">
+          <div class="card-section-label">💬 Comments</div>
+          <div class="comment-list" id="cm-comments"></div>
+          <div class="comment-row">
+            <input class="comment-input" id="cm-comment" placeholder="Add a comment..." onkeydown="if(event.key==='Enter')addComment()"/>
+            <button class="comment-btn" onclick="addComment()">Save</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-sidebar">
+        <div class="cf"><div class="cf-label">Status</div>
+          <select class="cf-select" id="cm-status" onchange="saveField('status')">
+            <option value="backlog">Backlog</option><option value="todo">To Do</option>
+            <option value="inprogress">In Progress</option><option value="blocked">Blocked</option><option value="done">Done</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Priority</div>
+          <select class="cf-select" id="cm-priority" onchange="saveField('priority')">
+            <option value="high">🔴 High</option><option value="med">🟡 Medium</option><option value="low">🟢 Low</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Project</div>
+          <select class="cf-select" id="cm-project" onchange="saveField('project')">
+            <option value="gbb">💼 GBB</option><option value="wtc">✝️ WTC</option>
+            <option value="aligned">🌱 Aligned Life</option><option value="mustard">🌿 Mustard Seed</option>
+            <option value="portal">⚡ Portal</option><option value="home">🏠 Home</option><option value="personal">👤 Personal</option><option value="vision">✨ The Vision</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Due Date</div><input class="cf-input" type="date" id="cm-due" onchange="saveField('due')"/></div>
+        <div class="cf"><div class="cf-label">Time (hrs)</div><input class="cf-input" type="number" id="cm-time" placeholder="e.g. 2" min="0" step="0.5" onblur="saveField('time')"/></div>
+        <div class="cf"><div class="cf-label">Assigned to</div>
+          <select class="cf-select" id="cm-assignee" onchange="saveField('assignee')">
+            <option value="rebecca">Rebecca</option><option value="seth">Seth</option><option value="team">Team</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Priority flag</div>
+          <select class="cf-select" id="cm-priority-flag" onchange="saveField('priority_flag')">
+            <option value="">None</option>
+            <option value="1">P1 — Top priority</option>
+            <option value="2">P2 — Important</option>
+            <option value="3">P3 — Next up</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Schedule block</div>
+          <select class="cf-select" id="cm-block" onchange="saveField('block')">
+            <option value="">No block</option>
+            <option value="b1">🌅 Morning</option>
+            <option value="b2">💼 Work</option>
+            <option value="b3">🌤 Afternoon</option>
+            <option value="b4">🌆 Evening</option>
+            <option value="b5">🌙 Night</option>
+          </select></div>
+        <div class="cf"><div class="cf-label">Blocker</div><input class="cf-input" id="cm-blocker" placeholder="Why blocked?" onblur="saveField('blocker')"/></div>
+        <button class="card-archive-btn" onclick="archiveCard()">Archive</button>
+        <button class="card-del-btn" onclick="deleteCard()">Delete task</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="add-task-modal">
+  <div class="modal">
+    <div class="modal-title">Add Task</div>
+    <div class="modal-label">Title</div><input class="modal-input" id="at-title" placeholder="What needs to be done..."/>
+    <div class="modal-row">
+      <div><div class="modal-label">Project</div>
+        <select class="modal-select" id="at-project">
+          <option value="gbb">💼 GBB</option><option value="wtc">✝️ WTC</option>
+          <option value="aligned">🌱 Aligned Life</option><option value="mustard">🌿 Mustard Seed</option>
+          <option value="portal">⚡ Portal</option><option value="home">🏠 Home</option><option value="personal">👤 Personal</option><option value="vision">✨ The Vision</option>
+        </select></div>
+      <div><div class="modal-label">Status</div>
+        <select class="modal-select" id="at-status">
+          <option value="backlog">Backlog</option><option value="todo">To Do</option>
+          <option value="inprogress">In Progress</option><option value="blocked">Blocked</option>
+        </select></div>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-label">Priority</div>
+        <select class="modal-select" id="at-priority">
+          <option value="high">🔴 High</option><option value="med">🟡 Medium</option><option value="low">🟢 Low</option>
+        </select></div>
+      <div><div class="modal-label">Due date</div><input class="modal-input" type="date" id="at-due"/></div>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-label">Time (hrs)</div><input class="modal-input" type="number" id="at-time" placeholder="2" min="0" step="0.5"/></div>
+      <div><div class="modal-label">Assigned to</div>
+        <select class="modal-select" id="at-assignee">
+          <option value="rebecca">Rebecca</option><option value="seth">Seth</option><option value="team">Team</option>
+        </select></div>
+    </div>
+    <div class="modal-row">
+      <div><div class="modal-label">Priority flag</div>
+        <select class="modal-select" id="at-priority-flag">
+          <option value="">None</option>
+          <option value="1">P1 — Top priority</option>
+          <option value="2">P2 — Important</option>
+          <option value="3">P3 — Next up</option>
+        </select></div>
+      <div><div class="modal-label">Schedule block</div>
+        <select class="modal-select" id="at-block">
+          <option value="">No block</option>
+          <option value="b1">🌅 Morning</option>
+          <option value="b2">💼 Work</option>
+          <option value="b3">🌤 Afternoon</option>
+          <option value="b4">🌆 Evening</option>
+          <option value="b5">🌙 Night</option>
+        </select></div>
+    </div>
+    <div class="modal-label">Description</div>
+    <textarea class="modal-textarea" id="at-desc" placeholder="Context, links, dependencies..."></textarea>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal('add-task-modal')">Cancel</button>
+      <button class="modal-save" onclick="saveNewTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- DECISION MODAL -->
+<div class="modal-overlay" id="add-decision-modal">
+  <div class="modal">
+    <div class="modal-title">Log a Decision</div>
+    <div class="modal-label">What was decided</div><input class="modal-input" id="ad-title" placeholder="e.g. Use Google Sheets as primary database"/>
+    <div class="modal-label">Project</div>
+    <select class="modal-select" id="ad-project">
+      <option value="portal">Portal</option><option value="home">Home</option><option value="personal">Personal</option><option value="vision">The Vision</option><option value="gbb">GBB</option><option value="wtc">WTC</option>
+      <option value="aligned">Aligned Life</option><option value="mustard">Mustard Seed</option><option value="infra">Infrastructure</option>
+    </select>
+    <div class="modal-label">Why</div><textarea class="modal-textarea" id="ad-why" placeholder="Reasoning..."></textarea>
+    <div class="modal-label">Alternatives considered</div><input class="modal-input" id="ad-alts" placeholder="e.g. D1, Supabase..."/>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal('add-decision-modal')">Cancel</button>
+      <button class="modal-save" onclick="saveDecision()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- SESSION MODAL -->
+<div class="modal-overlay" id="add-session-modal">
+  <div class="modal">
+    <div class="modal-title">Log Session</div>
+    <div class="modal-label">Title</div><input class="modal-input" id="as-title" placeholder="e.g. Built contact card system"/>
+    <div class="modal-label">What happened</div><textarea class="modal-textarea" id="as-body" placeholder="Summary..." style="min-height:90px"></textarea>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal('add-session-modal')">Cancel</button>
+      <button class="modal-save" onclick="saveSession()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<!-- PROJECT EDIT MODAL -->
+<div class="proj-edit-overlay" id="proj-edit-modal">
+  <div class="proj-edit-panel">
+    <div class="proj-edit-header">
+      <div class="proj-edit-title" id="pem-title">Edit Project</div>
+      <button onclick="closeProjEdit()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;padding:0 4px">✕</button>
+    </div>
+    <div class="proj-edit-body">
+      <div class="pef"><div class="pef-label">Name</div><input class="pef-input" id="pem-name" onblur="saveProjField('name',this.value)"/></div>
+      <div class="pef"><div class="pef-label">Description</div><textarea class="pef-input" id="pem-desc" rows="2" onblur="saveProjField('desc',this.value)"></textarea></div>
+      <div class="pef"><div class="pef-label">Goal</div><input class="pef-input" id="pem-goal" onblur="saveProjField('goal',this.value)"/></div>
+      <div class="pef"><div class="pef-label">Status</div>
+        <select class="pef-input" id="pem-status" onchange="saveProjField('status',this.value)">
+          <option value="planning">Planning</option>
+          <option value="building">Building</option>
+          <option value="live">Live</option>
+          <option value="paused">Paused</option>
+          <option value="ongoing">Ongoing</option>
+        </select>
+      </div>
+      <div class="pef"><div class="pef-label">Links</div><div id="pem-links"></div><button class="s-action" onclick="addProjLink()" style="margin-top:.4rem">+ Add Link</button></div>
+      <div class="pef"><div class="pef-label">Notes</div><textarea class="pef-input" id="pem-notes" rows="3" placeholder="Notes, strategy, ideas..." onblur="saveProjField('notes',this.value)"></textarea></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem 1.25rem;border-top:1px solid rgba(255,255,255,.08)">
+      <button class="btn-primary" onclick="goToProjectKanban()">View in Kanban →</button>
+      <button class="s-action" onclick="closeProjEdit()">Done</button>
+    </div>
+  </div>
+</div>
+
+  <script src="/js/projects.js"></script>
+</body>
+</html>
